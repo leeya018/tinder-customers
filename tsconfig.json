@@ -35,7 +35,7 @@
     "src/context/*.jsx",
     "src/lib/**.js",
     "src/lib/**.ts",
-    "src/node/helper.js"
+    "src/node/**.js"
   ],
   "exclude": ["node_modules"]
 }
