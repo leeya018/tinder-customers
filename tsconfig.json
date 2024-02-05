@@ -33,8 +33,9 @@
     "src/mobx/**/*.js",
     "src/api/**/*.ts",
     "src/context/*.jsx",
-    "src/data/*.json",
-    "src/data/products.js"
+    "src/lib/**.js",
+    "src/lib/**.ts",
+    "src/node/helper.js"
   ],
   "exclude": ["node_modules"]
 }
