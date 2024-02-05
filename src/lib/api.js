@@ -239,3 +239,10 @@ export const getRandomMessage = async () => {
   )
   return res.data
 }
+export const startApi = async () => {
+  const res = await axios.get(
+    `http://localhost:${process.env.NEXT_PUBLIC_PORT}/api/start`,
+    {}
+  )
+  return res.data
+}

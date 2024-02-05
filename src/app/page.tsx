@@ -11,6 +11,7 @@ import {
   likeAutomation,
   messageAutomation,
 } from "@/util"
+import { startApi } from "@/lib/api"
 
 const RootPage = observer(() => {
   const [token, setToken] = useState("")
@@ -24,6 +25,7 @@ const RootPage = observer(() => {
     // intervalForever(likeAll, day / 2)
     // intervalForever(likeAutomation, day / 10)
     // intervalForever(messageAutomation, day / 2)
+    startApi()
   }
 
   return (
