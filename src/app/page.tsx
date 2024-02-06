@@ -70,7 +70,7 @@ const RootPage = observer(() => {
       <Button
         variant="outlined"
         disabled={!isPlusAvailable()}
-        className="mb-2"
+        className="mb-2 "
         onClick={add}
       >
         <FaPlus size={30} />
@@ -87,8 +87,10 @@ const RootPage = observer(() => {
               }}
               value={token.key}
               placeholder="token"
+              className="h-10"
             />
             <Button
+              className="h-10"
               variant="outlined"
               disabled={token.key === "" || token.isProcess === true}
               onClick={() => start(key)}

@@ -176,7 +176,7 @@ const intervalForever = async (callback, rate) => {
 }
 
 // I can do setIntrval for each one , every time the dist betwen the operations
-const main = async (token = "5728883c-d648-4aac-b9ca-64ce9daa8ff7") => {
+const main = async (token) => {
   const minute = 1000 * 60
   const hour = 1000 * 60 * 60
   const day = hour * 24
@@ -195,7 +195,7 @@ const main = async (token = "5728883c-d648-4aac-b9ca-64ce9daa8ff7") => {
   console.log(myProfileId)
   intervalForever(() => likeAll(token), day / 2)
   intervalForever(() => likeAutomation(token), day / 10)
-  intervalForever(() => messageAutomation(token, myProfileId), day / 2)
+  // intervalForever(() => messageAutomation(token, myProfileId), day / 2)
 
   console.log("==================END_MAIN========================")
   // console.log(res.data.user)

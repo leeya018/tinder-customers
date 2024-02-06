@@ -6,7 +6,9 @@ const FormData = require("form-data")
 // const { addImageUrl } = require("lib/api");
 let data = new FormData()
 
-const filePath = "starters/messages_english.txt"
+const filePath = `C://Users//user//Desktop//code//lee//tinder-customers//src//node//starters//messages_english.txt`
+
+// const filePath = "starters/messages_english.txt"
 
 const getMessagesApi = async (token, matchId) => {
   let config = {
@@ -314,7 +316,7 @@ const getRandomMessage = () => {
 
     throw new Error("Line is out of range" + chosenLine)
   } catch (err) {
-    return err.message
+    throw err.message
   }
 }
 
