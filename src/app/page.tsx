@@ -1,5 +1,6 @@
 "use client"
 import React, { useState } from "react"
+import { FaPlus } from "react-icons/fa"
 
 // import { getProfile } from "lib/api"
 import { Button, OutlinedInput } from "@mui/material"
@@ -14,31 +15,41 @@ import {
 import { startApi } from "@/lib/api"
 
 const RootPage = observer(() => {
-  const [token, setToken] = useState("")
-  const [port, setPort] = useState("")
+  const [tokens, setTokens] = useState<string[]>([])
+  // const [token, setToken] = useState([])
+  // const [port, setPort] = useState("")
 
-  const start = async () => {
-    // const res = await getProfile()
-    // const profile = res.data
-    // const profileId = profile._id
-    // console.log(profileId)
-    // intervalForever(likeAll, day / 2)
-    // intervalForever(likeAutomation, day / 10)
-    // intervalForever(messageAutomation, day / 2)
-    startApi()
+  const start = async (index: number) => {
+    startApi(tokens[index])
+  }
+  const add = () => {
+    setTokens((prev) => ["", ...prev])
   }
 
   return (
     <div>
       <div>customers</div>
-      <OutlinedInput
-        onChange={(e) => setToken(e.target.value)}
-        value={token}
-        placeholder="token"
-      />
-      <Button variant="outlined" onClick={start}>
-        Start
+      <Button variant="outlined" onClick={add}>
+        <FaPlus size={30} />
       </Button>
+      <ul>
+        {tokens.map((token: string, key: number) => (
+          <li key={key}>
+            <OutlinedInput
+              onChange={(e) => {
+                let dupTokens = [...tokens]
+                dupTokens[key] = e.target.value
+                setTokens(dupTokens)
+              }}
+              value={token}
+              placeholder="token"
+            />
+            <Button variant="outlined" onClick={() => start(key)}>
+              Start
+            </Button>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 })

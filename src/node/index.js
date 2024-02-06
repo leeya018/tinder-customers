@@ -230,5 +230,5 @@ const outputAll = "C:\\Users\\user\\Documents\\tinder-tensor\\all"
 // imagesConv(sourcePass, outputPass);
 // start(l, o);
 
-main()
+// main()
 module.exports = { main }

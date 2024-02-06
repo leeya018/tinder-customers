@@ -239,10 +239,10 @@ const { default: axios } = require("axios")
 //   )
 //   return res.data
 // }
-export const startApi = async () => {
-  const res = await axios.get(
+export const startApi = async (token) => {
+  const res = await axios.post(
     `http://localhost:${process.env.NEXT_PUBLIC_PORT}/api/start`,
-    {}
+    { token }
   )
   return res.data
 }
