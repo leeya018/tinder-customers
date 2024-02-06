@@ -9,6 +9,9 @@ import { observer } from "mobx-react-lite"
 import { startApi } from "@/lib/api"
 import Alerts from "@/ui/Alerts"
 import { messageStore } from "@/mobx/messageStore"
+import MessageModal from "@/ui/modal/message"
+import { ModalStore } from "@/mobx/modalStore"
+import { instructions, modals } from "@/util"
 
 type Token = {
   key: string
@@ -42,6 +45,20 @@ const RootPage = observer(() => {
   return (
     <div className="w-[100vw] h-[100vh] p-10 ">
       <Alerts />
+      {ModalStore.modalName === modals.message && (
+        <MessageModal
+          onClose={() => ModalStore.closeModal()}
+          title={"Benefits"}
+          messageArr={instructions}
+        />
+      )}
+      <Button
+        variant="outlined"
+        className="absolute top-1 left-1"
+        onClick={() => ModalStore.openModal(modals.message)}
+      >
+        Benefits
+      </Button>
       <div className="flex justify-center text-xl font-bold">
         Tinder Customers
       </div>
@@ -58,10 +75,11 @@ const RootPage = observer(() => {
       >
         <FaPlus size={30} />
       </Button>
-      <ul>
+      <ul className="mt-5">
         {tokens.map((token: Token, key: number) => (
           <li key={key} className="flex items-center gap-2">
             <OutlinedInput
+              disabled={token.isProcess === true}
               onChange={(e) => {
                 let dupTokens = [...tokens]
                 dupTokens[key].key = e.target.value

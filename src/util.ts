@@ -220,3 +220,13 @@ export const messageAutomation = async () => {
     console.log(error.message)
   }
 }
+
+export const modals = {
+  message: "message",
+}
+
+export const instructions = [
+  "auto likes for you so you will not have to waist times. ( by Machine learning it will already choose for you )",
+  "auto message for all the matches , so you will not need to think what to send them for the first time ( all you have to do is just to continue typing with the women who already answer for the first message). ",
+  "it will like back all the women who already liked you , so you will not have to do it by your self",
+]
