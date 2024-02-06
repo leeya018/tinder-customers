@@ -6,7 +6,7 @@ const FormData = require("form-data")
 // const { addImageUrl } = require("lib/api");
 let data = new FormData()
 
-const filePath = "messages_english.txt"
+const filePath = "starters/messages_english.txt"
 
 const getMessagesApi = async (matchId) => {
   let config = {
@@ -324,6 +324,40 @@ const getImagesApi = async (counter) => {
       //   return res.status(450).json(error);
     })
 }
+const getProfileApi = async () => {
+  const body = {
+    user: {
+      global_mode: {
+        language_preferences: [
+          {
+            language: "en",
+            is_selected: true,
+          },
+        ],
+      },
+    },
+  }
+  var config = {
+    method: "post",
+    maxBodyLength: Infinity,
+
+    url: `https://api.gotinder.com/v2/profile?locale=en`,
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+      "x-auth-token": process.env.NEXT_PUBLIC_X_AUTH_TOKEN,
+    },
+    data: body,
+  }
+  return axios(config)
+    .then(function (response) {
+      return response.data
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+}
 
 // const getLotsImages = async () => {
 //   let counter = 65980;
@@ -349,5 +383,6 @@ module.exports = {
   readImagesFromTxt,
   getImagesApi,
   addArrDataToTxt,
+  getProfileApi,
   // getLotsImages,
 }

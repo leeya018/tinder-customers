@@ -14,6 +14,8 @@ const { getDate, sleep, getToken, convertPrediction } = require("./util")
 
 const { model, predict } = require("./modelCreate")
 
+const { getProfileApi } = require("./api")
+
 let likes = 0
 let passes = 0
 const likesLimit = 100
@@ -130,8 +132,9 @@ const likeAutomation = async () => {
   console.log({ likes, passes })
 }
 
-const messageAutomation = async () => {
+const messageAutomation = async (myProfileId) => {
   console.log("==================MESSAGE_AUTOMATION========================")
+  console.log({ myProfileId })
   const paylod = {
     message: 0,
     amount: 60,
@@ -145,7 +148,7 @@ const messageAutomation = async () => {
       const message = getRandomMessage()
 
       const payloadMessage = {
-        userId: process.env.NEXT_PUBLIC_MY_USER_ID,
+        userId: myProfileId,
         otherId: match?.person._id,
         matchId: match?.id,
         sessionId: null,
@@ -186,10 +189,12 @@ const main = async () => {
 
   // intervalForever(updateToken, day); // each day updaet the token in file and then in the env
   // await sleep(minute);
-
+  const res = await getProfileApi()
+  const myProfileId = res.data.user._id
+  console.log(myProfileId)
   intervalForever(likeAll, day / 2)
   intervalForever(likeAutomation, day / 10)
-  intervalForever(messageAutomation, day / 2)
+  intervalForever(() => messageAutomation(myProfileId), day / 2)
 
   console.log("==================END_MAIN========================")
 
@@ -225,5 +230,5 @@ const outputAll = "C:\\Users\\user\\Documents\\tinder-tensor\\all"
 // imagesConv(sourcePass, outputPass);
 // start(l, o);
 
-// main()
+main()
 module.exports = { main }
