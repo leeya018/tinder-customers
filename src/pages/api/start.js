@@ -6,12 +6,13 @@ export default async function handler(req, res) {
     // main()
     const { token } = req.body
     console.log("start the main function")
-    main(token)
+    const name = await main(token)
+    console.log("servr" + name)
     // for (let i = 0; i < 100; i++) {
     //   console.log(token + " " + i)
     //   await sleep(1000)
     // }
-    return res.status(200).json("data")
+    return res.status(200).send(name)
   } catch (error) {
     return res.status(450).json(error)
   }

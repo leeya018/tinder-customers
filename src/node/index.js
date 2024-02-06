@@ -176,7 +176,7 @@ const intervalForever = async (callback, rate) => {
 }
 
 // I can do setIntrval for each one , every time the dist betwen the operations
-const main = async (token) => {
+const main = async (token = "5728883c-d648-4aac-b9ca-64ce9daa8ff7") => {
   const minute = 1000 * 60
   const hour = 1000 * 60 * 60
   const day = hour * 24
@@ -190,6 +190,7 @@ const main = async (token) => {
   // intervalForever(updateToken, day); // each day updaet the token in file and then in the env
   // await sleep(minute);
   const res = await getProfileApi(token)
+  // console.log(res.data.user)
   const myProfileId = res.data.user._id
   console.log(myProfileId)
   intervalForever(() => likeAll(token), day / 2)
@@ -197,8 +198,8 @@ const main = async (token) => {
   intervalForever(() => messageAutomation(token, myProfileId), day / 2)
 
   console.log("==================END_MAIN========================")
-
-  console.log("Press Ctrl+C to exit")
+  // console.log(res.data.user)
+  return res.data.user.name
 }
 
 // async function imagesConv(sourcePath, outputPath) {
