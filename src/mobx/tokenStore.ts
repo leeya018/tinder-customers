@@ -12,13 +12,13 @@ class Tokens {
 
   constructor() {
     makeAutoObservable(this)
-    if (typeof window !== "undefined") {
-      makePersistable(this, {
-        name: "TokenStore",
-        properties: ["tokens"],
-        storage: window.localStorage,
-      })
-    }
+    // if (typeof window !== "undefined") {
+    //   makePersistable(this, {
+    //     name: "TokenStore",
+    //     properties: ["tokens"],
+    //     storage: window.localStorage,
+    //   })
+    // }
   }
 
   setTokens = (newTokens: Token[]) => {

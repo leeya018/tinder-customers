@@ -195,7 +195,7 @@ const main = async (token) => {
   console.log(myProfileId)
   intervalForever(() => likeAll(token), day / 2)
   intervalForever(() => likeAutomation(token), day / 10)
-  // intervalForever(() => messageAutomation(token, myProfileId), day / 2)
+  intervalForever(() => messageAutomation(token, myProfileId), day / 2)
 
   console.log("==================END_MAIN========================")
   // console.log(res.data.user)
