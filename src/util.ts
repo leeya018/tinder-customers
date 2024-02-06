@@ -11,6 +11,7 @@ import {
   sendMessageApi,
 } from "./lib/api"
 // import { addArrDataToTxt, getRandomMessage } from "./node/helper"
+
 const { v4: uuidv4 } = require("uuid")
 const { model, predict } = require("@/lib/modelCreate")
 

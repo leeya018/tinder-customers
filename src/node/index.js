@@ -30,13 +30,13 @@ const payloadLike = (s_number) => ({
   liked_content_id: uuidv4(),
 })
 
-const likeAll = async () => {
+const likeAll = async (token) => {
   // console.log("==================LIKEALL========================")
-  const recs = await getMyLikesApi() // GET ALL LIKES FROM WOMEN
+  const recs = await getMyLikesApi(token) // GET ALL LIKES FROM WOMEN
   for (const rec of recs) {
     console.log(rec.user)
     console.log(rec.user._id, rec.s_number)
-    let res1 = await likeUserApi(rec.user, payloadLike(rec.s_number))
+    let res1 = await likeUserApi(token, rec.user, payloadLike(rec.s_number))
     console.log("like user id : " + rec.user._id)
     await sleep()
   }
@@ -44,7 +44,7 @@ const likeAll = async () => {
 
 // let counter = 0
 
-const isGoodFit = async (rec) => {
+const isGoodFit = async (token, rec) => {
   // console.log({ rec })
   const user = rec.user
   const photoUrls = user.photos.map((photos) => photos.url)
@@ -80,10 +80,10 @@ const isGoodFit = async (rec) => {
   return isBioFit || pred.like > 0.4
   // return isBioFit
 }
-const iterateRecs = async () => {
+const iterateRecs = async (token) => {
   let res = null
   do {
-    res = await getRecsApi()
+    res = await getRecsApi(token)
     await sleep(8000)
   } while (!res || !res?.data || res?.data?.results?.length < 0)
   console.log({ res })
@@ -104,16 +104,16 @@ const iterateRecs = async () => {
     try {
       // console.log(pred)
       // if (convertPrediction(prediction).like > 0.5) {
-      const isFit = await isGoodFit(rec)
+      const isFit = await isGoodFit(token, rec)
       if (isFit) {
         // if (randNum > 0.3) {
         console.log("HHHHHHHHHOOOOOOOOOOOOOOOOOOTTTTTTTTTTTTTTTTTTTTTTTT")
         likes++
-        res1 = await likeUserApi(rec.user, payloadLike(rec.s_number))
+        res1 = await likeUserApi(token, rec.user, payloadLike(rec.s_number))
         console.log("LIKE USER : " + rec.user._id)
       } else {
         passes++
-        res1 = await passUserApi(rec.user, rec.s_number, 1)
+        res1 = await passUserApi(token, rec.user, rec.s_number, 1)
         console.log("PASS USER : " + rec.user._id)
       }
     } catch (error) {
@@ -124,15 +124,15 @@ const iterateRecs = async () => {
   console.log({ likes, passes })
 }
 
-const likeAutomation = async () => {
+const likeAutomation = async (token) => {
   console.log("==================LIKE_AUTOMATION========================")
   while (likes < likesLimit && passes + likes < 100) {
-    await iterateRecs()
+    await iterateRecs(token)
   }
   console.log({ likes, passes })
 }
 
-const messageAutomation = async (myProfileId) => {
+const messageAutomation = async (token, myProfileId) => {
   console.log("==================MESSAGE_AUTOMATION========================")
   console.log({ myProfileId })
   const paylod = {
@@ -141,7 +141,7 @@ const messageAutomation = async (myProfileId) => {
     is_tinder_u: true,
   }
   try {
-    const res = await getMatchesApi(paylod)
+    const res = await getMatchesApi(token, paylod)
 
     const matches = res.data?.matches
     for (const match of matches) {
@@ -155,7 +155,7 @@ const messageAutomation = async (myProfileId) => {
         message,
       }
       console.log(payloadMessage)
-      const res = await sendMessageApi(payloadMessage)
+      const res = await sendMessageApi(token, payloadMessage)
       console.log("MESSAGE: " + message + "TO : " + match.person._id)
       await sleep()
     }
@@ -176,25 +176,25 @@ const intervalForever = async (callback, rate) => {
 }
 
 // I can do setIntrval for each one , every time the dist betwen the operations
-const main = async () => {
+const main = async (token) => {
   const minute = 1000 * 60
   const hour = 1000 * 60 * 60
   const day = hour * 24
   const week = day * 7
   const second = 1000
   // process.env.NEXT_PUBLIC_X_AUTH_TOKEN = "";
-  console.log(process.env.NEXT_PUBLIC_X_AUTH_TOKEN)
+  // console.log(process.env.NEXT_PUBLIC_X_AUTH_TOKEN)
 
   console.log("==================START_MAIN========================")
 
   // intervalForever(updateToken, day); // each day updaet the token in file and then in the env
   // await sleep(minute);
-  const res = await getProfileApi()
+  const res = await getProfileApi(token)
   const myProfileId = res.data.user._id
   console.log(myProfileId)
-  intervalForever(likeAll, day / 2)
-  intervalForever(likeAutomation, day / 10)
-  intervalForever(() => messageAutomation(myProfileId), day / 2)
+  intervalForever(() => likeAll(token), day / 2)
+  intervalForever(() => likeAutomation(token), day / 10)
+  intervalForever(() => messageAutomation(token, myProfileId), day / 2)
 
   console.log("==================END_MAIN========================")
 

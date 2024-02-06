@@ -8,7 +8,7 @@ let data = new FormData()
 
 const filePath = "starters/messages_english.txt"
 
-const getMessagesApi = async (matchId) => {
+const getMessagesApi = async (token, matchId) => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
@@ -17,7 +17,7 @@ const getMessagesApi = async (matchId) => {
       "Content-Type": "application/json",
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
-      "x-auth-token": process.env.NEXT_PUBLIC_X_AUTH_TOKEN,
+      "x-auth-token": token,
     },
   }
 
@@ -30,7 +30,7 @@ const getMessagesApi = async (matchId) => {
       return error.message
     })
 }
-const unmatchUsersApi = async (matchId) => {
+const unmatchUsersApi = async (token, matchId) => {
   let data = ""
   let config = {
     method: "delete",
@@ -40,7 +40,7 @@ const unmatchUsersApi = async (matchId) => {
       "Content-Type": "application/json",
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
-      "x-auth-token": process.env.NEXT_PUBLIC_X_AUTH_TOKEN,
+      "x-auth-token": token,
     },
     data: data,
   }
@@ -54,8 +54,8 @@ const unmatchUsersApi = async (matchId) => {
       return error.message
     })
 }
-const getMyLikesApi = async () => {
-  console.log({ TOKEN: process.env.NEXT_PUBLIC_X_AUTH_TOKEN })
+const getMyLikesApi = async (token) => {
+  // console.log({ TOKEN: token })
   let config = {
     method: "get",
     maxBodyLength: Infinity,
@@ -64,7 +64,7 @@ const getMyLikesApi = async () => {
       "Content-Type": "application/json",
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
-      "x-auth-token": process.env.NEXT_PUBLIC_X_AUTH_TOKEN,
+      "x-auth-token": token,
     },
   }
 
@@ -80,7 +80,7 @@ const getMyLikesApi = async () => {
       return error.message
     })
 }
-const getMatchesApi = async (payload) => {
+const getMatchesApi = async (token, payload) => {
   const { message, is_tinder_u, amount } = payload
   var config = {
     method: "get",
@@ -90,7 +90,7 @@ const getMatchesApi = async (payload) => {
       "Content-Type": "application/json",
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
-      "x-auth-token": process.env.NEXT_PUBLIC_X_AUTH_TOKEN,
+      "x-auth-token": token,
     },
   }
   return axios(config)
@@ -103,22 +103,7 @@ const getMatchesApi = async (payload) => {
     })
 }
 
-const getRandomMessage = () => {
-  try {
-    const data = fs.readFileSync(filePath, "utf8")
-    const lines = data.split("\n").filter((line) => line.trim() !== "")
-    const chosenLine = Math.floor(Math.random() * (lines.length - 1))
-    console.log({ chosenLine })
-    if (chosenLine < lines.length && chosenLine >= 0) {
-      return lines[chosenLine]
-    }
-
-    throw new Error("Line is out of range" + chosenLine)
-  } catch (err) {
-    return err.message
-  }
-}
-const sendMessageApi = async (data) => {
+const sendMessageApi = async (token, data) => {
   let config = {
     method: "post",
     maxBodyLength: Infinity,
@@ -127,7 +112,7 @@ const sendMessageApi = async (data) => {
       "Content-Type": "application/json",
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
-      "x-auth-token": process.env.NEXT_PUBLIC_X_AUTH_TOKEN,
+      "x-auth-token": token,
     },
     data: JSON.stringify(data),
   }
@@ -142,7 +127,7 @@ const sendMessageApi = async (data) => {
       return error.message
     })
 }
-const passUserApi = async (user, s_number, user_traveling) => {
+const passUserApi = async (token, user, s_number, user_traveling) => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
@@ -151,7 +136,7 @@ const passUserApi = async (user, s_number, user_traveling) => {
       "Content-Type": "application/json",
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
-      "x-auth-token": process.env.NEXT_PUBLIC_X_AUTH_TOKEN,
+      "x-auth-token": token,
     },
   }
   return axios
@@ -168,8 +153,8 @@ const passUserApi = async (user, s_number, user_traveling) => {
     })
 }
 
-const likeUserApi = async (user, data) => {
-  // console.log({ token: process.env.NEXT_PUBLIC_X_AUTH_TOKEN })
+const likeUserApi = async (token, user, data) => {
+  // console.log({ token: token })
   let config = {
     method: "post",
     maxBodyLength: Infinity,
@@ -180,7 +165,7 @@ const likeUserApi = async (user, data) => {
       Accept: "application/json",
       "Content-Type": "application/json",
       "User-Agent": "Chrome/100.0.4896.127",
-      "x-auth-token": process.env.NEXT_PUBLIC_X_AUTH_TOKEN,
+      "x-auth-token": token,
     },
     data: data,
   }
@@ -200,7 +185,7 @@ const likeUserApi = async (user, data) => {
       return error.message
     })
 }
-const getRecsApi = async () => {
+const getRecsApi = async (token) => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
@@ -209,7 +194,7 @@ const getRecsApi = async () => {
       "Content-Type": "application/json",
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
-      "x-auth-token": process.env.NEXT_PUBLIC_X_AUTH_TOKEN,
+      "x-auth-token": token,
     },
   }
 
@@ -247,6 +232,108 @@ async function fromUrlToImage(url, pathFileName) {
     console.log(error.data)
   }
 }
+
+const getImagesApi = async (token, counter) => {
+  let outputPath = `C:\\Users\\user\\Downloads\\womenPics\\${counter}.png`
+
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `https://api.gotinder.com/v2/recs/core?locale=en`,
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+      "x-auth-token": token,
+    },
+  }
+
+  return axios
+    .request(config)
+    .then(async (response) => {
+      const items = response.data.data.results
+      const imageUrls = items.map((item) =>
+        item.user.photos.map((photos) => photos.url)
+      )
+      // console.log(imageUrls);
+      const images = imageUrls.map((images) => images[0])
+      console.log(images)
+      // for (const url of images) {
+      //   await fromUrlToImage(url, outputPath);
+      // }
+    })
+    .catch((error) => {
+      console.log(error.message)
+      //   return res.status(450).json(error);
+    })
+}
+const getProfileApi = async (token) => {
+  const body = {
+    user: {
+      global_mode: {
+        language_preferences: [
+          {
+            language: "en",
+            is_selected: true,
+          },
+        ],
+      },
+    },
+  }
+  var config = {
+    method: "post",
+    maxBodyLength: Infinity,
+
+    url: `https://api.gotinder.com/v2/profile?locale=en`,
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+      "x-auth-token": token,
+    },
+    data: body,
+  }
+  return axios(config)
+    .then(function (response) {
+      return response.data
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+}
+
+const getRandomMessage = () => {
+  try {
+    const data = fs.readFileSync(filePath, "utf8")
+    const lines = data.split("\n").filter((line) => line.trim() !== "")
+    const chosenLine = Math.floor(Math.random() * (lines.length - 1))
+    console.log({ chosenLine })
+    if (chosenLine < lines.length && chosenLine >= 0) {
+      return lines[chosenLine]
+    }
+
+    throw new Error("Line is out of range" + chosenLine)
+  } catch (err) {
+    return err.message
+  }
+}
+
+function addArrDataToTxt(fileName, strArr, txt) {
+  for (const str of strArr) {
+    fs.appendFileSync(fileName, str + "\n")
+  }
+  fs.appendFileSync(fileName, txt + "\n\n\n\n")
+}
+
+function readImagesFromTxt(url) {
+  // Read the file content
+  const content = fs.readFileSync(url, "utf8")
+
+  // Split the content by newline character to get an array
+  const lines = content.split("\n").filter(Boolean) // filter(Boolean) removes any empty lines
+
+  return lines
+}
 async function appendImageFromUrlToFormData(url, formData, fieldName) {
   const response = await axios({
     method: "GET",
@@ -273,93 +360,7 @@ function addDataToTxt(fileName, str) {
     }
   })
 }
-function addArrDataToTxt(fileName, strArr, txt) {
-  for (const str of strArr) {
-    fs.appendFileSync(fileName, str + "\n")
-  }
-  fs.appendFileSync(fileName, txt + "\n\n\n\n")
-}
-
-function readImagesFromTxt(url) {
-  // Read the file content
-  const content = fs.readFileSync(url, "utf8")
-
-  // Split the content by newline character to get an array
-  const lines = content.split("\n").filter(Boolean) // filter(Boolean) removes any empty lines
-
-  return lines
-}
-
-const getImagesApi = async (counter) => {
-  let outputPath = `C:\\Users\\user\\Downloads\\womenPics\\${counter}.png`
-
-  let config = {
-    method: "get",
-    maxBodyLength: Infinity,
-    url: `https://api.gotinder.com/v2/recs/core?locale=en`,
-    headers: {
-      "Content-Type": "application/json",
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
-      "x-auth-token": process.env.NEXT_PUBLIC_X_AUTH_TOKEN,
-    },
-  }
-
-  return axios
-    .request(config)
-    .then(async (response) => {
-      const items = response.data.data.results
-      const imageUrls = items.map((item) =>
-        item.user.photos.map((photos) => photos.url)
-      )
-      // console.log(imageUrls);
-      const images = imageUrls.map((images) => images[0])
-      console.log(images)
-      // for (const url of images) {
-      //   await fromUrlToImage(url, outputPath);
-      // }
-    })
-    .catch((error) => {
-      console.log(error.message)
-      //   return res.status(450).json(error);
-    })
-}
-const getProfileApi = async () => {
-  const body = {
-    user: {
-      global_mode: {
-        language_preferences: [
-          {
-            language: "en",
-            is_selected: true,
-          },
-        ],
-      },
-    },
-  }
-  var config = {
-    method: "post",
-    maxBodyLength: Infinity,
-
-    url: `https://api.gotinder.com/v2/profile?locale=en`,
-    headers: {
-      "Content-Type": "application/json",
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
-      "x-auth-token": process.env.NEXT_PUBLIC_X_AUTH_TOKEN,
-    },
-    data: body,
-  }
-  return axios(config)
-    .then(function (response) {
-      return response.data
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
-}
-
-// const getLotsImages = async () => {
+// const getLotsImages = async (token,) => {
 //   let counter = 65980;
 //   while (true) {
 //     await getImagesApi(counter);
