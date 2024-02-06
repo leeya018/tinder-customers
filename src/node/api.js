@@ -146,7 +146,9 @@ const passUserApi = async (token, user, s_number, user_traveling) => {
     .then((response) => {
       const firstImage = user.photos.map((photos) => photos.url)[0]
       console.log(firstImage)
-      // addDataToTxt("../tensorFolder/pass.txt", firstImage)
+      const passPath =
+        "C://Users//user//Desktop//code//lee//tinder-customers//src//node//tensorFolder//pass.txt"
+      addDataToTxt(passPath, token + " - " + firstImage)
       return response.data
     })
     .catch((error) => {
@@ -179,7 +181,9 @@ const likeUserApi = async (token, user, data) => {
       const firstImage = user.photos.map((photos) => photos.url)[0]
 
       console.log(firstImage)
-      // addDataToTxt("../tensorFolder/like.txt", firstImage)
+      const likePath =
+        "C://Users//user//Desktop//code//lee//tinder-customers//src//node//tensorFolder//like.txt"
+      addDataToTxt(likePath, token + " - " + firstImage)
       return response.data
     })
     .catch((error) => {
