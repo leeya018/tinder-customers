@@ -12,22 +12,19 @@ import { messageStore } from "@/mobx/messageStore"
 import MessageModal from "@/ui/modal/message"
 import { ModalStore } from "@/mobx/modalStore"
 import { instructions, modals } from "@/util"
+import tokensStore, { Token } from "@/mobx/tokenStore"
 
-type Token = {
-  key: string
-  isProcess: boolean
-  name: string
-}
 const RootPage = observer(() => {
-  const [tokens, setTokens] = useState<Token[]>([])
+  const { tokens, addToken, setTokens, setToken } = tokensStore
 
   const isPlusAvailable = () => {
-    return tokens.length === 0 || tokens[0].name !== ""
+    return tokensStore.tokens.length === 0 || tokens[0].name !== ""
   }
 
   const start = async (index: number) => {
     let dupTokens = [...tokens]
     dupTokens[index].isProcess = true
+
     const name = await startApi(tokens[index].key)
     console.log(name)
     dupTokens[index].name = name
@@ -36,7 +33,7 @@ const RootPage = observer(() => {
   const add = () => {
     const emptyTokensAmount = tokens.filter((token) => token.key === "").length
     if (emptyTokensAmount < 1) {
-      setTokens((prev) => [{ key: "", isProcess: false, name: "" }, ...prev])
+      addToken({ key: "", isProcess: false, name: "" })
     } else {
       messageStore.setMessage("cannot add more than 1 empty box", 400)
     }

@@ -29,7 +29,7 @@ const getMessagesApi = async (token, matchId) => {
       return response.data.data.messages
     })
     .catch((error) => {
-      return error.message
+      throw error.message
     })
 }
 const unmatchUsersApi = async (token, matchId) => {
@@ -53,7 +53,7 @@ const unmatchUsersApi = async (token, matchId) => {
       return response.data
     })
     .catch((error) => {
-      return error.message
+      throw error.message
     })
 }
 const getMyLikesApi = async (token) => {
@@ -79,7 +79,7 @@ const getMyLikesApi = async (token) => {
     .catch((error) => {
       console.log(error)
       console.log(error.message)
-      return error.message
+      throw error.message
     })
 }
 const getMatchesApi = async (token, payload) => {
@@ -101,7 +101,7 @@ const getMatchesApi = async (token, payload) => {
     })
     .catch(function (error) {
       console.log(error)
-      return error.message
+      throw error.message
     })
 }
 
@@ -126,7 +126,7 @@ const sendMessageApi = async (token, data) => {
     })
     .catch((error) => {
       // console.log(error);
-      return error.message
+      throw error.message
     })
 }
 const passUserApi = async (token, user, s_number, user_traveling) => {
@@ -151,7 +151,7 @@ const passUserApi = async (token, user, s_number, user_traveling) => {
     })
     .catch((error) => {
       console.log(error.message)
-      return error.message
+      throw error.message
     })
 }
 
@@ -184,7 +184,7 @@ const likeUserApi = async (token, user, data) => {
     })
     .catch((error) => {
       //   console.log(error);
-      return error.message
+      throw error.message
     })
 }
 const getRecsApi = async (token) => {
