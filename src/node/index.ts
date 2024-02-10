@@ -1,3 +1,8 @@
+import { addLikeFirestore, addMessageCountFirestore } from "@/api/firestore"
+import { Like } from "@/api/firestore/like/interfaces"
+import { Message } from "@/api/firestore/message/interfaces"
+import { Timestamp } from "firebase/firestore"
+
 const {
   getRecsApi,
   likeUserApi,
@@ -30,13 +35,21 @@ const payloadLike = (s_number) => ({
   liked_content_id: uuidv4(),
 })
 
-const likeAll = async (token) => {
+const likeAll = async (token, myProfileId) => {
   // console.log("==================LIKEALL========================")
   const recs = await getMyLikesApi(token) // GET ALL LIKES FROM WOMEN
   for (const rec of recs) {
     console.log(rec.user)
     console.log(rec.user._id, rec.s_number)
     let res1 = await likeUserApi(token, rec.user, payloadLike(rec.s_number))
+    const firstImage = rec.user.photos.map((photos: any) => photos.url)[0]
+
+    const newLike: Like = {
+      userId: myProfileId,
+      likeUrl: firstImage,
+      createdDate: Timestamp.now(),
+    }
+    await addLikeFirestore(newLike)
     console.log("like user id : " + rec.user._id)
     await sleep()
   }
@@ -80,7 +93,7 @@ const isGoodFit = async (token, rec) => {
   return isBioFit || pred.like > 0.4
   // return isBioFit
 }
-const iterateRecs = async (token) => {
+const iterateRecs = async (token, myProfileId) => {
   let res = null
   do {
     res = await getRecsApi(token)
@@ -110,6 +123,14 @@ const iterateRecs = async (token) => {
         console.log("HHHHHHHHHOOOOOOOOOOOOOOOOOOTTTTTTTTTTTTTTTTTTTTTTTT")
         likes++
         res1 = await likeUserApi(token, rec.user, payloadLike(rec.s_number))
+        const firstImage = rec.user.photos.map((photos: any) => photos.url)[0]
+
+        const newLike: Like = {
+          userId: myProfileId,
+          likeUrl: firstImage,
+          createdDate: Timestamp.now(),
+        }
+        await addLikeFirestore(newLike)
         console.log("LIKE USER : " + rec.user._id)
       } else {
         passes++
@@ -124,10 +145,10 @@ const iterateRecs = async (token) => {
   console.log({ likes, passes })
 }
 
-const likeAutomation = async (token) => {
+const likeAutomation = async (token, myProfileId) => {
   console.log("==================LIKE_AUTOMATION========================")
   while (likes < likesLimit && passes + likes < 100) {
-    await iterateRecs(token)
+    await iterateRecs(token, myProfileId)
   }
   console.log({ likes, passes })
 }
@@ -156,6 +177,12 @@ const messageAutomation = async (token, myProfileId) => {
       }
       console.log(payloadMessage)
       const res = await sendMessageApi(token, payloadMessage)
+      const newMessage: Message = {
+        userId: myProfileId,
+        amount: 1,
+        createdDate: Timestamp.now(),
+      }
+      await addMessageCountFirestore(newMessage)
       console.log("MESSAGE: " + message + "TO : " + match.person._id)
       await sleep()
     }
@@ -175,6 +202,18 @@ const intervalForever = async (callback, rate) => {
   }
 }
 
+const test = async (token) => {
+  const res = await getProfileApi(token)
+  const myProfileId = res.data.user._id
+
+  const newLike: Like = {
+    userId: myProfileId,
+    likeUrl: "firstImage2/3324",
+    createdDate: Timestamp.now(),
+  }
+  await addLikeFirestore(newLike)
+  // await addMessageCountFirestore(newMessage)
+}
 // I can do setIntrval for each one , every time the dist betwen the operations
 const main = async (token) => {
   const minute = 1000 * 60
@@ -193,8 +232,8 @@ const main = async (token) => {
   // console.log(res.data.user)
   const myProfileId = res.data.user._id
   console.log(myProfileId)
-  intervalForever(() => likeAll(token), day / 2)
-  intervalForever(() => likeAutomation(token), day / 10)
+  intervalForever(() => likeAll(token, myProfileId), day / 2)
+  intervalForever(() => likeAutomation(token, myProfileId), day / 10)
   intervalForever(() => messageAutomation(token, myProfileId), day / 2)
 
   console.log("==================END_MAIN========================")
@@ -232,4 +271,4 @@ const outputAll = "C:\\Users\\user\\Documents\\tinder-tensor\\all"
 // start(l, o);
 
 // main()
-module.exports = { main }
+module.exports = { main, test }

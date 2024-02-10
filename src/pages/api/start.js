@@ -1,5 +1,4 @@
-import { main } from "../../node"
-import { sleep } from "../../node/util"
+import { main, test } from "../../node"
 
 export default async function handler(req, res) {
   try {
@@ -7,7 +6,9 @@ export default async function handler(req, res) {
     const { token } = req.body
     console.log("start the main function")
     const name = await main(token)
-    console.log("servr" + name)
+    // const name = await test(token)
+
+    // console.log("servr" + name)
     // for (let i = 0; i < 100; i++) {
     //   console.log(token + " " + i)
     //   await sleep(1000)

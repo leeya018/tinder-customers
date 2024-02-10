@@ -1,7 +1,7 @@
 import { db } from "@/firebase"
 import { collection, getDocs, query, where } from "firebase/firestore"
 
-export const getMessagesApi = async (userId: string) => {
+export const getMessages = async (userId: string) => {
   const collectionRef = collection(db, "messages")
   const q = query(collectionRef, where("userId", "==", userId))
   const querySnapshot = await getDocs(q)

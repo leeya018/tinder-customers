@@ -1,29 +1,28 @@
-import { db } from "@/firebase"
 import {
-  Timestamp,
-  addDoc,
-  arrayUnion,
-  collection,
-  doc,
   getDocs,
+  collection,
+  Timestamp,
+  doc,
+  addDoc,
   query,
-  updateDoc,
   where,
+  updateDoc,
+  increment,
 } from "firebase/firestore"
-import { Like } from "./interfaces"
+import { db } from "@/firebase"
+import { Message } from "./interfaces"
 
-export const addLike = async (newLike: Like): Promise<string | void> => {
+export const addMessageCount = async (newMessage: Message) => {
   try {
-    const { userId, createdDate, likeUrl } = newLike
+    const { userId, createdDate } = newMessage
     const date = createdDate.toDate()
 
     // Start of the day
     const startOfDay = new Date(date.setHours(0, 0, 0, 0))
-
     const endOfDay = new Date(startOfDay)
     endOfDay.setDate(startOfDay.getDate() + 1)
 
-    const messageCollectionRef = collection(db, "likes")
+    const messageCollectionRef = collection(db, "messages")
     const q = query(
       messageCollectionRef,
       where("userId", "==", userId),
@@ -36,18 +35,14 @@ export const addLike = async (newLike: Like): Promise<string | void> => {
     if (!querySnapshot.empty) {
       // Update the first document found
       const documentToUpdate = querySnapshot.docs[0]
-      await updateDoc(doc(db, "likes", documentToUpdate.id), {
-        likeUrls: arrayUnion(likeUrl),
+      await updateDoc(doc(db, "messages", documentToUpdate.id), {
+        amount: increment(1),
       })
       console.log("Document updated successfully")
       return "Document updated successfully"
     } else {
       // Add a new document if no matching document is found
-      const docRef = await addDoc(messageCollectionRef, {
-        userId,
-        createdDate,
-        likeUrls: [likeUrl],
-      })
+      const docRef = await addDoc(messageCollectionRef, newMessage)
       console.log("Message added successfully")
       return docRef.id
     }
