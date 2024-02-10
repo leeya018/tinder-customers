@@ -233,3 +233,11 @@ export const instructions = [
   "it will like back all the women who already liked you , so you will not have to do it by your self",
   "it can find a match according to search words that you want  it to look for in the bio",
 ]
+
+export const convertDate = (date) => {
+  const dateMilliseconds = date.seconds * 1000 + date.nanoseconds / 1000000
+
+  // Create a Moment.js date object
+  const momentDate = moment(dateMilliseconds)
+  return momentDate
+}

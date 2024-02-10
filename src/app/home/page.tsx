@@ -28,14 +28,14 @@ const HomePage = observer(() => {
       <Button
         variant="outlined"
         className=""
-        onClick={() => getMessagesFirestore("pluyf11")}
+        onClick={() => getMessagesFirestore("5980deb74a75f5b45fb118ee")}
       >
         get messages
       </Button>
       <Button
         variant="outlined"
         className=""
-        onClick={() => getLikesFirestore("pluyf1")}
+        onClick={() => getLikesFirestore("5980deb74a75f5b45fb118ee")}
       >
         get likes
       </Button>

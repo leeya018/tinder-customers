@@ -9,10 +9,11 @@ import FilterInput from "@/ui/input/filter"
 import filterStore from "@/mobx/filterStore"
 import CustomerList from "@/components/customerList"
 import { CustomerStore } from "@/mobx/customerStore"
+import Graph from "@/components/graph"
 
 const ViewPage = observer(() => {
   return (
-    <div className="w-[100vw] h-[100vh]">
+    <div className="w-[100vw] h-[100vh] mb-2">
       <div className="mt-10 w-full flex justify-center items-center">
         <div className="flex items-center">
           <Title>View customers :</Title>
@@ -21,18 +22,26 @@ const ViewPage = observer(() => {
           </div>
         </div>
       </div>
-      <div className="w-full flex h-full gap-5">
-        <div className="w-[40%]">
-          <FilterInput
-            onChange={(e) => filterStore.setFilter(e.target.value)}
-            value={filterStore.search}
-            placeholder="search customers"
-          />
-          <CustomerList />
-        </div>
-        <div className=" w-full flex flex-col items-center justify-center">
-          <div>digram1</div>
-          <div>digram2</div>
+      <div className="w-full h-full flex justify-center ">
+        <div className="w-[80%]  flex flex-col justify-center h-full gap-5">
+          <div className="h-full w-full">
+            <FilterInput
+              onChange={(e) => filterStore.setFilter(e.target.value)}
+              value={filterStore.search}
+              placeholder="search customers"
+            />
+            <div className="relative w-full">
+              <div className="absolute w-full">
+                <CustomerList />
+              </div>
+            </div>
+          </div>
+          <div className="h-full flex flex-col items-center justify-center ">
+            <Graph
+              likes={CustomerStore.likes}
+              messages={CustomerStore.messages}
+            />
+          </div>
         </div>
       </div>
     </div>
