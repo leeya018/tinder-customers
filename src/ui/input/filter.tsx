@@ -5,6 +5,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6"
 type FilterInputProps = {
   onChange: (e: any) => void
   value: string
+  placeholder: string
 }
 const FilterInput: FC<FilterInputProps> = ({ ...rest }) => {
   const [isFocused, setIsFocused] = useState(false)
@@ -21,7 +22,6 @@ const FilterInput: FC<FilterInputProps> = ({ ...rest }) => {
         type="string"
         className="pl-5 w-full py-6  outline-none  border-color-text-gray
        placeholder:text-color-text-gray placeholder:pl-10 "
-        placeholder="Search"
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />

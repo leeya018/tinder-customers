@@ -12,7 +12,7 @@ import { collection, doc, setDoc } from "firebase/firestore"
 
 import { NavNames } from "@/util"
 import { User } from "@/api/firestore/user/interfaces"
-import { addUserApi } from "@/api/firestore/user/addUser"
+import { addUserFirestore } from "@/api/firestore"
 
 const AuthContext = createContext<AuthReturnType | undefined>(undefined)
 
@@ -37,7 +37,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderType) => {
       .then(async (UserCredentialImp) => {
         const { email, displayName, uid } = UserCredentialImp.user
         const newUser: User = { email, displayName, userId: uid }
-        await addUserApi(newUser)
+        await addUserFirestore(newUser)
         router.push(`/${NavNames.home}`)
       })
       .catch((err) => {

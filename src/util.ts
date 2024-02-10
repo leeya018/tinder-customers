@@ -21,6 +21,7 @@ export const NavNames = {
   products: "products",
   login: "login",
   root: "",
+  view: "view",
 }
 
 const sleep = (waitTime = null) => {
