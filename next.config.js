@@ -6,7 +6,7 @@ const nextConfig = {
     domains: [
       "lh3.googleusercontent.com",
       "oaidalleapiprodscus.blob.core.windows.net",
-      "dating-empire.netlify.app",
+      "tinder-customers.netlify.app",
     ],
   },
   async headers() {
@@ -16,7 +16,7 @@ const nextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: `https://dating-empire.netlify.app`,
+            value: `https://tinder-customers.netlify.app`,
           },
         ],
       },

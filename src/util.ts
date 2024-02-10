@@ -20,6 +20,7 @@ export const NavNames = {
   commonQuestions: "commonQuestions",
   products: "products",
   login: "login",
+  root: "",
 }
 
 const sleep = (waitTime = null) => {

@@ -1,73 +1,74 @@
-// "use client"
-// import React, { useContext, createContext, useState, useEffect } from "react"
-// import {
-//   signInWithPopup,
-//   signOut,
-//   onAuthStateChanged,
-//   GoogleAuthProvider,
-// } from "firebase/auth"
-// import { auth, db } from "@/firebase"
-// import { useRouter } from "next/navigation"
-// import { collection, doc, setDoc } from "firebase/firestore"
-// import { User } from "@/api/users/interfaces"
-// import * as API from "@/api/users"
-// import { NavNames } from "@/util"
+"use client"
+import React, { useContext, createContext, useState, useEffect } from "react"
+import {
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+} from "firebase/auth"
+import { auth, db } from "@/firebase"
+import { useRouter } from "next/navigation"
+import { collection, doc, setDoc } from "firebase/firestore"
 
-// const AuthContext = createContext<AuthReturnType | undefined>(undefined)
+import { NavNames } from "@/util"
+import { User } from "@/api/firestore/user/interfaces"
+import { addUserApi } from "@/api/firestore/user/addUser"
 
-// type AuthContextProviderType = {
-//   children: React.ReactNode
-// }
-// export const AuthContextProvider = ({ children }: AuthContextProviderType) => {
-//   const [user, setUser] = useState<any>(null)
-//   const router = useRouter()
-//   const [isLoading, setIsLoading] = useState<boolean>(false)
+const AuthContext = createContext<AuthReturnType | undefined>(undefined)
 
-//   useEffect(() => {
-//     const unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
-//       setUser(currentUser)
-//     })
-//     return () => unsubscribe()
-//   }, [user])
+type AuthContextProviderType = {
+  children: React.ReactNode
+}
+export const AuthContextProvider = ({ children }: AuthContextProviderType) => {
+  const [user, setUser] = useState<any>(null)
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-//   const googleSignIn = async () => {
-//     const provider = new GoogleAuthProvider()
-//     signInWithPopup(auth, provider)
-//       .then(async (UserCredentialImp) => {
-//         const { email, displayName, uid } = UserCredentialImp.user
-//         const newUser: User = { email, displayName, userId: uid }
-//         await API.addUser(newUser)
-//         router.push(`/${NavNames.home}`)
-//       })
-//       .catch((err) => {
-//         console.log(err.message)
-//         throw err
-//       })
-//   }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
+      setUser(currentUser)
+    })
+    return () => unsubscribe()
+  }, [user])
 
-//   const logOut = () => {
-//     setIsLoading(true)
+  const googleSignIn = async () => {
+    const provider = new GoogleAuthProvider()
+    signInWithPopup(auth, provider)
+      .then(async (UserCredentialImp) => {
+        const { email, displayName, uid } = UserCredentialImp.user
+        const newUser: User = { email, displayName, userId: uid }
+        await addUserApi(newUser)
+        router.push(`/${NavNames.home}`)
+      })
+      .catch((err) => {
+        console.log(err.message)
+        throw err
+      })
+  }
 
-//     signOut(auth)
-//     router.push(`/${NavNames.login}`)
-//   }
+  const logOut = () => {
+    setIsLoading(true)
 
-//   return (
-//     <AuthContext.Provider value={{ user, googleSignIn, logOut }}>
-//       {children}
-//     </AuthContext.Provider>
-//   )
-// }
+    signOut(auth)
+    router.push(`/${NavNames.login}`)
+  }
 
-// export interface AuthReturnType {
-//   user: any
-//   logOut: () => void
-//   googleSignIn: () => void
-// }
-// export const UserAuth = (): AuthReturnType => {
-//   const context = useContext(AuthContext)
-//   if (!context) {
-//     throw new Error("UserAuth must be used within AuthContext.Provider")
-//   }
-//   return context
-// }
+  return (
+    <AuthContext.Provider value={{ user, googleSignIn, logOut }}>
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+export interface AuthReturnType {
+  user: any
+  logOut: () => void
+  googleSignIn: () => void
+}
+export const UserAuth = (): AuthReturnType => {
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw new Error("UserAuth must be used within AuthContext.Provider")
+  }
+  return context
+}
