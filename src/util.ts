@@ -240,8 +240,3 @@ export const fromTimestampToMoment = (date: Timestamp) => {
   const momentDate = moment(dateStr, "YYYY-MM-DD")
   return momentDate
 }
-export const fromTimestampToStr = (date: Timestamp) => {
-  const jsDate = date.toDate()
-  const dateStr = moment(jsDate).format("YYYY-MM-DD")
-  return dateStr
-}
