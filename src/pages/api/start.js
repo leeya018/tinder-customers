@@ -5,8 +5,8 @@ export default async function handler(req, res) {
     // main()
     const { token } = req.body
     console.log("start the main function")
-    // const name = await main(token)
-    const name = await test(token)
+    const name = await main(token)
+    // const name = await test(token)
 
     // console.log("servr" + name)
     // for (let i = 0; i < 100; i++) {

@@ -7,9 +7,14 @@ import filterStore from "@/mobx/filterStore"
 import CustomerList from "@/components/customerList"
 import { CustomerStore } from "@/mobx/customerStore"
 import Graph from "@/components/graph"
+import NavRoutButton from "@/ui/button/routNav"
+import { useRouter } from "next/navigation"
+import { NavNames } from "@/util"
 
 const ViewPage = observer(() => {
   const [isShowCustomerList, setIsShowCustomerList] = useState(false)
+  const router = useRouter()
+
   const handleFocus = () => {
     setIsShowCustomerList(true)
   }
@@ -21,6 +26,10 @@ const ViewPage = observer(() => {
 
   return (
     <div className="w-[100vw] h-[100vh] mb-2">
+      <NavRoutButton onClick={() => router.push(`/${NavNames.root}`)}>
+        {"Home"}
+      </NavRoutButton>
+
       <div className="mt-10 w-full flex justify-center items-center">
         <div className="flex items-center">
           <Title>View customers :</Title>

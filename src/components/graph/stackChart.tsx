@@ -12,7 +12,6 @@ import {
 import { Line } from "react-chartjs-2"
 import moment from "moment"
 import { observer } from "mobx-react-lite"
-// import faker from "faker"
 
 ChartJS.register(
   CategoryScale,
@@ -51,10 +50,8 @@ const getSmallestDate = (date1: moment.Moment, date2: moment.Moment) => {
 const getBiggestDate = (date1: moment.Moment, date2: moment.Moment) => {
   if (!date1 || !date2) return moment()
   if (date1.isAfter(date2)) {
-    // If date1 is earlier, return date1
     return date1
   } else {
-    // Otherwise, return date2
     return date2
   }
 }
@@ -94,10 +91,6 @@ const createFullArr = (dates: moment.Moment[], dataArr: dataItem[]) => {
 
   return fullArray
 }
-export type DataItemsProps = {
-  likesData: any[]
-  messagesData: any[]
-}
 
 const Order = {
   asc: "asc",
@@ -117,6 +110,14 @@ const sortItemsByDates = (items: Item[], order: string) => {
   })
   return sortedItems
 }
+
+export type DataItemsProps = {
+  dataItems: {
+    likesData: any[]
+    messagesData: any[]
+  }
+}
+
 const StackChart = observer<DataItemsProps>(({ dataItems }) => {
   const { likesData, messagesData } = dataItems
   console.log({ likesData, messagesData })

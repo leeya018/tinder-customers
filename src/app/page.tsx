@@ -2,7 +2,6 @@
 import React, { useState } from "react"
 import { FaPlus } from "react-icons/fa"
 
-// import { getProfile } from "lib/api"
 import { Button, OutlinedInput } from "@mui/material"
 import { observer } from "mobx-react-lite"
 
@@ -11,12 +10,14 @@ import Alerts from "@/ui/Alerts"
 import { messageStore } from "@/mobx/messageStore"
 import MessageModal from "@/ui/modal/message"
 import { ModalStore } from "@/mobx/modalStore"
-import { instructions, modals } from "@/util"
+import { NavNames, instructions, modals } from "@/util"
 import tokensStore, { Token } from "@/mobx/tokenStore"
+import { useRouter } from "next/navigation"
+import NavRoutButton from "@/ui/button/routNav"
 
 const RootPage = observer(() => {
   const { tokens, addToken, setTokens, setToken } = tokensStore
-
+  const router = useRouter()
   const isPlusAvailable = () => {
     return tokensStore.tokens.length === 0 || tokens[0].name !== ""
   }
@@ -42,6 +43,10 @@ const RootPage = observer(() => {
   return (
     <div className="w-[100vw] h-[100vh] p-10 ">
       <Alerts />
+      {/*  */}
+      <NavRoutButton onClick={() => router.push(`/${NavNames.view}`)}>
+        {NavNames.view}
+      </NavRoutButton>
       {ModalStore.modalName === modals.message && (
         <MessageModal
           onClose={() => ModalStore.closeModal()}
