@@ -6,10 +6,20 @@ type FilterInputProps = {
   onChange: (e: any) => void
   value: string
   placeholder: string
+  onFocus: (e: any) => void
+  onBlur: (e: any) => void
 }
-const FilterInput: FC<FilterInputProps> = ({ ...rest }) => {
+const FilterInput: FC<FilterInputProps> = ({ onFocus, onBlur, ...rest }) => {
   const [isFocused, setIsFocused] = useState(false)
 
+  const handleFocus = (e: any) => {
+    onFocus(e)
+    setIsFocused(true)
+  }
+  const handleBlur = (e: any) => {
+    onBlur(e)
+    setIsFocused(false)
+  }
   return (
     <div
       className={`w-full flex items-center border-b-2  border-color-text-gray  
@@ -22,8 +32,8 @@ const FilterInput: FC<FilterInputProps> = ({ ...rest }) => {
         type="string"
         className="pl-5 w-full py-6  outline-none  border-color-text-gray
        placeholder:text-color-text-gray placeholder:pl-10 "
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
     </div>
   )

@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx"
+import { autorun, makeAutoObservable } from "mobx"
 
 class Filter {
   search: string = ""
@@ -13,4 +13,7 @@ class Filter {
 }
 
 const filterStore = new Filter()
+autorun(() => {
+  console.log("search changed:", filterStore.search)
+})
 export default filterStore

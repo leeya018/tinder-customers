@@ -11,10 +11,20 @@ import {
   where,
 } from "firebase/firestore"
 import { Like } from "./interfaces"
+import { isCustomerExist } from "../customer/isCustomerExist"
+import { addCustomer } from "../customer/addCustomer"
+import { Customer } from "../customer/interfaces"
 
-export const addLike = async (newLike: Like): Promise<string | void> => {
+export const addLike = async (
+  newLike: Like,
+  customer: Customer
+): Promise<string | void> => {
   try {
     const { userId, createdDate, likeUrl } = newLike
+    const isExists = await isCustomerExist(userId)
+    if (!isExists) {
+      await addCustomer(customer)
+    }
     const date = createdDate.toDate()
 
     // Start of the day

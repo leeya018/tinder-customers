@@ -39,6 +39,9 @@ const convertPrediction = (prediction) => {
     console.log("convertPrediction function", error.message);
   }
 };
+
+
+
 module.exports = {
   getDate,
   sleep,

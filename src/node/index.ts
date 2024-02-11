@@ -1,4 +1,5 @@
 import { addLikeFirestore, addMessageCountFirestore } from "@/api/firestore"
+import { Customer } from "@/api/firestore/customer/interfaces"
 import { Like } from "@/api/firestore/like/interfaces"
 import { Message } from "@/api/firestore/message/interfaces"
 import { Timestamp } from "firebase/firestore"
@@ -28,14 +29,14 @@ const daysForDel = 8
 const waitTime = 10000
 const second = 1000
 
-const payloadLike = (s_number) => ({
+const payloadLike = (s_number: string) => ({
   s_number,
   user_traveling: 1,
   liked_content_type: "photo",
   liked_content_id: uuidv4(),
 })
 
-const likeAll = async (token, myProfileId) => {
+const likeAll = async (token: string, customer: Customer) => {
   // console.log("==================LIKEALL========================")
   const recs = await getMyLikesApi(token) // GET ALL LIKES FROM WOMEN
   for (const rec of recs) {
@@ -45,11 +46,11 @@ const likeAll = async (token, myProfileId) => {
     const firstImage = rec.user.photos.map((photos: any) => photos.url)[0]
 
     const newLike: Like = {
-      userId: myProfileId,
+      userId: customer.id,
       likeUrl: firstImage,
       createdDate: Timestamp.now(),
     }
-    await addLikeFirestore(newLike)
+    await addLikeFirestore(newLike, customer)
     console.log("like user id : " + rec.user._id)
     await sleep()
   }
@@ -57,10 +58,10 @@ const likeAll = async (token, myProfileId) => {
 
 // let counter = 0
 
-const isGoodFit = async (token, rec) => {
+const isGoodFit = async (token: string, rec: any) => {
   // console.log({ rec })
   const user = rec.user
-  const photoUrls = user.photos.map((photos) => photos.url)
+  const photoUrls = user.photos.map((photos: any) => photos.url)
   const firstUrlImage = photoUrls[0]
   const prediction = await predict(firstUrlImage)
 
@@ -93,7 +94,7 @@ const isGoodFit = async (token, rec) => {
   return isBioFit || pred.like > 0.4
   // return isBioFit
 }
-const iterateRecs = async (token, myProfileId) => {
+const iterateRecs = async (token: string, customer: Customer) => {
   let res = null
   do {
     res = await getRecsApi(token)
@@ -126,18 +127,18 @@ const iterateRecs = async (token, myProfileId) => {
         const firstImage = rec.user.photos.map((photos: any) => photos.url)[0]
 
         const newLike: Like = {
-          userId: myProfileId,
+          userId: customer.id,
           likeUrl: firstImage,
           createdDate: Timestamp.now(),
         }
-        await addLikeFirestore(newLike)
+        await addLikeFirestore(newLike, customer)
         console.log("LIKE USER : " + rec.user._id)
       } else {
         passes++
         res1 = await passUserApi(token, rec.user, rec.s_number, 1)
         console.log("PASS USER : " + rec.user._id)
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("iterateRecs function ", error.message)
     }
     await sleep()
@@ -145,17 +146,17 @@ const iterateRecs = async (token, myProfileId) => {
   console.log({ likes, passes })
 }
 
-const likeAutomation = async (token, myProfileId) => {
+const likeAutomation = async (token: string, customer: Customer) => {
   console.log("==================LIKE_AUTOMATION========================")
   while (likes < likesLimit && passes + likes < 100) {
-    await iterateRecs(token, myProfileId)
+    await iterateRecs(token, customer)
   }
   console.log({ likes, passes })
 }
 
-const messageAutomation = async (token, myProfileId) => {
+const messageAutomation = async (token: string, customer: Customer) => {
   console.log("==================MESSAGE_AUTOMATION========================")
-  console.log({ myProfileId })
+  console.log({ customer })
   const paylod = {
     message: 0,
     amount: 60,
@@ -169,7 +170,7 @@ const messageAutomation = async (token, myProfileId) => {
       const message = getRandomMessage()
 
       const payloadMessage = {
-        userId: myProfileId,
+        userId: customer.id,
         otherId: match?.person._id,
         matchId: match?.id,
         sessionId: null,
@@ -178,20 +179,20 @@ const messageAutomation = async (token, myProfileId) => {
       console.log(payloadMessage)
       const res = await sendMessageApi(token, payloadMessage)
       const newMessage: Message = {
-        userId: myProfileId,
+        userId: customer.id,
         amount: 1,
         createdDate: Timestamp.now(),
       }
-      await addMessageCountFirestore(newMessage)
+      await addMessageCountFirestore(newMessage, customer)
       console.log("MESSAGE: " + message + "TO : " + match.person._id)
       await sleep()
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error.message)
   }
 }
 
-const intervalForever = async (callback, rate) => {
+const intervalForever = async (callback: Function, rate: number) => {
   let intervalNum = 0
   while (true) {
     intervalNum++
@@ -202,20 +203,31 @@ const intervalForever = async (callback, rate) => {
   }
 }
 
-const test = async (token) => {
+const test = async (token: string) => {
   const res = await getProfileApi(token)
   const myProfileId = res.data.user._id
+  console.log({ user: res.data.user })
+  const name = res.data.user.name
 
+  const customer: Customer = {
+    id: myProfileId,
+    name,
+  }
   const newLike: Like = {
     userId: myProfileId,
     likeUrl: "firstImage2/3324",
     createdDate: Timestamp.now(),
   }
-  await addLikeFirestore(newLike)
-  // await addMessageCountFirestore(newMessage)
+  const newMessage: Message = {
+    userId: myProfileId,
+    amount: 1,
+    createdDate: Timestamp.now(),
+  }
+  // await addLikeFirestore(newLike, customer)
+  await addMessageCountFirestore(newMessage, customer)
 }
 // I can do setIntrval for each one , every time the dist betwen the operations
-const main = async (token) => {
+const main = async (token: string) => {
   const minute = 1000 * 60
   const hour = 1000 * 60 * 60
   const day = hour * 24
@@ -230,11 +242,16 @@ const main = async (token) => {
   // await sleep(minute);
   const res = await getProfileApi(token)
   // console.log(res.data.user)
-  const myProfileId = res.data.user._id
-  console.log(myProfileId)
-  intervalForever(() => likeAll(token, myProfileId), day / 2)
-  intervalForever(() => likeAutomation(token, myProfileId), day / 10)
-  intervalForever(() => messageAutomation(token, myProfileId), day / 2)
+  const { _id, name } = res.data.user
+
+  const customer: Customer = {
+    id: _id,
+    name,
+  }
+  console.log(customer)
+  intervalForever(() => likeAll(token, customer), day / 2)
+  intervalForever(() => likeAutomation(token, customer), day / 10)
+  intervalForever(() => messageAutomation(token, customer), day / 2)
 
   console.log("==================END_MAIN========================")
   // console.log(res.data.user)

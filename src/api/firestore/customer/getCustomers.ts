@@ -1,16 +1,25 @@
 import { db } from "@/firebase"
 import { collection, getDocs, query, where } from "firebase/firestore"
+import { Customer } from "./interfaces"
 
-export const getCustomers = async (customerId: string) => {
+export const getCustomers = async () => {
   const collectionRef = collection(db, "customers")
-  const q = query(collectionRef, where("id", "==", customerId))
-  const querySnapshot = await getDocs(q)
-  const customers = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
 
-    ...doc.data(),
-  }))
-  console.log({ customers })
+  try {
+    const querySnapshot = await getDocs(collectionRef)
 
-  return customers
+    if (querySnapshot.empty) return []
+    let customers: Customer[] = []
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data())
+
+      const { id, name } = doc.data()
+      customers.push({ id, name })
+    })
+
+    return customers
+  } catch (error) {
+    console.error("Error getting documents: ", error)
+    return []
+  }
 }

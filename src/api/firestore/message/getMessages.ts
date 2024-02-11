@@ -3,14 +3,16 @@ import { collection, getDocs, query, where } from "firebase/firestore"
 
 export const getMessages = async (userId: string) => {
   const collectionRef = collection(db, "messages")
-  const q = query(collectionRef, where("userId", "==", userId))
-  const querySnapshot = await getDocs(q)
-  const messages = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
+  try {
+    const q = query(collectionRef, where("userId", "==", userId))
+    const querySnapshot = await getDocs(q)
+    if (querySnapshot.empty) return []
+    const messages = querySnapshot.docs.map((doc) => doc.data())
+    console.log({ messages })
 
-    ...doc.data(),
-  }))
-  console.log({ messages })
-
-  return messages
+    return messages
+  } catch (error: any) {
+    console.log("no data in messages", error.message)
+    return []
+  }
 }

@@ -11,10 +11,20 @@ import {
 } from "firebase/firestore"
 import { db } from "@/firebase"
 import { Message } from "./interfaces"
+import { isCustomerExist } from "../customer/isCustomerExist"
+import { addCustomer } from "../customer/addCustomer"
+import { Customer } from "../customer/interfaces"
 
-export const addMessageCount = async (newMessage: Message) => {
+export const addMessageCount = async (
+  newMessage: Message,
+  customer: Customer
+) => {
   try {
     const { userId, createdDate } = newMessage
+    const isExists = await isCustomerExist(userId)
+    if (!isExists) {
+      await addCustomer(customer)
+    }
     const date = createdDate.toDate()
 
     // Start of the day
