@@ -16,7 +16,7 @@ const ViewPage = observer(() => {
   const handleBlur = () => {
     setTimeout(() => {
       setIsShowCustomerList(false)
-    }, 100)
+    }, 500)
   }
 
   return (
@@ -47,14 +47,16 @@ const ViewPage = observer(() => {
               </div>
             )}
           </div>
-          {CustomerStore.chosenCustomer && (
-            <div className="h-full flex flex-col items-center justify-center ">
-              <Graph
-                likes={CustomerStore.likes}
-                messages={CustomerStore.messages}
-              />
-            </div>
-          )}
+          {CustomerStore.chosenCustomer &&
+            CustomerStore.messages.length > 0 &&
+            CustomerStore.likes.length > 0 && (
+              <div className="h-full flex flex-col items-center justify-center ">
+                <Graph
+                  likes={CustomerStore.likes}
+                  messages={CustomerStore.messages}
+                />
+              </div>
+            )}
         </div>
       </div>
     </div>

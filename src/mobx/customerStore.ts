@@ -9,17 +9,6 @@ import { modals } from "@/util"
 import { Timestamp } from "firebase/firestore"
 import { makeAutoObservable } from "mobx"
 
-// const data: Customer[] = [
-//   {
-//     id: "cust123",
-//     name: "Lee",
-//   },
-//   {
-//     id: "cust121",
-//     name: "Rich",
-//   },
-// ]
-
 class CustomerS {
   customers: Customer[] = []
   chosenCustomer: Customer | null = null

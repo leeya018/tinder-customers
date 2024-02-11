@@ -234,10 +234,14 @@ export const instructions = [
   "it can find a match according to search words that you want  it to look for in the bio",
 ]
 
-export const convertDate = (date) => {
-  const dateMilliseconds = date.seconds * 1000 + date.nanoseconds / 1000000
-
-  // Create a Moment.js date object
-  const momentDate = moment(dateMilliseconds)
+export const fromTimestampToMoment = (date: Timestamp) => {
+  const jsDate = date.toDate()
+  const dateStr = moment(jsDate).format("YYYY-MM-DD")
+  const momentDate = moment(dateStr, "YYYY-MM-DD")
   return momentDate
+}
+export const fromTimestampToStr = (date: Timestamp) => {
+  const jsDate = date.toDate()
+  const dateStr = moment(jsDate).format("YYYY-MM-DD")
+  return dateStr
 }

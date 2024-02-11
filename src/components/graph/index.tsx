@@ -11,9 +11,10 @@ import {
 } from "chart.js"
 import { observer } from "mobx-react-lite"
 
-import { convertDate } from "@/util"
+import { fromTimestampToMoment } from "@/util"
 import { Message } from "@/api/firestore/message/interfaces"
 import StackChart from "./stackChart"
+import { toJS } from "mobx"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -23,16 +24,19 @@ type GraphProps = {
 }
 const Graph = observer<GraphProps>(({ likes, messages }) => {
   const convertLikes = () => {
+    console.log(toJS(likes))
     const likesData = likes.map((like: any) => ({
       amount: like.likeUrls.length,
-      createdDate: convertDate(like.createdDate),
+      createdDate: like.createdDate,
+      // createdDate: fromTimestampToMoment(like.createdDate),
     }))
     return likesData
   }
   const convertMessages = () => {
     const likesData = messages.map((message: Message) => ({
       amount: message.amount,
-      createdDate: convertDate(message.createdDate),
+      createdDate: message.createdDate,
+      // createdDate: fromTimestampToMoment(message.createdDate),
     }))
     return likesData
   }

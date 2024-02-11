@@ -1,5 +1,5 @@
 import { db } from "@/firebase"
-import { collection, getDocs, query, where } from "firebase/firestore"
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore"
 
 export const getMessages = async (userId: string) => {
   const collectionRef = collection(db, "messages")
