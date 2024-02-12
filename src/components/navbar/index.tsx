@@ -16,6 +16,7 @@ import { NavNames } from "@/util"
 import { useRouter } from "next/navigation"
 import { signOut } from "firebase/auth"
 import { auth } from "@/firebase"
+import Image from "next/image"
 
 const pages = ["Home", "View"]
 const settings = ["Logout"]
@@ -64,7 +65,14 @@ function Navbar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+          {/* <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} /> */}
+          <Image
+            className="mr-6"
+            src={"/images/logo.png"}
+            alt="logo"
+            width={50}
+            height={50}
+          />
           <Typography
             variant="h6"
             noWrap
@@ -80,7 +88,7 @@ function Navbar() {
               textDecoration: "none",
             }}
           >
-            LOGO
+            TINDER CUSTOMERS
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -139,6 +147,7 @@ function Navbar() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {/*  the big */}
             {pages.map((page) => (
               <Button
                 key={page}

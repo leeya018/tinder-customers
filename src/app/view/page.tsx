@@ -31,14 +31,7 @@ const ViewPage = observer(() => {
       <div>
         <Navbar />
         <div className="w-[100vw] h-[100vh] mb-2">
-          <div className="mt-10 w-full flex justify-center items-center">
-            <div className="flex items-center">
-              <Title>View customers :</Title>
-              <div className="text-lg font-bold">
-                {CustomerStore.chosenCustomer?.name}
-              </div>
-            </div>
-          </div>
+          <div className="mt-10 w-full flex justify-center items-center"></div>
           <div className="w-full h-full flex justify-center ">
             <div className="w-[80%]  flex flex-col justify-center h-full gap-5">
               <div className="h-full w-full">
@@ -58,7 +51,7 @@ const ViewPage = observer(() => {
                 )}
               </div>
               {CustomerStore.chosenCustomer && (
-                <div className="h-full flex flex-col items-center justify-center ">
+                <div className="h-full flex flex-col items-center  ">
                   <Graph
                     likes={CustomerStore.likes}
                     messages={CustomerStore.messages}

@@ -37,6 +37,7 @@ const config: Config = {
         google: "url('/google.png')",
         golden: "url('/golden.png')",
         me: "url('/me.jpg')",
+        // logo: "url('/logo.png')",
       },
     },
   },
