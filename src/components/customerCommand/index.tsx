@@ -63,7 +63,3 @@ const CustomerCommand = observer<CustomerCommandProps>(({ token, index }) => {
 })
 
 export default CustomerCommand
-
-//  trans
-//  relathithip
-//  sex
