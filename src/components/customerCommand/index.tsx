@@ -5,12 +5,15 @@ import { Token } from "@/mobx/tokenStore"
 import tokensStore from "@/mobx/tokenStore"
 import { startApi } from "@/lib/api"
 import { toJS } from "mobx"
+import BasicSelect from "@/ui/basicSelect"
+import { options } from "@/util"
 
 type CustomerCommandProps = {
   token: Token
   index: number
 }
 const CustomerCommand = observer<CustomerCommandProps>(({ token, index }) => {
+  const [lookFor, setLookFor] = useState<string>("")
   const { tokens, setTokens } = tokensStore
   console.log(token)
 
@@ -23,6 +26,7 @@ const CustomerCommand = observer<CustomerCommandProps>(({ token, index }) => {
     dupTokens[index].name = name
     setTokens(dupTokens)
   }
+  console.log({ lookFor })
   return (
     <li className="flex items-center gap-2">
       <OutlinedInput
@@ -35,6 +39,13 @@ const CustomerCommand = observer<CustomerCommandProps>(({ token, index }) => {
         value={token.key}
         placeholder="token"
         className="h-10"
+      />
+      <BasicSelect
+        className="w-36 h-full box-content"
+        handleChange={setLookFor}
+        value={lookFor}
+        options={options}
+        name="look for"
       />
       <Button
         className="h-10"

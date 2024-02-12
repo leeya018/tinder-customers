@@ -238,3 +238,31 @@ export const fromTimestampToMoment = (date: Timestamp) => {
   const momentDate = moment(dateStr, "YYYY-MM-DD")
   return momentDate
 }
+
+export const options = ["trans", "relationship", "sex"]
+export const trans = [
+  "trans",
+  "transgender",
+  "ladyboy",
+  "טרנס",
+  "טראנס",
+  "shemale",
+]
+
+export const relationship = [
+  "long-term",
+  "no hookups",
+  "for serious",
+  "family-oriented",
+  "קשר אמיתי",
+  "קשר רציני",
+  "משפחה",
+]
+export const sex = [
+  "friends with benefits",
+  "Nothing serious",
+  "looking to meet new people",
+  "not looking for anything serious",
+  "קשר לא מחייב",
+  "משהו קליל",
+]
