@@ -141,8 +141,7 @@ const iterateRecs = async (
   let res1
   for (const rec of recs) {
     if (likes > likesLimit) return
-    // console.log(user.photos);
-    // console.log({ firstUrlImage })
+
     try {
       // console.log(pred)
       // if (convertPrediction(prediction).like > 0.5) {

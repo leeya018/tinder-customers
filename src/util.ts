@@ -254,12 +254,9 @@ export const transWords = [
   "shemale",
 ]
 
-export const relationshipWords = [
-  "Long-term partner",
-  "New friends",
-  "Still figuring it out",
-]
+export const relationshipWords = ["Long-term partner", "New friends"]
 export const sexWords = [
+  "Still figuring it out",
   "Long-term, open to short",
   "Short-term, open to long",
   "Short-term fun",
