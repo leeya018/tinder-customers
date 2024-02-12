@@ -36,4 +36,4 @@ next-env.d.ts
 .env
 
 
-/node/tensorFolder
+/src/node/tensorFolder/
