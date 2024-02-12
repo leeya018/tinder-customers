@@ -7,9 +7,11 @@ import filterStore from "@/mobx/filterStore"
 import CustomerList from "@/components/customerList"
 import { CustomerStore } from "@/mobx/customerStore"
 import Graph from "@/components/graph"
-import NavRoutButton from "@/ui/button/routNav"
+
 import { useRouter } from "next/navigation"
 import { NavNames } from "@/util"
+import ProtectedRout from "@/components/protectedRout"
+import Navbar from "@/components/navbar"
 
 const ViewPage = observer(() => {
   const [isShowCustomerList, setIsShowCustomerList] = useState(false)
@@ -25,48 +27,49 @@ const ViewPage = observer(() => {
   }
 
   return (
-    <div className="w-[100vw] h-[100vh] mb-2">
-      <NavRoutButton onClick={() => router.push(`/${NavNames.root}`)}>
-        {"Home"}
-      </NavRoutButton>
-
-      <div className="mt-10 w-full flex justify-center items-center">
-        <div className="flex items-center">
-          <Title>View customers :</Title>
-          <div className="text-lg font-bold">
-            {CustomerStore.chosenCustomer?.name}
-          </div>
-        </div>
-      </div>
-      <div className="w-full h-full flex justify-center ">
-        <div className="w-[80%]  flex flex-col justify-center h-full gap-5">
-          <div className="h-full w-full">
-            <FilterInput
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              onChange={(e) => filterStore.setFilter(e.target.value)}
-              value={filterStore.search}
-              placeholder="search customers"
-            />
-            {isShowCustomerList && (
-              <div className="relative w-full">
-                <div className="absolute w-full">
-                  <CustomerList />
-                </div>
+    <ProtectedRout>
+      <div>
+        <Navbar />
+        <div className="w-[100vw] h-[100vh] mb-2">
+          <div className="mt-10 w-full flex justify-center items-center">
+            <div className="flex items-center">
+              <Title>View customers :</Title>
+              <div className="text-lg font-bold">
+                {CustomerStore.chosenCustomer?.name}
               </div>
-            )}
-          </div>
-          {CustomerStore.chosenCustomer && (
-            <div className="h-full flex flex-col items-center justify-center ">
-              <Graph
-                likes={CustomerStore.likes}
-                messages={CustomerStore.messages}
-              />
             </div>
-          )}
+          </div>
+          <div className="w-full h-full flex justify-center ">
+            <div className="w-[80%]  flex flex-col justify-center h-full gap-5">
+              <div className="h-full w-full">
+                <FilterInput
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  onChange={(e) => filterStore.setFilter(e.target.value)}
+                  value={filterStore.search}
+                  placeholder="search customers"
+                />
+                {isShowCustomerList && (
+                  <div className="relative w-full">
+                    <div className="absolute w-full">
+                      <CustomerList />
+                    </div>
+                  </div>
+                )}
+              </div>
+              {CustomerStore.chosenCustomer && (
+                <div className="h-full flex flex-col items-center justify-center ">
+                  <Graph
+                    likes={CustomerStore.likes}
+                    messages={CustomerStore.messages}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </ProtectedRout>
   )
 })
 

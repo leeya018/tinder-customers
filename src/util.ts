@@ -16,12 +16,10 @@ const { v4: uuidv4 } = require("uuid")
 const { model, predict } = require("@/lib/modelCreate")
 
 export const NavNames = {
-  home: "home",
-  commonQuestions: "commonQuestions",
-  products: "products",
-  login: "login",
-  root: "",
-  view: "view",
+  // home: "/home",
+  login: "/login",
+  home: "/",
+  view: "/view",
 }
 
 const sleep = (waitTime = null) => {

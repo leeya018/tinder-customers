@@ -1,30 +1,51 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react"
 
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth"
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+} from "firebase/auth"
 import { auth } from "@/firebase"
-import { UserAuth, AuthReturnType } from "@/context/AuthContext"
 
 import Image from "next/image"
 
 import { observer } from "mobx-react-lite"
 import { useRouter } from "next/navigation"
 import { NavNames } from "@/util"
+import { addUserFirestore } from "@/api/firestore"
+import { User } from "@/api/firestore/user/interfaces"
 
 function login() {
   const router = useRouter()
   const inputRef = useRef(null)
   const [isLoading, setIsLoading] = useState(false)
-  const { user, googleSignIn, logOut } = UserAuth() as AuthReturnType
 
   useEffect(() => {
-    console.log(user)
-    if (user) {
-      setIsLoading(true)
+    const unSub = onAuthStateChanged(auth, (user) => {
+      console.log(user)
+      if (user) {
+        router.push(NavNames.home)
+      }
+    })
 
-      router.push(`/${NavNames.root}`)
-    }
-  }, [user])
+    return () => unSub()
+  }, [])
+
+  const googleSignIn = async () => {
+    const provider = new GoogleAuthProvider()
+    signInWithPopup(auth, provider)
+      .then(async (UserCredentialImp) => {
+        const { email, displayName, uid } = UserCredentialImp.user
+        const newUser: User = { email, displayName, userId: uid }
+        await addUserFirestore(newUser)
+        router.push(NavNames.home)
+      })
+      .catch((err) => {
+        console.log(err.message)
+        throw err
+      })
+  }
 
   return (
     <div
@@ -35,7 +56,7 @@ function login() {
         <div className="relative flex flex-col  items-center justify-center h-full w-[90%] md:w-[50%] lg:w-[30%] ">
           {/* title */}
           <div className="absolute top-1 left-1 text-lg font-bold text-left w-full p-2">
-            Golden List
+            Tinder Customers
           </div>
           {/* signin */}
           <div className="w-[80%] flex flex-col gap-4">
@@ -72,7 +93,7 @@ function login() {
          shadow-lg  items-center justify-center  sm:flex  "
         >
           <div className="text-white font-bold text-5xl rotate-12">
-            Golden List
+            Tinder Customers
           </div>
         </div>
       </div>
