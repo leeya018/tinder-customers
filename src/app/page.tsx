@@ -4,18 +4,18 @@ import { FaPlus } from "react-icons/fa"
 
 import { Button, OutlinedInput } from "@mui/material"
 import { observer } from "mobx-react-lite"
-
-import { startApi } from "@/lib/api"
 import Alerts from "@/ui/Alerts"
 import { messageStore } from "@/mobx/messageStore"
 import MessageModal from "@/ui/modal/message"
 import { ModalStore } from "@/mobx/modalStore"
-import { NavNames, instructions, modals } from "@/util"
+import { instructions, modals } from "@/util"
 import tokensStore, { Token } from "@/mobx/tokenStore"
 import { useRouter } from "next/navigation"
 
 import ProtectedRout from "@/components/protectedRout"
 import Navbar from "@/components/navbar"
+import CustomerCommand from "@/components/customerCommand"
+import { startApi } from "@/lib/api"
 
 const RootPage = observer(() => {
   const { tokens, addToken, setTokens, setToken } = tokensStore
@@ -81,28 +81,29 @@ const RootPage = observer(() => {
         </Button>
         <ul className="mt-5">
           {tokens.map((token: Token, key: number) => (
-            <li key={key} className="flex items-center gap-2">
-              <OutlinedInput
-                disabled={token.isProcess === true}
-                onChange={(e) => {
-                  let dupTokens = [...tokens]
-                  dupTokens[key].key = e.target.value
-                  setTokens(dupTokens)
-                }}
-                value={token.key}
-                placeholder="token"
-                className="h-10"
-              />
-              <Button
-                className="h-10"
-                variant="outlined"
-                disabled={token.key === "" || token.isProcess === true}
-                onClick={() => start(key)}
-              >
-                {token.isProcess === true ? "in Process" : "Start"}
-              </Button>
-              <div>{token.name}</div>
-            </li>
+            <CustomerCommand key={key} index={key} token={token} />
+            // <li className="flex items-center gap-2" key={key}>
+            //   <OutlinedInput
+            //     disabled={token.isProcess === true}
+            //     onChange={(e) => {
+            //       let dupTokens = [...tokens]
+            //       dupTokens[key].key = e.target.value
+            //       setTokens(dupTokens)
+            //     }}
+            //     value={token.key}
+            //     placeholder="token"
+            //     className="h-10"
+            //   />
+            //   <Button
+            //     className="h-10"
+            //     variant="outlined"
+            //     disabled={token.key === "" || token.isProcess === true}
+            //     onClick={() => start(key)}
+            //   >
+            //     {token.isProcess === true ? "in Process" : "Start"}
+            //   </Button>
+            //   <div>{token.name}</div>
+            // </li>
           ))}
         </ul>
       </div>

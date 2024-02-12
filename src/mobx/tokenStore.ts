@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx"
+import { autorun, makeAutoObservable, toJS } from "mobx"
 import { makePersistable } from "mobx-persist-store"
 
 export type Token = {
@@ -34,3 +34,9 @@ class Tokens {
 
 const tokensStore = new Tokens()
 export default tokensStore
+
+autorun(() => {
+  if (tokensStore.tokens.length > 0) {
+    console.log(toJS(tokensStore.tokens[0]))
+  }
+})

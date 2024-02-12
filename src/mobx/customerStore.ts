@@ -8,6 +8,7 @@ import { Message } from "@/api/firestore/message/interfaces"
 import { modals } from "@/util"
 import { Timestamp } from "firebase/firestore"
 import { makeAutoObservable } from "mobx"
+import { makePersistable } from "mobx-persist-store"
 
 class CustomerS {
   customers: Customer[] = []
@@ -18,6 +19,13 @@ class CustomerS {
   constructor() {
     makeAutoObservable(this)
     this.getCustomers()
+    if (typeof window !== "undefined") {
+      makePersistable(this, {
+        name: "customerStore",
+        properties: ["customers"],
+        storage: window.localStorage,
+      })
+    }
   }
 
   setChosenCustomer(customer: Customer) {
