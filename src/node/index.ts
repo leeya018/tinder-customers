@@ -58,7 +58,7 @@ const likeAll = async (token: string, customer: Customer) => {
 }
 
 // let counter = 0
-const getFitName = (lookFor: string, user: any) => {
+const getIsLookForFit = (lookFor: string, user: any) => {
   let wordsIncludes = []
   console.log({ lookFor })
   switch (lookFor) {
@@ -112,7 +112,7 @@ const isGoodFit = async (token: string, rec: any, lookFor: string) => {
   const randNum = Math.random()
   const bio = rec.user.bio
   // console.log({ bio })
-  const isFitPref = getFitName(lookFor, rec.user)
+  const isFitPref = getIsLookForFit(lookFor, rec.user)
 
   if (isFitPref) {
     return isFitPref || pred.like > 0.4
@@ -280,9 +280,9 @@ const main = async (token: string, lookFor: string) => {
     name,
   }
   console.log(customer)
-  // intervalForever(() => likeAll(token, customer), day / 2)
+  intervalForever(() => likeAll(token, customer), day / 2)
   intervalForever(() => likeAutomation(token, customer, lookFor), day / 10)
-  // intervalForever(() => messageAutomation(token, customer), day / 2)
+  intervalForever(() => messageAutomation(token, customer), day / 2)
 
   console.log("==================END_MAIN========================")
   // console.log(res.data.user)
