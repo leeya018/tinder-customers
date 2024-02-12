@@ -156,6 +156,33 @@ const passUserApi = async (token, user, s_number, user_traveling) => {
       throw error.message
     })
 }
+const passUserWithMatchApi = async (token, user, s_number, user_traveling) => {
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `https://api.gotinder.com/pass/${user._id}?locale=en&fast_match=1&s_number=${s_number}&user_traveling=${user_traveling}`,
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+      "x-auth-token": token,
+    },
+  }
+  return axios
+    .request(config)
+    .then((response) => {
+      const firstImage = user.photos.map((photos) => photos.url)[0]
+      console.log(firstImage)
+      const passPath =
+        "C://Users//user//Desktop//code//lee//tinder-customers//src//node//tensorFolder//pass.txt"
+      addDataToTxt(passPath, token + " - " + firstImage)
+      return response.data
+    })
+    .catch((error) => {
+      console.log(error.message)
+      throw error.message
+    })
+}
 
 const likeUserApi = async (token, user, data) => {
   // console.log({ token: token })
@@ -391,5 +418,6 @@ module.exports = {
   getImagesApi,
   addArrDataToTxt,
   getProfileApi,
+  passUserWithMatchApi,
   // getLotsImages,
 }

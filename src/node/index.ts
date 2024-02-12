@@ -4,6 +4,7 @@ import { Like } from "@/api/firestore/like/interfaces"
 import { Message } from "@/api/firestore/message/interfaces"
 import { lookForOptions, relationshipWords, sexWords, transWords } from "@/util"
 import { Timestamp } from "firebase/firestore"
+import { passUserWithMatchApi } from "./api"
 
 const {
   getRecsApi,
@@ -37,23 +38,35 @@ const payloadLike = (s_number: string) => ({
   liked_content_id: uuidv4(),
 })
 
-const likeAll = async (token: string, customer: Customer) => {
+const likeAll = async (token: string, customer: Customer, lookFor: string) => {
   // console.log("==================LIKEALL========================")
-  const recs = await getMyLikesApi(token) // GET ALL LIKES FROM WOMEN
-  for (const rec of recs) {
-    console.log(rec.user)
-    console.log(rec.user._id, rec.s_number)
-    let res1 = await likeUserApi(token, rec.user, payloadLike(rec.s_number))
-    const firstImage = rec.user.photos.map((photos: any) => photos.url)[0]
+  try {
+    const recs = await getMyLikesApi(token) // GET ALL LIKES FROM WOMEN
+    for (const rec of recs) {
+      // console.log(rec.user)
+      // console.log(rec.user._id, rec.s_number)
+      const isFit = await isGoodFit(rec.user, lookFor)
+      console.log({ name: rec.user.name, lookFor, isFit })
+      if (isFit) {
+        await likeUserApi(token, rec.user, payloadLike(rec.s_number))
+      } else {
+        console.log("pass user should happend")
+        await passUserWithMatchApi(token, rec.user, rec.s_number, 1)
+        console.log("pass user done")
+      }
+      const firstImage = rec.user.photos.map((photos: any) => photos.url)[0]
 
-    const newLike: Like = {
-      userId: customer.id,
-      likeUrl: firstImage,
-      createdDate: Timestamp.now(),
+      const newLike: Like = {
+        userId: customer.id,
+        likeUrl: firstImage,
+        createdDate: Timestamp.now(),
+      }
+      await addLikeFirestore(newLike, customer)
+      console.log("like user id : " + rec.user._id)
+      await sleep()
     }
-    await addLikeFirestore(newLike, customer)
-    console.log("like user id : " + rec.user._id)
-    await sleep()
+  } catch (error) {
+    console.log(error.message)
   }
 }
 
@@ -101,22 +114,23 @@ const getIsLookForFit = (lookFor: string, user: any) => {
   }
   return wordsIncludes.length > 0
 }
-const isGoodFit = async (token: string, rec: any, lookFor: string) => {
+const isGoodFit = async (user: any, lookFor: string) => {
   // console.log({ rec })
-  const user = rec.user
+
   const photoUrls = user.photos.map((photos: any) => photos.url)
   const firstUrlImage = photoUrls[0]
   const prediction = await predict(firstUrlImage)
 
   const pred = convertPrediction(prediction)
   const randNum = Math.random()
-  const bio = rec.user.bio
+  const bio = user.bio
   // console.log({ bio })
-  const isFitPref = getIsLookForFit(lookFor, rec.user)
+  const isFitPref = getIsLookForFit(lookFor, user)
 
-  if (isFitPref) {
-    return isFitPref || pred.like > 0.4
-  }
+  return isFitPref
+  // if (isFitPref) {
+  // return isFitPref || pred.like > 0.4
+  // }
 }
 const iterateRecs = async (
   token: string,
@@ -145,7 +159,7 @@ const iterateRecs = async (
     try {
       // console.log(pred)
       // if (convertPrediction(prediction).like > 0.5) {
-      const isFit = await isGoodFit(token, rec, lookFor)
+      const isFit = await isGoodFit(rec.user, lookFor)
       if (isFit) {
         // if (randNum > 0.3) {
         console.log("HHHHHHHHHOOOOOOOOOOOOOOOOOOTTTTTTTTTTTTTTTTTTTTTTTT")
@@ -280,9 +294,9 @@ const main = async (token: string, lookFor: string) => {
     name,
   }
   console.log(customer)
-  intervalForever(() => likeAll(token, customer), day / 2)
+  // intervalForever(() => likeAll(token, customer, lookFor), day / 2)
   intervalForever(() => likeAutomation(token, customer, lookFor), day / 10)
-  intervalForever(() => messageAutomation(token, customer), day / 2)
+  // intervalForever(() => messageAutomation(token, customer), day / 2)
 
   console.log("==================END_MAIN========================")
   // console.log(res.data.user)

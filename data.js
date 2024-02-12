@@ -1509,3 +1509,5 @@ const user = {
 
 // the way
 // rec.user.relationship_intent.body_text
+
+https://api.gotinder.com/pass/${user._id}?locale=en&s_number=${s_number}&user_traveling=${user_traveling}`,
