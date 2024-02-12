@@ -51,7 +51,7 @@ const likeAll = async (token: string, customer: Customer, lookFor: string) => {
         await likeUserApi(token, rec.user, payloadLike(rec.s_number))
       } else {
         console.log("pass user should happend")
-        await passUserWithMatchApi(token, rec.user, rec.s_number, 1)
+        // await passUserWithMatchApi(token, rec.user, rec.s_number, 1)
         console.log("pass user done")
       }
       const firstImage = rec.user.photos.map((photos: any) => photos.url)[0]
@@ -87,7 +87,7 @@ const getIsLookForFit = (lookFor: string, user: any) => {
       break
     }
     case lookForOptions.relationship: {
-      const pref = user.relationship_intent.body_text
+      const pref = user.relationship_intent?.body_text || ""
       console.log({ pref })
       wordsIncludes = relationshipWords.filter((choice) => choice === pref)
       if (wordsIncludes.length > 0) {
@@ -98,7 +98,7 @@ const getIsLookForFit = (lookFor: string, user: any) => {
       break
     }
     case lookForOptions.sex: {
-      const pref = user.relationship_intent.body_text
+      const pref = user.relationship_intent?.body_text || ""
       console.log({ pref })
       wordsIncludes = sexWords.filter((choice) => choice === pref)
       if (wordsIncludes.length > 0) {
@@ -294,8 +294,8 @@ const main = async (token: string, lookFor: string) => {
     name,
   }
   console.log(customer)
-  // intervalForever(() => likeAll(token, customer, lookFor), day / 2)
-  intervalForever(() => likeAutomation(token, customer, lookFor), day / 10)
+  intervalForever(() => likeAll(token, customer, lookFor), day / 2)
+  // intervalForever(() => likeAutomation(token, customer, lookFor), day / 10)
   // intervalForever(() => messageAutomation(token, customer), day / 2)
 
   console.log("==================END_MAIN========================")
