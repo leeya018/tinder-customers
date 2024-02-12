@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation"
 import { NavNames } from "@/util"
 import { addUserFirestore } from "@/api/firestore"
 import { User } from "@/api/firestore/user/interfaces"
+import Alerts from "@/ui/Alerts"
 
 function login() {
   const router = useRouter()
@@ -22,15 +23,11 @@ function login() {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    const unSub = onAuthStateChanged(auth, (user) => {
-      console.log(user)
-      if (user) {
-        router.push(NavNames.home)
-      }
-    })
-
-    return () => unSub()
-  }, [])
+    console.log(auth)
+    if (auth) {
+      router.push(NavNames.home)
+    }
+  }, [auth])
 
   const googleSignIn = async () => {
     const provider = new GoogleAuthProvider()
@@ -84,7 +81,7 @@ function login() {
               <div className="text-black">Sign in with Google</div>
             </button>
 
-            {/* <Alerts /> */}
+            <Alerts />
           </div>
         </div>
 

@@ -57,6 +57,8 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
   }
+  console.log("auth.currentUser?.photoURL")
+  console.log(auth.currentUser?.photoURL)
 
   return (
     <AppBar position="static">
