@@ -22,13 +22,6 @@ function login() {
   const inputRef = useRef(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    console.log(auth)
-    if (auth) {
-      router.push(NavNames.home)
-    }
-  }, [auth])
-
   const googleSignIn = async () => {
     const provider = new GoogleAuthProvider()
     signInWithPopup(auth, provider)
