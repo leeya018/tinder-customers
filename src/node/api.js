@@ -180,7 +180,7 @@ const likeUserApi = async (token, user, data) => {
     .then((response) => {
       const firstImage = user.photos.map((photos) => photos.url)[0]
 
-      console.log(firstImage)
+      // console.log(firstImage)
       const likePath =
         "C://Users//user//Desktop//code//lee//tinder-customers//src//node//tensorFolder//like.txt"
       addDataToTxt(likePath, token + " - " + firstImage)
@@ -208,9 +208,9 @@ const getRecsApi = async (token) => {
     .request(config)
     .then((response) => {
       const user = response.data.data.results[0].user
-      console.log(Object.keys(user))
-      console.log(user.photos.map((photos) => photos.url))
-      console.log({})
+      // console.log(Object.keys(user))
+      // console.log(user.photos.map((photos) => photos.url))
+      // console.log({})
       return response.data
     })
     .catch((error) => {
@@ -263,7 +263,7 @@ const getImagesApi = async (token, counter) => {
       )
       // console.log(imageUrls);
       const images = imageUrls.map((images) => images[0])
-      console.log(images)
+      // console.log(images)
       // for (const url of images) {
       //   await fromUrlToImage(url, outputPath);
       // }
@@ -346,7 +346,7 @@ async function appendImageFromUrlToFormData(url, formData, fieldName) {
     url: url,
     responseType: "stream",
   })
-  console.log("inner func")
+  // console.log("inner func")
   // console.log(response.data);
 
   // Append the image stream to the FormData

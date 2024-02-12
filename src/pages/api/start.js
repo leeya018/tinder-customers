@@ -3,9 +3,9 @@ import { main, test } from "../../node"
 export default async function handler(req, res) {
   try {
     // main()
-    const { token } = req.body
+    const { token, lookFor } = req.body
     console.log("start the main function")
-    const name = await main(token)
+    const name = await main(token, lookFor)
     // const name = await test(token)
 
     // console.log("servr" + name)

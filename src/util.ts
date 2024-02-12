@@ -239,8 +239,13 @@ export const fromTimestampToMoment = (date: Timestamp) => {
   return momentDate
 }
 
-export const options = ["trans", "relationship", "sex"]
-export const trans = [
+export const lookForOptions = {
+  trans: "trans",
+  relationship: "relationship",
+  sex: "sex",
+}
+
+export const transWords = [
   "trans",
   "transgender",
   "ladyboy",
@@ -249,20 +254,31 @@ export const trans = [
   "shemale",
 ]
 
-export const relationship = [
-  "long-term",
-  "no hookups",
-  "for serious",
-  "family-oriented",
-  "קשר אמיתי",
-  "קשר רציני",
-  "משפחה",
+export const relationshipWords = [
+  "Long-term partner",
+  "New friends",
+  "Still figuring it out",
 ]
-export const sex = [
-  "friends with benefits",
-  "Nothing serious",
-  "looking to meet new people",
-  "not looking for anything serious",
-  "קשר לא מחייב",
-  "משהו קליל",
+export const sexWords = [
+  "Long-term, open to short",
+  "Short-term, open to long",
+  "Short-term fun",
 ]
+
+// export const relationship = [
+//   "long-term",
+//   "no hookups",
+//   "for serious",
+//   "family-oriented",
+//   "קשר אמיתי",
+//   "קשר רציני",
+//   "משפחה",
+// ]
+// export const sex = [
+//   "friends with benefits",
+//   "Nothing serious",
+//   "looking to meet new people",
+//   "not looking for anything serious",
+//   "קשר לא מחייב",
+//   "משהו קליל",
+// ]

@@ -239,10 +239,10 @@ export const getRandomMessage = async () => {
   )
   return res.data
 }
-export const startApi = async (token) => {
+export const startApi = async (token, lookFor) => {
   const res = await axios.post(
     `http://localhost:${process.env.NEXT_PUBLIC_PORT}/api/start`,
-    { token }
+    { token, lookFor }
   )
   return res.data
 }

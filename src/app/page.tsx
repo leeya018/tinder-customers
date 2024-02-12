@@ -82,28 +82,6 @@ const RootPage = observer(() => {
         <ul className="mt-5">
           {tokens.map((token: Token, key: number) => (
             <CustomerCommand key={key} index={key} token={token} />
-            // <li className="flex items-center gap-2" key={key}>
-            //   <OutlinedInput
-            //     disabled={token.isProcess === true}
-            //     onChange={(e) => {
-            //       let dupTokens = [...tokens]
-            //       dupTokens[key].key = e.target.value
-            //       setTokens(dupTokens)
-            //     }}
-            //     value={token.key}
-            //     placeholder="token"
-            //     className="h-10"
-            //   />
-            //   <Button
-            //     className="h-10"
-            //     variant="outlined"
-            //     disabled={token.key === "" || token.isProcess === true}
-            //     onClick={() => start(key)}
-            //   >
-            //     {token.isProcess === true ? "in Process" : "Start"}
-            //   </Button>
-            //   <div>{token.name}</div>
-            // </li>
           ))}
         </ul>
       </div>

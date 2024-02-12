@@ -2,6 +2,7 @@ import { addLikeFirestore, addMessageCountFirestore } from "@/api/firestore"
 import { Customer } from "@/api/firestore/customer/interfaces"
 import { Like } from "@/api/firestore/like/interfaces"
 import { Message } from "@/api/firestore/message/interfaces"
+import { lookForOptions, relationshipWords, sexWords, transWords } from "@/util"
 import { Timestamp } from "firebase/firestore"
 
 const {
@@ -57,8 +58,50 @@ const likeAll = async (token: string, customer: Customer) => {
 }
 
 // let counter = 0
-
-const isGoodFit = async (token: string, rec: any) => {
+const getFitName = (lookFor: string, user: any) => {
+  let wordsIncludes = []
+  console.log({ lookFor })
+  switch (lookFor) {
+    case lookForOptions.trans: {
+      wordsIncludes = transWords.filter((word) =>
+        user.bio.toLowerCase().includes(word)
+      )
+      if (wordsIncludes.length > 0) {
+        console.log("trans fit===>")
+      } else {
+        console.log("not trans fit===>")
+      }
+      break
+    }
+    case lookForOptions.relationship: {
+      const pref = user.relationship_intent.body_text
+      console.log({ pref })
+      wordsIncludes = relationshipWords.filter((choice) => choice === pref)
+      if (wordsIncludes.length > 0) {
+        console.log("relationship fit===>")
+      } else {
+        console.log("not relationship fit===>")
+      }
+      break
+    }
+    case lookForOptions.sex: {
+      const pref = user.relationship_intent.body_text
+      console.log({ pref })
+      wordsIncludes = sexWords.filter((choice) => choice === pref)
+      if (wordsIncludes.length > 0) {
+        console.log("sex fit===>")
+      } else {
+        console.log("not sex fit===>")
+      }
+      break
+    }
+    default:
+      console.log("this optiosn is not exists")
+      throw new Error("this optiosn is not exists")
+  }
+  return wordsIncludes.length > 0
+}
+const isGoodFit = async (token: string, rec: any, lookFor: string) => {
   // console.log({ rec })
   const user = rec.user
   const photoUrls = user.photos.map((photos: any) => photos.url)
@@ -68,33 +111,18 @@ const isGoodFit = async (token: string, rec: any) => {
   const pred = convertPrediction(prediction)
   const randNum = Math.random()
   const bio = rec.user.bio
-  console.log({ bio })
-  // const desc =
-  const fitWords = [
-    "trans",
-    "transgender",
-    "ladyboy",
-    "טרנס",
-    "טראנס",
-    "shemale",
-  ]
+  // console.log({ bio })
+  const isFitPref = getFitName(lookFor, rec.user)
 
-  const wordsIncludes = fitWords.filter((word) =>
-    bio.toLowerCase().includes(word)
-  )
-  const isBioFit = wordsIncludes.length > 0
-  if (isBioFit) {
-    // let photoUrlsTxt = photoUrls.map((url) => url + "/n")
-    // photoUrlsTxt + bio + "/n/n/n"
-    console.log(photoUrls)
-    // addArrDataToTxt("./tensorFolder/bio.txt", photoUrls, bio)
+  if (isFitPref) {
+    return isFitPref || pred.like > 0.4
   }
-  // return isBioFit || pred.like > 0.4 || randNum > 0.4
-  // return isBioFit || randNum > 0.4
-  return isBioFit || pred.like > 0.4
-  // return isBioFit
 }
-const iterateRecs = async (token: string, customer: Customer) => {
+const iterateRecs = async (
+  token: string,
+  customer: Customer,
+  lookFor: string
+) => {
   let res = null
   do {
     res = await getRecsApi(token)
@@ -118,7 +146,7 @@ const iterateRecs = async (token: string, customer: Customer) => {
     try {
       // console.log(pred)
       // if (convertPrediction(prediction).like > 0.5) {
-      const isFit = await isGoodFit(token, rec)
+      const isFit = await isGoodFit(token, rec, lookFor)
       if (isFit) {
         // if (randNum > 0.3) {
         console.log("HHHHHHHHHOOOOOOOOOOOOOOOOOOTTTTTTTTTTTTTTTTTTTTTTTT")
@@ -146,10 +174,14 @@ const iterateRecs = async (token: string, customer: Customer) => {
   console.log({ likes, passes })
 }
 
-const likeAutomation = async (token: string, customer: Customer) => {
+const likeAutomation = async (
+  token: string,
+  customer: Customer,
+  lookFor: string
+) => {
   console.log("==================LIKE_AUTOMATION========================")
   while (likes < likesLimit && passes + likes < 100) {
-    await iterateRecs(token, customer)
+    await iterateRecs(token, customer, lookFor)
   }
   console.log({ likes, passes })
 }
@@ -227,7 +259,7 @@ const test = async (token: string) => {
   await addMessageCountFirestore(newMessage, customer)
 }
 // I can do setIntrval for each one , every time the dist betwen the operations
-const main = async (token: string) => {
+const main = async (token: string, lookFor: string) => {
   const minute = 1000 * 60
   const hour = 1000 * 60 * 60
   const day = hour * 24
@@ -249,9 +281,9 @@ const main = async (token: string) => {
     name,
   }
   console.log(customer)
-  intervalForever(() => likeAll(token, customer), day / 2)
-  intervalForever(() => likeAutomation(token, customer), day / 10)
-  intervalForever(() => messageAutomation(token, customer), day / 2)
+  // intervalForever(() => likeAll(token, customer), day / 2)
+  intervalForever(() => likeAutomation(token, customer, lookFor), day / 10)
+  // intervalForever(() => messageAutomation(token, customer), day / 2)
 
   console.log("==================END_MAIN========================")
   // console.log(res.data.user)

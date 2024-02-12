@@ -6,7 +6,7 @@ import tokensStore from "@/mobx/tokenStore"
 import { startApi } from "@/lib/api"
 import { toJS } from "mobx"
 import BasicSelect from "@/ui/basicSelect"
-import { options } from "@/util"
+import { lookForOptions } from "@/util"
 
 type CustomerCommandProps = {
   token: Token
@@ -21,7 +21,7 @@ const CustomerCommand = observer<CustomerCommandProps>(({ token, index }) => {
     let dupTokens = [...tokens]
     dupTokens[index].isProcess = true
 
-    const name = await startApi(tokens[index].key)
+    const name = await startApi(tokens[index].key, lookFor)
     console.log(name)
     dupTokens[index].name = name
     setTokens(dupTokens)
@@ -44,13 +44,15 @@ const CustomerCommand = observer<CustomerCommandProps>(({ token, index }) => {
         className="w-36 h-full box-content"
         handleChange={setLookFor}
         value={lookFor}
-        options={options}
+        options={Object.keys(lookForOptions)}
         name="look for"
       />
       <Button
         className="h-10"
         variant="outlined"
-        disabled={token.key === "" || token.isProcess === true}
+        disabled={
+          token.key === "" || token.isProcess === true || lookFor === ""
+        }
         onClick={() => start(index)}
       >
         {token.isProcess === true ? "in Process" : "Start"}
