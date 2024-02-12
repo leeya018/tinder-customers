@@ -1,5 +1,5 @@
 import { NavNames } from "@/util"
-import { makeAutoObservable } from "mobx"
+import { autorun, makeAutoObservable } from "mobx"
 
 class Nav {
   nav: string = NavNames.home
@@ -14,3 +14,7 @@ class Nav {
 
 const navStore = new Nav()
 export default navStore
+
+autorun(() => {
+  console.log(navStore.nav)
+})

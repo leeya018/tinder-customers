@@ -17,11 +17,13 @@ import { useRouter } from "next/navigation"
 import { signOut } from "firebase/auth"
 import { auth } from "@/firebase"
 import Image from "next/image"
+import navStore from "@/mobx/navStore"
+import { observer } from "mobx-react-lite"
 
 const pages = ["Home", "View"]
 const settings = ["Logout"]
 
-function Navbar() {
+const Navbar = observer(() => {
   const router = useRouter()
 
   const [anchorElNav, setAnchorElNav] = React.useState(null)
@@ -77,7 +79,6 @@ function Navbar() {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -151,8 +152,21 @@ function Navbar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={() => navigate(page)}
-                sx={{ my: 2, color: "white", display: "block" }}
+                onClick={() => {
+                  navStore.setNav(NavNames[page.toLowerCase()])
+                  navigate(page)
+                }}
+                sx={{
+                  my: 2,
+                  color: "white",
+                  display: "block",
+                  textDecoration:
+                    navStore.nav === NavNames[page.toLowerCase()]
+                      ? "underline"
+                      : "none",
+                  // textDecoration: "underline",
+                }}
+                // className={"bg-color-orange"}
               >
                 {page}
               </Button>
@@ -190,5 +204,5 @@ function Navbar() {
       </Container>
     </AppBar>
   )
-}
+})
 export default Navbar
