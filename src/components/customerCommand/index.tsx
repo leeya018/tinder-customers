@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { Button, OutlinedInput } from "@mui/material"
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  OutlinedInput,
+} from "@mui/material"
 import { Token } from "@/mobx/tokenStore"
 import tokensStore from "@/mobx/tokenStore"
 import { startApi } from "@/lib/api"
@@ -14,6 +19,7 @@ type CustomerCommandProps = {
 }
 const CustomerCommand = observer<CustomerCommandProps>(({ token, index }) => {
   const [lookFor, setLookFor] = useState<string>("")
+  const [isLookGood, setIsLookGood] = useState(false)
   const { tokens, setTokens } = tokensStore
   console.log(token)
 
@@ -21,12 +27,12 @@ const CustomerCommand = observer<CustomerCommandProps>(({ token, index }) => {
     let dupTokens = [...tokens]
     dupTokens[index].isProcess = true
 
-    const name = await startApi(tokens[index].key, lookFor)
+    const name = await startApi(tokens[index].key, lookFor, isLookGood)
     console.log(name)
     dupTokens[index].name = name
     setTokens(dupTokens)
   }
-  console.log({ lookFor })
+  console.log({ isLookGood })
   return (
     <li className="flex items-center gap-2">
       <OutlinedInput
@@ -46,6 +52,16 @@ const CustomerCommand = observer<CustomerCommandProps>(({ token, index }) => {
         value={lookFor}
         options={Object.keys(lookForOptions)}
         name="look for"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={isLookGood}
+            onChange={() => setIsLookGood((prev) => !prev)}
+            name="gilad"
+          />
+        }
+        label="Looking good"
       />
       <Button
         className="h-10"

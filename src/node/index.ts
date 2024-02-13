@@ -38,14 +38,19 @@ const payloadLike = (s_number: string) => ({
   liked_content_id: uuidv4(),
 })
 
-const likeAll = async (token: string, customer: Customer, lookFor: string) => {
+const likeAll = async (
+  token: string,
+  customer: Customer,
+  lookFor: string,
+  isLookGood: boolean
+) => {
   // console.log("==================LIKEALL========================")
   try {
     const recs = await getMyLikesApi(token) // GET ALL LIKES FROM WOMEN
     for (const rec of recs) {
       // console.log(rec.user)
       // console.log(rec.user._id, rec.s_number)
-      const isFit = await isGoodFit(rec.user, lookFor)
+      const isFit = await isGoodFit(rec.user, lookFor, isLookGood)
       console.log({ name: rec.user.name, lookFor, isFit })
       if (isFit) {
         await likeUserApi(token, rec.user, payloadLike(rec.s_number))
@@ -114,7 +119,7 @@ const getIsLookForFit = (lookFor: string, user: any) => {
   }
   return wordsIncludes.length > 0
 }
-const isGoodFit = async (user: any, lookFor: string) => {
+const isGoodFit = async (user: any, lookFor: string, isLookGood: boolean) => {
   // console.log({ rec })
 
   const photoUrls = user.photos.map((photos: any) => photos.url)
@@ -126,16 +131,14 @@ const isGoodFit = async (user: any, lookFor: string) => {
   const bio = user.bio
   // console.log({ bio })
   const isFitPref = getIsLookForFit(lookFor, user)
-
-  return isFitPref
-  // if (isFitPref) {
-  // return isFitPref || pred.like > 0.4
-  // }
+  console.log({ isLookGood })
+  return isLookGood ? isFitPref && pred.like > 0.4 : isFitPref
 }
 const iterateRecs = async (
   token: string,
   customer: Customer,
-  lookFor: string
+  lookFor: string,
+  isLookGood: boolean
 ) => {
   let res = null
   do {
@@ -159,7 +162,7 @@ const iterateRecs = async (
     try {
       // console.log(pred)
       // if (convertPrediction(prediction).like > 0.5) {
-      const isFit = await isGoodFit(rec.user, lookFor)
+      const isFit = await isGoodFit(rec.user, lookFor, isLookGood)
       if (isFit) {
         // if (randNum > 0.3) {
         console.log("HHHHHHHHHOOOOOOOOOOOOOOOOOOTTTTTTTTTTTTTTTTTTTTTTTT")
@@ -190,11 +193,12 @@ const iterateRecs = async (
 const likeAutomation = async (
   token: string,
   customer: Customer,
-  lookFor: string
+  lookFor: string,
+  isLookGood: boolean
 ) => {
   console.log("==================LIKE_AUTOMATION========================")
   while (likes < likesLimit && passes + likes < 100) {
-    await iterateRecs(token, customer, lookFor)
+    await iterateRecs(token, customer, lookFor, isLookGood)
   }
   console.log({ likes, passes })
 }
@@ -272,7 +276,7 @@ const test = async (token: string) => {
   await addMessageCountFirestore(newMessage, customer)
 }
 // I can do setIntrval for each one , every time the dist betwen the operations
-const main = async (token: string, lookFor: string) => {
+const main = async (token: string, lookFor: string, isLookGood: boolean) => {
   const minute = 1000 * 60
   const hour = 1000 * 60 * 60
   const day = hour * 24
@@ -294,8 +298,11 @@ const main = async (token: string, lookFor: string) => {
     name,
   }
   console.log(customer)
-  intervalForever(() => likeAll(token, customer, lookFor), day / 2)
-  // intervalForever(() => likeAutomation(token, customer, lookFor), day / 10)
+  intervalForever(() => likeAll(token, customer, lookFor, isLookGood), day / 2)
+  intervalForever(
+    () => likeAutomation(token, customer, lookFor, isLookGood),
+    day / 10
+  )
   // intervalForever(() => messageAutomation(token, customer), day / 2)
 
   console.log("==================END_MAIN========================")
