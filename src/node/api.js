@@ -3,10 +3,11 @@ require("dotenv").config()
 const fs = require("fs")
 // const {getToken } = require("./util");
 const FormData = require("form-data")
+const { getUrl } = require("@/util")
 // const { addImageUrl } = require("lib/api");
 let data = new FormData()
 
-const filePath = `C://Users//user//Desktop//code//lee//tinder-customers//src//node//starters//messages_english.txt`
+const fileStarterFolder = `C://Users//user//Desktop//code//lee//tinder-customers//src//node//starters//`
 
 // const filePath = "starters/messages_english.txt"
 
@@ -300,31 +301,53 @@ const getImagesApi = async (token, counter) => {
       //   return res.status(450).json(error);
     })
 }
+// const getProfileApi = async (token) => {
+//   const body = {
+//     user: {
+//       global_mode: {
+//         language_preferences: [
+//           {
+//             language: "en",
+//             is_selected: true,
+//           },
+//         ],
+//       },
+//     },
+//   }
+//   var config = {
+//     method: "post",
+//     maxBodyLength: Infinity,
+
+//     // url: `https://api.gotinder.com/v2/profile?locale=en`,
+//     url: `https://api.gotinder.com/v2/profile?locale=en&include=account%2Cavailable_descriptors%2Cboost%2Cbouncerbypass%2Ccontact_cards%2Cemail_settings%2Cfeature_access%2Cinstagram%2Clikes%2Cprofile_meter%2Cnotifications%2Cmisc_merchandising%2Cofferings%2Conboarding%2Cpaywalls%2Cplus_control%2Cpurchase%2Creadreceipts%2Cspotify%2Csuper_likes%2Ctinder_u%2Ctravel%2Ctutorials%2Cuser`,
+//     headers: {
+//       "Content-Type": "application/json",
+//       "User-Agent":
+//         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+//       "x-auth-token": token,
+//     },
+//     data: body,
+//   }
+//   return axios(config)
+//     .then(function (response) {
+//       return response.data
+//     })
+//     .catch(function (error) {
+//       console.log(error)
+//     })
+// }
 const getProfileApi = async (token) => {
-  const body = {
-    user: {
-      global_mode: {
-        language_preferences: [
-          {
-            language: "en",
-            is_selected: true,
-          },
-        ],
-      },
-    },
-  }
   var config = {
-    method: "post",
+    method: "get",
     maxBodyLength: Infinity,
 
-    url: `https://api.gotinder.com/v2/profile?locale=en`,
+    url: `https://api.gotinder.com/v2/profile?locale=en&include=account%2Cavailable_descriptors%2Cboost%2Cbouncerbypass%2Ccontact_cards%2Cemail_settings%2Cfeature_access%2Cinstagram%2Clikes%2Cprofile_meter%2Cnotifications%2Cmisc_merchandising%2Cofferings%2Conboarding%2Cpaywalls%2Cplus_control%2Cpurchase%2Creadreceipts%2Cspotify%2Csuper_likes%2Ctinder_u%2Ctravel%2Ctutorials%2Cuser`,
     headers: {
       "Content-Type": "application/json",
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
       "x-auth-token": token,
     },
-    data: body,
   }
   return axios(config)
     .then(function (response) {
@@ -335,8 +358,10 @@ const getProfileApi = async (token) => {
     })
 }
 
-const getRandomMessage = () => {
+const getRandomMessage = (fileStarterName) => {
   try {
+    const filePath = fileStarterFolder + "" + fileStarterName + ".txt"
+    console.log({ fileStarterName, filePath })
     const data = fs.readFileSync(filePath, "utf8")
     const lines = data.split("\n").filter((line) => line.trim() !== "")
     const chosenLine = Math.floor(Math.random() * (lines.length - 1))
@@ -345,8 +370,10 @@ const getRandomMessage = () => {
       return lines[chosenLine]
     }
 
+    console.log("Line is out of range" + chosenLine)
     throw new Error("Line is out of range" + chosenLine)
   } catch (err) {
+    console.log(err.message)
     throw err.message
   }
 }
@@ -393,6 +420,7 @@ function addDataToTxt(fileName, str) {
     }
   })
 }
+
 // const getLotsImages = async (token,) => {
 //   let counter = 65980;
 //   while (true) {

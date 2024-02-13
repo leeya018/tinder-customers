@@ -2,9 +2,16 @@ import { addLikeFirestore, addMessageCountFirestore } from "@/api/firestore"
 import { Customer } from "@/api/firestore/customer/interfaces"
 import { Like } from "@/api/firestore/like/interfaces"
 import { Message } from "@/api/firestore/message/interfaces"
-import { lookForOptions, relationshipWords, sexWords, transWords } from "@/util"
+import {
+  fileStarterNames,
+  lookForOptions,
+  relationshipWords,
+  sexWords,
+  transWords,
+} from "@/util"
 import { Timestamp } from "firebase/firestore"
 import { passUserWithMatchApi } from "./api"
+import { getDataFromGptApi } from "@/lib/api"
 
 const {
   getRecsApi,
@@ -203,7 +210,11 @@ const likeAutomation = async (
   console.log({ likes, passes })
 }
 
-const messageAutomation = async (token: string, customer: Customer) => {
+const messageAutomation = async (
+  token: string,
+  customer: Customer,
+  lang: string
+) => {
   console.log("==================MESSAGE_AUTOMATION========================")
   console.log({ customer })
   const paylod = {
@@ -215,9 +226,15 @@ const messageAutomation = async (token: string, customer: Customer) => {
     const res = await getMatchesApi(token, paylod)
 
     const matches = res.data?.matches
+    console.log("matches len: ", matches.length)
+    console.log("message automation: ", lang)
     for (const match of matches) {
-      const message = getRandomMessage()
-
+      console.log("I am in the for===>")
+      const fileStarterName =
+        fileStarterNames[lang.toLowerCase()] || fileStarterNames.english
+      console.log({ fileStarterName })
+      const message = getRandomMessage(fileStarterName)
+      console.log({ message })
       const payloadMessage = {
         userId: customer.id,
         otherId: match?.person._id,
@@ -255,6 +272,7 @@ const intervalForever = async (callback: Function, rate: number) => {
 const test = async (token: string) => {
   const res = await getProfileApi(token)
   const myProfileId = res.data.user._id
+
   console.log({ user: res.data.user })
   const name = res.data.user.name
 
@@ -282,32 +300,51 @@ const main = async (token: string, lookFor: string, isLookGood: boolean) => {
   const day = hour * 24
   const week = day * 7
   const second = 1000
-  // process.env.NEXT_PUBLIC_X_AUTH_TOKEN = "";
-  // console.log(process.env.NEXT_PUBLIC_X_AUTH_TOKEN)
 
-  console.log("==================START_MAIN========================")
+  try {
+    // process.env.NEXT_PUBLIC_X_AUTH_TOKEN = "";
+    // console.log(process.env.NEXT_PUBLIC_X_AUTH_TOKEN)
 
-  // intervalForever(updateToken, day); // each day updaet the token in file and then in the env
-  // await sleep(minute);
-  const res = await getProfileApi(token)
-  // console.log(res.data.user)
-  const { _id, name } = res.data.user
+    console.log("==================START_MAIN========================")
 
-  const customer: Customer = {
-    id: _id,
-    name,
+    // intervalForever(updateToken, day); // each day updaet the token in file and then in the env
+    // await sleep(minute);
+    const res = await getProfileApi(token)
+    console.log({ profile: res.data })
+    console.log({ isTraveling: res.data.travel?.is_traveling })
+    console.log({ travelPos: res.data.travel?.travel_pos })
+    console.log({ myPos: res.data.user.pos })
+
+    const location = res.data.travel?.is_traveling
+      ? res.data.travel.travel_pos
+      : res.data.user.pos
+    const question = `what is the speaking language in ${JSON.stringify(
+      location
+    )} in 1 word only`
+    console.log({ question })
+    const lang = await getDataFromGptApi(question)
+    console.log({ lang })
+    // console.log(res.data.user)
+    const { _id, name } = res.data.user
+
+    const customer: Customer = {
+      id: _id,
+      name,
+    }
+    console.log(customer)
+    // intervalForever(() => likeAll(token, customer, lookFor, isLookGood), day / 2)
+    // intervalForever(
+    //   () => likeAutomation(token, customer, lookFor, isLookGood),
+    //   day / 10
+    // )
+    intervalForever(() => messageAutomation(token, customer, lang), day / 2)
+
+    console.log("==================END_MAIN========================")
+    // console.log(res.data.user)
+    return res.data.user.name
+  } catch (error) {
+    console.log(error.message)
   }
-  console.log(customer)
-  intervalForever(() => likeAll(token, customer, lookFor, isLookGood), day / 2)
-  intervalForever(
-    () => likeAutomation(token, customer, lookFor, isLookGood),
-    day / 10
-  )
-  // intervalForever(() => messageAutomation(token, customer), day / 2)
-
-  console.log("==================END_MAIN========================")
-  // console.log(res.data.user)
-  return res.data.user.name
 }
 
 // async function imagesConv(sourcePath, outputPath) {

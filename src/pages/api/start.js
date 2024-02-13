@@ -6,6 +6,9 @@ export default async function handler(req, res) {
     const { token, lookFor, isLookGood } = req.body
     console.log("start the main function")
     const name = await main(token, lookFor, isLookGood)
+    // const question = `what is the speaking language in {lat: 6.248, lon: -75.566} in 1 word only`
+    // const lang = await getDataFromGptApi(question)
+    // console.log({ lang })
     // const name = await test(token)
 
     // console.log("servr" + name)
