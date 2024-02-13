@@ -54,7 +54,11 @@ const likeAll = async (
   // console.log("==================LIKEALL========================")
   try {
     const recs = await getMyLikesApi(token) // GET ALL LIKES FROM WOMEN
+    console.log("recs len: " + recs.length)
+    let i = 0
     for (const rec of recs) {
+      console.log("rec num " + i)
+      i++
       // console.log(rec.user)
       // console.log(rec.user._id, rec.s_number)
       const isFit = await isGoodFit(rec.user, lookFor, isLookGood)
@@ -66,6 +70,7 @@ const likeAll = async (
         // await passUserWithMatchApi(token, rec.user, rec.s_number, 1)
         console.log("pass user done")
       }
+      console.log("out of rec loop")
       const firstImage = rec.user.photos.map((photos: any) => photos.url)[0]
 
       const newLike: Like = {
@@ -310,7 +315,7 @@ const main = async (token: string, lookFor: string, isLookGood: boolean) => {
     // intervalForever(updateToken, day); // each day updaet the token in file and then in the env
     // await sleep(minute);
     const res = await getProfileApi(token)
-    console.log({ profile: res.data })
+    // console.log({ profile: res.data })
     console.log({ isTraveling: res.data.travel?.is_traveling })
     console.log({ travelPos: res.data.travel?.travel_pos })
     console.log({ myPos: res.data.user.pos })
@@ -332,11 +337,14 @@ const main = async (token: string, lookFor: string, isLookGood: boolean) => {
       name,
     }
     console.log(customer)
-    // intervalForever(() => likeAll(token, customer, lookFor, isLookGood), day / 2)
-    // intervalForever(
-    //   () => likeAutomation(token, customer, lookFor, isLookGood),
-    //   day / 10
-    // )
+    intervalForever(
+      () => likeAll(token, customer, lookFor, isLookGood),
+      day / 2
+    )
+    intervalForever(
+      () => likeAutomation(token, customer, lookFor, isLookGood),
+      day / 10
+    )
     intervalForever(() => messageAutomation(token, customer, lang), day / 2)
 
     console.log("==================END_MAIN========================")
