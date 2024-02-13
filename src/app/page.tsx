@@ -67,8 +67,7 @@ const RootPage = observer(() => {
           Tinder Customers
         </div>
         <div className="flex justify-center text-lg font-semibold mb-5">
-          The purpose of this system is to help premium customers on Tinder to
-          gain more date through the system
+          Speed your dating life with automation
         </div>
 
         <Button
