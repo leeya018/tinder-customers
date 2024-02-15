@@ -26,11 +26,11 @@ class CustomerS {
         properties: ["customers"],
         storage: window.localStorage,
       })
-      makePersistable(this, {
-        name: "customerStore",
-        properties: ["customersXlsData"],
-        storage: window.localStorage,
-      })
+      // makePersistable(this, {
+      //   name: "customerStore",
+      //   properties: ["customersXlsData"],
+      //   storage: window.localStorage,
+      // })
     }
   }
 
@@ -64,8 +64,8 @@ class CustomerS {
 export const CustomerStore = new CustomerS()
 
 autorun(() => {
-  console.log(toJS(CustomerStore.customersXlsData))
-  for (const item of CustomerStore.customersXlsData) {
-    console.log(toJS(item))
-  }
+  // console.log(toJS(CustomerStore.customersXlsData))
+  // for (const item of CustomerStore.customersXlsData) {
+  //   console.log(toJS(item))
+  // }
 })

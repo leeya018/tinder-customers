@@ -35,7 +35,7 @@ const LoadXls = observer<LoadXlsProps>(({ callback }) => {
   return (
     <div>
       <input type="file" onChange={handleFileUpload} />
-      <table>
+      {/* <table>
         <tbody>
           {data.map((row, index) => (
             <tr key={index}>
@@ -45,7 +45,7 @@ const LoadXls = observer<LoadXlsProps>(({ callback }) => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
     </div>
   )
 })
