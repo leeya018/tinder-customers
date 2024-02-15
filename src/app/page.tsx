@@ -17,10 +17,12 @@ import Navbar from "@/components/navbar"
 import CustomerCommand from "@/components/customerCommand"
 import { startApi } from "@/lib/api"
 import LoadXls from "@/components/loadXls"
+import { CustomerStore } from "@/mobx/customerStore"
 
 const RootPage = observer(() => {
   const { tokens, addToken, setTokens, setToken } = tokensStore
   const router = useRouter()
+
   const isPlusAvailable = () => {
     return tokensStore.tokens.length === 0 || tokens[0].name !== ""
   }
@@ -49,7 +51,9 @@ const RootPage = observer(() => {
       <div className="w-[100vw] h-[100vh] p-10 ">
         <Alerts />
         {/*  */}
-        <LoadXls />
+        <LoadXls
+          callback={(json: Object) => CustomerStore.setCustomersXls(json)}
+        />
         {ModalStore.modalName === modals.message && (
           <MessageModal
             onClose={() => ModalStore.closeModal()}

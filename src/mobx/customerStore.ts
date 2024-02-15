@@ -7,10 +7,11 @@ import { Customer } from "@/api/firestore/customer/interfaces"
 import { Message } from "@/api/firestore/message/interfaces"
 import { modals } from "@/util"
 import { Timestamp } from "firebase/firestore"
-import { makeAutoObservable } from "mobx"
+import { autorun, makeAutoObservable, toJS } from "mobx"
 import { makePersistable } from "mobx-persist-store"
 
 class CustomerS {
+  customersXlsData: any[] = []
   customers: Customer[] = []
   chosenCustomer: Customer | null = null
   likes: any[] = []
@@ -25,7 +26,24 @@ class CustomerS {
         properties: ["customers"],
         storage: window.localStorage,
       })
+      makePersistable(this, {
+        name: "customerStore",
+        properties: ["customersXlsData"],
+        storage: window.localStorage,
+      })
     }
+  }
+
+  setCustomersXls(xlsDataJson: any) {
+    const headers = xlsDataJson[0]
+    const result = xlsDataJson.slice(1).map((row) => {
+      const obj = {}
+      headers.forEach((header, index) => {
+        obj[header] = row[index]
+      })
+      return obj
+    })
+    this.customersXlsData = result
   }
 
   setChosenCustomer(customer: Customer) {
@@ -44,3 +62,10 @@ class CustomerS {
   }
 }
 export const CustomerStore = new CustomerS()
+
+autorun(() => {
+  console.log(toJS(CustomerStore.customersXlsData))
+  for (const item of CustomerStore.customersXlsData) {
+    console.log(toJS(item))
+  }
+})

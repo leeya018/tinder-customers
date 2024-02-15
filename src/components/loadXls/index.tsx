@@ -2,7 +2,10 @@ import React, { ChangeEvent, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import * as XLSX from "xlsx"
 
-const LoadXls = observer(() => {
+type LoadXlsProps = {
+  callback: () => void
+}
+const LoadXls = observer<LoadXlsProps>(({ callback }) => {
   const [data, setData] = useState<any>([])
 
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -19,6 +22,8 @@ const LoadXls = observer(() => {
         const sheet = workbook.Sheets[sheetName]
         const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 })
         setData(jsonData)
+        console.log({ jsonData })
+        callback(jsonData)
       }
       reader.readAsBinaryString(file)
     } catch (error) {
