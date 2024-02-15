@@ -3,7 +3,7 @@ require("dotenv").config()
 const fs = require("fs")
 // const {getToken } = require("./util");
 const FormData = require("form-data")
-const { getUrl } = require("@/util")
+// const { getUrl } = require("@/util")
 // const { addImageUrl } = require("lib/api");
 let data = new FormData()
 
@@ -149,7 +149,7 @@ const passUserApi = async (token, user, s_number, user_traveling) => {
       console.log(firstImage)
       const passPath =
         "C://Users//user//Desktop//code//lee//tinder-customers//src//node//tensorFolder//pass.txt"
-      addDataToTxt(passPath, token + " - " + firstImage)
+      addDataToTxt(passPath, firstImage)
       return response.data
     })
     .catch((error) => {
@@ -263,7 +263,6 @@ async function fromUrlToImage(url, pathFileName) {
     })
   } catch (error) {
     console.log(error.message)
-    console.log(error.data)
   }
 }
 
@@ -386,13 +385,17 @@ function addArrDataToTxt(fileName, strArr, txt) {
 }
 
 function readImagesFromTxt(url) {
-  // Read the file content
-  const content = fs.readFileSync(url, "utf8")
+  try {
+    // Read the file content
+    const content = fs.readFileSync(url, "utf8")
 
-  // Split the content by newline character to get an array
-  const lines = content.split("\n").filter(Boolean) // filter(Boolean) removes any empty lines
+    // Split the content by newline character to get an array
+    const lines = content.split("\n").filter(Boolean) // filter(Boolean) removes any empty lines
 
-  return lines
+    return lines
+  } catch (error) {
+    console.log(error.message)
+  }
 }
 async function appendImageFromUrlToFormData(url, formData, fieldName) {
   const response = await axios({

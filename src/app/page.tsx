@@ -16,6 +16,7 @@ import ProtectedRout from "@/components/protectedRout"
 import Navbar from "@/components/navbar"
 import CustomerCommand from "@/components/customerCommand"
 import { startApi } from "@/lib/api"
+import LoadXls from "@/components/loadXls"
 
 const RootPage = observer(() => {
   const { tokens, addToken, setTokens, setToken } = tokensStore
@@ -24,15 +25,15 @@ const RootPage = observer(() => {
     return tokensStore.tokens.length === 0 || tokens[0].name !== ""
   }
 
-  const start = async (index: number) => {
-    let dupTokens = [...tokens]
-    dupTokens[index].isProcess = true
+  // const start = async (index: number) => {
+  //   let dupTokens = [...tokens]
+  //   dupTokens[index].isProcess = true
 
-    const name = await startApi(tokens[index].key)
-    console.log(name)
-    dupTokens[index].name = name
-    setTokens(dupTokens)
-  }
+  //   const name = await startApi(tokens[index].key)
+  //   console.log(name)
+  //   dupTokens[index].name = name
+  //   setTokens(dupTokens)
+  // }
   const add = () => {
     const emptyTokensAmount = tokens.filter((token) => token.key === "").length
     if (emptyTokensAmount < 1) {
@@ -48,7 +49,7 @@ const RootPage = observer(() => {
       <div className="w-[100vw] h-[100vh] p-10 ">
         <Alerts />
         {/*  */}
-
+        <LoadXls />
         {ModalStore.modalName === modals.message && (
           <MessageModal
             onClose={() => ModalStore.closeModal()}
