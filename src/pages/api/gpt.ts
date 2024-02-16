@@ -33,9 +33,6 @@ handler.post(async (req: NextApiRequest, res: NextApiResponse) => {
       presence_penalty: 0,
     })
 
-    // console.log("choises 1 ", completion)
-    // console.log("choises 1 ", completion.choices)
-    // console.log("choises 1 ", completion.choices[0])
     const content = completion.choices[0].message.content
     // const data = choice.message.content
     console.log({ content })

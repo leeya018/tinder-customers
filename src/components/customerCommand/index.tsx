@@ -12,7 +12,8 @@ import { startApi } from "@/lib/api"
 import { toJS } from "mobx"
 import BasicSelect from "@/ui/basicSelect"
 import { lookForOptions } from "@/util"
-import { CustomerStore } from "@/mobx/customerStore"
+import { CustomerStore, customerStatus } from "@/mobx/customerStore"
+import { CustomerXlsData } from "@/api/firestore/customerXlsData/interface"
 //  need to continuse with the xls
 // https://docs.google.com/spreadsheets/d/194xGNn4jMguCqcqJCcqzzKR7ZIgCHQzwtpHajv80wWU/edit#gid=1701642647
 type CustomerCommandProps = {
@@ -29,7 +30,21 @@ const CustomerCommand = observer<CustomerCommandProps>(
       return name && token && lookForOptions[lookFor] && !isProcess
     }
 
-    const start = async (index: number) => {}
+    const start = async () => {
+      try {
+        await startApi(customerXlsData)
+        CustomerStore.updateCustomersXls(index, {
+          status: customerStatus.success,
+        })
+      } catch (error) {
+        console.log(error.message)
+        CustomerStore.updateCustomersXls(index, {
+          status: customerStatus.failed,
+        })
+        throw error
+      }
+    }
+
     console.log({ customerXlsData })
     return (
       <li className="flex items-center gap-2">
@@ -91,7 +106,7 @@ const CustomerCommand = observer<CustomerCommandProps>(
           className={`h-10 ${isAllFieldsFill() ? "cursor-pointer" : ""}`}
           variant="outlined"
           disabled={!isAllFieldsFill()}
-          // onClick={() => start(index)}
+          onClick={start}
         >
           {customerXlsData.isProcess === true ? "in Process" : "Start"}
         </Button>
@@ -99,6 +114,17 @@ const CustomerCommand = observer<CustomerCommandProps>(
           <div className="group-hover:hidden">Show Token</div>
           <div className="hidden  group-hover:flex  ">
             {customerXlsData.token}
+          </div>
+        </div>
+        <div className="flex justify-center items-center  ">
+          <div
+            className={
+              customerXlsData.status === customerStatus.success
+                ? "text-color-green"
+                : "text-color-red"
+            }
+          >
+            {customerXlsData.status}
           </div>
         </div>
       </li>

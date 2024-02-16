@@ -27,15 +27,6 @@ const RootPage = observer(() => {
     return tokensStore.tokens.length === 0 || tokens[0].name !== ""
   }
 
-  // const start = async (index: number) => {
-  //   let dupTokens = [...tokens]
-  //   dupTokens[index].isProcess = true
-
-  //   const name = await startApi(tokens[index].key)
-  //   console.log(name)
-  //   dupTokens[index].name = name
-  //   setTokens(dupTokens)
-  // }
   const add = () => {
     const emptyTokensAmount = tokens.filter((token) => token.key === "").length
     if (emptyTokensAmount < 1) {

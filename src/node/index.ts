@@ -12,6 +12,7 @@ import {
 import { Timestamp } from "firebase/firestore"
 import { passUserWithMatchApi } from "./api"
 import { getDataFromGptApi } from "@/lib/api"
+import { CustomerXlsData } from "@/api/firestore/customerXlsData/interface"
 
 const {
   getRecsApi,
@@ -46,12 +47,11 @@ const payloadLike = (s_number: string) => ({
 })
 
 const likeAll = async (
-  token: string,
   customer: Customer,
-  lookFor: string,
-  isLookGood: boolean
+  customerXlsData: CustomerXlsData
 ) => {
   // console.log("==================LIKEALL========================")
+  const { token, lookFor } = customerXlsData
   try {
     const recs = await getMyLikesApi(token) // GET ALL LIKES FROM WOMEN
     console.log("recs len: " + recs.length)
@@ -61,8 +61,12 @@ const likeAll = async (
       i++
       // console.log(rec.user)
       // console.log(rec.user._id, rec.s_number)
-      const isFit = await isGoodFit(rec.user, lookFor, isLookGood)
-      console.log({ name: rec.user.name, lookFor, isFit })
+      const isFit = await isGoodFit(rec.user, customerXlsData)
+      console.log({
+        name: rec.user.name,
+        lookFor: lookFor,
+        isFit,
+      })
       if (isFit) {
         await likeUserApi(token, rec.user, payloadLike(rec.s_number))
       } else {
@@ -131,9 +135,9 @@ const getIsLookForFit = (lookFor: string, user: any) => {
   }
   return wordsIncludes.length > 0
 }
-const isGoodFit = async (user: any, lookFor: string, isLookGood: boolean) => {
+const isGoodFit = async (user: any, customerXlsData: CustomerXlsData) => {
   // console.log({ rec })
-
+  const { lookFor, isLookGood } = customerXlsData
   const photoUrls = user.photos.map((photos: any) => photos.url)
   const firstUrlImage = photoUrls[0]
   const prediction = await predict(firstUrlImage)
@@ -147,11 +151,10 @@ const isGoodFit = async (user: any, lookFor: string, isLookGood: boolean) => {
   return isLookGood ? isFitPref && pred.like > 0.4 : isFitPref
 }
 const iterateRecs = async (
-  token: string,
   customer: Customer,
-  lookFor: string,
-  isLookGood: boolean
+  customerXlsData: CustomerXlsData
 ) => {
+  const { token, lookFor, isLookGood } = customerXlsData
   let res = null
   do {
     res = await getRecsApi(token)
@@ -174,7 +177,7 @@ const iterateRecs = async (
     try {
       // console.log(pred)
       // if (convertPrediction(prediction).like > 0.5) {
-      const isFit = await isGoodFit(rec.user, lookFor, isLookGood)
+      const isFit = await isGoodFit(rec.user, customerXlsData)
       if (isFit) {
         // if (randNum > 0.3) {
         console.log("HHHHHHHHHOOOOOOOOOOOOOOOOOOTTTTTTTTTTTTTTTTTTTTTTTT")
@@ -203,24 +206,23 @@ const iterateRecs = async (
 }
 
 const likeAutomation = async (
-  token: string,
   customer: Customer,
-  lookFor: string,
-  isLookGood: boolean
+  customerXlsData: CustomerXlsData
 ) => {
   console.log("==================LIKE_AUTOMATION========================")
   while (likes < likesLimit && passes + likes < 100) {
-    await iterateRecs(token, customer, lookFor, isLookGood)
+    await iterateRecs(customer, customerXlsData)
   }
   console.log({ likes, passes })
 }
 
 const messageAutomation = async (
-  token: string,
   customer: Customer,
+  customerXlsData: CustomerXlsData,
   lang: string
 ) => {
   console.log("==================MESSAGE_AUTOMATION========================")
+  const { token } = customerXlsData
   console.log({ customer })
   const paylod = {
     message: 0,
@@ -299,13 +301,14 @@ const test = async (token: string) => {
   await addMessageCountFirestore(newMessage, customer)
 }
 // I can do setIntrval for each one , every time the dist betwen the operations
-const main = async (token: string, lookFor: string, isLookGood: boolean) => {
+const main = async (customerXlsData: CustomerXlsData) => {
   const minute = 1000 * 60
   const hour = 1000 * 60 * 60
   const day = hour * 24
   const week = day * 7
   const second = 1000
 
+  const { token, lookFor, isLookGood } = customerXlsData
   try {
     // process.env.NEXT_PUBLIC_X_AUTH_TOKEN = "";
     // console.log(process.env.NEXT_PUBLIC_X_AUTH_TOKEN)
@@ -337,15 +340,12 @@ const main = async (token: string, lookFor: string, isLookGood: boolean) => {
       name,
     }
     console.log(customer)
+    intervalForever(() => likeAll(customer, customerXlsData), day / 2)
+    intervalForever(() => likeAutomation(customer, customerXlsData), day / 10)
     intervalForever(
-      () => likeAll(token, customer, lookFor, isLookGood),
+      () => messageAutomation(customer, customerXlsData, lang),
       day / 2
     )
-    intervalForever(
-      () => likeAutomation(token, customer, lookFor, isLookGood),
-      day / 10
-    )
-    intervalForever(() => messageAutomation(token, customer, lang), day / 2)
 
     console.log("==================END_MAIN========================")
     // console.log(res.data.user)

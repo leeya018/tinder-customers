@@ -13,7 +13,7 @@ import { makePersistable } from "mobx-persist-store"
 const xlsArr = [
   {
     name: "qqq",
-    token: "6c40dd8b-9982-4bd5-86d2-a74b3eae1e02",
+    token: "6c40dd8b-9982-4bd5-86d2-",
     lookFor: "sex",
     isLookGood: 1,
     isWithLikes: 1,
@@ -48,7 +48,7 @@ const xlsArr = [
   },
   {
     name: "qqq",
-    token: "6c40dd8b-9982-4bd5-86d2-a74b3eae1e02",
+    token: "6c40dd8b-9982-4bd5-86d2-",
     lookFor: "sex",
     isLookGood: 1,
     isWithLikes: 1,
@@ -83,7 +83,7 @@ const xlsArr = [
   },
   {
     name: "qqq",
-    token: "6c40dd8b-9982-4bd5-86d2-a74b3eae1e02",
+    token: "6c40dd8b-9982-4bd5-86d2-",
     lookFor: "sex",
     isLookGood: 1,
     isWithLikes: 1,
@@ -118,7 +118,7 @@ const xlsArr = [
   },
   {
     name: "qqq",
-    token: "6c40dd8b-9982-4bd5-86d2-a74b3eae1e02",
+    token: "6c40dd8b-9982-4bd5-86d2-",
     lookFor: "sex",
     isLookGood: 1,
     isWithLikes: 1,
@@ -153,7 +153,7 @@ const xlsArr = [
   },
   {
     name: "qqq",
-    token: "6c40dd8b-9982-4bd5-86d2-a74b3eae1e02",
+    token: "6c40dd8b-9982-4bd5-86d2-",
     lookFor: "sex",
     isLookGood: 1,
     isWithLikes: 1,
@@ -188,7 +188,7 @@ const xlsArr = [
   },
   {
     name: "qqq",
-    token: "6c40dd8b-9982-4bd5-86d2-a74b3eae1e02",
+    token: "6c40dd8b-9982-4bd5-86d2-",
     lookFor: "sex",
     isLookGood: 1,
     isWithLikes: 1,
@@ -223,7 +223,7 @@ const xlsArr = [
   },
   {
     name: "qqq",
-    token: "6c40dd8b-9982-4bd5-86d2-a74b3eae1e02",
+    token: "6c40dd8b-9982-4bd5-86d2-",
     lookFor: "sex",
     isLookGood: 1,
     isWithLikes: 1,
@@ -257,9 +257,14 @@ const xlsArr = [
     isWithMessages: 0,
   },
 ]
+
+export const customerStatus = {
+  success: "success",
+  failed: "failed",
+}
 class CustomerS {
-  // customersXlsData: any[] = xlsArr
-  customersXlsData: any[] = []
+  customersXlsData: any[] = xlsArr
+  // customersXlsData: any[] = []
   customers: Customer[] = []
   chosenCustomer: Customer | null = null
   likes: any[] = []

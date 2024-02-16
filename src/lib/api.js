@@ -239,12 +239,17 @@ const { v4: uuidv4 } = require("uuid")
 //   )
 //   return res.data
 // }
-export const startApi = async (token, lookFor, isLookGood) => {
-  const res = await axios.post(
-    `http://localhost:${process.env.NEXT_PUBLIC_PORT}/api/start`,
-    { token, lookFor, isLookGood }
-  )
-  return res.data
+export const startApi = async (customerXlsData) => {
+  try {
+    const res = await axios.post(
+      `http://localhost:${process.env.NEXT_PUBLIC_PORT}/api/start`,
+      { customerXlsData }
+    )
+    return res.data
+  } catch (error) {
+    console.log(error)
+    throw new Error("failed to start")
+  }
 }
 
 export const getDataFromGptApi = async (question) => {
@@ -263,5 +268,6 @@ export const getDataFromGptApi = async (question) => {
     return res.data
   } catch (error) {
     console.error("Error fetching user:", error)
+    throw error
   }
 }

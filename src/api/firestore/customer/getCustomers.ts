@@ -1,5 +1,5 @@
 import { db } from "@/firebase"
-import { collection, getDocs, query, where } from "firebase/firestore"
+import { collection, getDocs } from "firebase/firestore"
 import { Customer } from "./interfaces"
 
 export const getCustomers = async () => {
