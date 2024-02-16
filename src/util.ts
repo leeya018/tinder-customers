@@ -241,7 +241,7 @@ export const fromTimestampToMoment = (date: Timestamp) => {
   return momentDate
 }
 
-export const lookForOptions = {
+export const lookForOptions: any = {
   trans: "trans",
   relationship: "relationship",
   sex: "sex",
