@@ -12,8 +12,8 @@ import { makePersistable } from "mobx-persist-store"
 
 const xlsArr = [
   {
-    name: "qqq",
-    token: "6c40dd8b-9982-4bd5-86d2-",
+    name: "lee",
+    token: "8016677c-03ff-43ef-94e7-fca2ba94e7e2",
     lookFor: "sex",
     isLookGood: 1,
     isWithLikes: 1,

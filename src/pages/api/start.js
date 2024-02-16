@@ -3,9 +3,9 @@ import { main, test } from "../../node"
 export default async function handler(req, res) {
   try {
     // main()
-    const { CustomerXlsData } = req.body
+    const { customerXlsData } = req.body
     console.log("start the main function")
-    const name = await main(CustomerXlsData)
+    const name = await main(customerXlsData)
     // const question = `what is the speaking language in {lat: 6.248, lon: -75.566} in 1 word only`
     // const lang = await getDataFromGptApi(question)
     // console.log({ lang })

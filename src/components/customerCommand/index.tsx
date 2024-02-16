@@ -37,7 +37,7 @@ const CustomerCommand = observer<CustomerCommandProps>(
           status: customerStatus.success,
         })
       } catch (error) {
-        console.log(error.message)
+        console.log(error)
         CustomerStore.updateCustomersXls(index, {
           status: customerStatus.failed,
         })

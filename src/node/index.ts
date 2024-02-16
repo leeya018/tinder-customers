@@ -308,7 +308,7 @@ const main = async (customerXlsData: CustomerXlsData) => {
   const week = day * 7
   const second = 1000
 
-  const { token, lookFor, isLookGood } = customerXlsData
+  const { token, isWithMessages, isWithLikes } = customerXlsData
   try {
     // process.env.NEXT_PUBLIC_X_AUTH_TOKEN = "";
     // console.log(process.env.NEXT_PUBLIC_X_AUTH_TOKEN)
@@ -340,12 +340,16 @@ const main = async (customerXlsData: CustomerXlsData) => {
       name,
     }
     console.log(customer)
-    intervalForever(() => likeAll(customer, customerXlsData), day / 2)
-    intervalForever(() => likeAutomation(customer, customerXlsData), day / 10)
-    intervalForever(
-      () => messageAutomation(customer, customerXlsData, lang),
-      day / 2
-    )
+    if (isWithLikes) {
+      intervalForever(() => likeAll(customer, customerXlsData), day / 2)
+      intervalForever(() => likeAutomation(customer, customerXlsData), day / 10)
+    }
+    if (isWithMessages) {
+      intervalForever(
+        () => messageAutomation(customer, customerXlsData, lang),
+        day / 2
+      )
+    }
 
     console.log("==================END_MAIN========================")
     // console.log(res.data.user)
