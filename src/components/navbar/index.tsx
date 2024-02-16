@@ -20,7 +20,7 @@ import Image from "next/image"
 import navStore from "@/mobx/navStore"
 import { observer } from "mobx-react-lite"
 
-const pages = ["Home", "View"]
+const pages = ["Home", "View", "About"]
 const settings = ["Logout"]
 
 const Navbar = observer(() => {

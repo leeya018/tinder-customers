@@ -56,36 +56,10 @@ const RootPage = observer(() => {
             CustomerStore.setCustomersXls(json)
           }}
         />
-        {ModalStore.modalName === modals.message && (
-          <MessageModal
-            onClose={() => ModalStore.closeModal()}
-            title={"Benefits"}
-            messageArr={instructions}
-          />
-        )}
-        <div className="w-full flex justify-between items-center ">
-          <Button
-            variant="outlined"
-            disabled={!isPlusAvailable()}
-            className="mb-2 "
-            onClick={add}
-          >
-            <FaPlus size={30} />
-          </Button>
-          <Button
-            variant="outlined"
-            className=" "
-            onClick={() => ModalStore.openModal(modals.message)}
-          >
-            Benefits
-          </Button>
-        </div>
-        {/* <ul className="mt-5">
-          {tokens.map((token: Token, key: number) => (
-            <CustomerCommand key={key} index={key} token={token} />
-          ))}
-        </ul> */}
-        <ul className="mt-5">
+
+        <div className="w-full flex justify-between items-center "></div>
+
+        <ul className="h-full overflow-scroll">
           {CustomerStore.customersXlsData.map(
             (customerXlsData: any, key: number) => (
               <CustomerCommand

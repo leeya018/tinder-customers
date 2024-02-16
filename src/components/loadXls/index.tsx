@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import * as XLSX from "xlsx"
 
 type LoadXlsProps = {
-  callback: () => void
+  callback: (json: Object) => void
 }
 const LoadXls = observer<LoadXlsProps>(({ callback }) => {
   const [data, setData] = useState<any>([])
@@ -35,17 +35,6 @@ const LoadXls = observer<LoadXlsProps>(({ callback }) => {
   return (
     <div>
       <input type="file" onChange={handleFileUpload} />
-      {/* <table>
-        <tbody>
-          {data.map((row, index) => (
-            <tr key={index}>
-              {row.map((cell: string, cellIndex: number) => (
-                <td key={cellIndex}>{cell}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
     </div>
   )
 })

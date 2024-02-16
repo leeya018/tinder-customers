@@ -91,7 +91,7 @@ const CustomerCommand = observer<CustomerCommandProps>(
           className={`h-10 ${isAllFieldsFill() ? "cursor-pointer" : ""}`}
           variant="outlined"
           disabled={!isAllFieldsFill()}
-          onClick={() => start(index)}
+          // onClick={() => start(index)}
         >
           {customerXlsData.isProcess === true ? "in Process" : "Start"}
         </Button>
