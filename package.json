@@ -17,6 +17,7 @@
     "@mui/icons-material": "^5.15.7",
     "@mui/material": "^5.14.18",
     "@sashido/teachablemachine-node": "^1.2.2",
+    "@mui/x-date-pickers": "^6.18.1",
     "@tensorflow/tfjs": "^4.6.0",
     "axios": "^1.6.2",
     "chart.js": "^4.4.1",
@@ -43,6 +44,7 @@
     "uuid": "^9.0.1",
     "uuidv4": "^6.2.13",
     "xlsx": "^0.18.5",
+    "dayjs": "^1.11.10",
     "yup": "^1.3.2"
   },
   "devDependencies": {

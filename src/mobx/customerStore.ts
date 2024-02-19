@@ -9,6 +9,7 @@ import { modals } from "@/util"
 import { Timestamp } from "firebase/firestore"
 import { autorun, makeAutoObservable, toJS } from "mobx"
 import { makePersistable } from "mobx-persist-store"
+import moment from "moment"
 
 const xlsArr = [
   {
@@ -70,17 +71,15 @@ class CustomerS {
 
   setChosenCustomer(customer: Customer) {
     this.chosenCustomer = customer
-    this.getMessages(customer.id)
-    this.getLikes(customer.id)
   }
   async getCustomers() {
     this.customers = await getCustomersFirestore()
   }
-  async getLikes(customerId: string) {
-    this.likes = await getLikesFirestore(customerId)
+  async getLikes(customerId: string, date: moment.Moment) {
+    this.likes = await getLikesFirestore(customerId, date)
   }
-  async getMessages(customerId: string) {
-    this.messages = await getMessagesFirestore(customerId)
+  async getMessages(customerId: string, date: moment.Moment) {
+    this.messages = await getMessagesFirestore(customerId, date)
   }
 }
 export const CustomerStore = new CustomerS()

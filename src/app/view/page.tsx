@@ -12,10 +12,22 @@ import { useRouter } from "next/navigation"
 import { NavNames } from "@/util"
 import ProtectedRout from "@/components/protectedRout"
 import Navbar from "@/components/navbar"
+import Calender from "@/components/calender"
+import moment from "moment"
 
 const ViewPage = observer(() => {
   const [isShowCustomerList, setIsShowCustomerList] = useState(false)
+  const [chosenDate, setChosenDate] = useState<moment.Moment>(moment())
   const router = useRouter()
+
+  useEffect(() => {
+    if (CustomerStore.chosenCustomer) {
+      console.log("calender change useEffect")
+      const customerId = CustomerStore.chosenCustomer.id
+      CustomerStore.getLikes(customerId, chosenDate)
+      CustomerStore.getMessages(customerId, chosenDate)
+    }
+  }, [chosenDate.month(), CustomerStore.chosenCustomer])
 
   const handleFocus = () => {
     setIsShowCustomerList(true)
@@ -26,6 +38,7 @@ const ViewPage = observer(() => {
     }, 500)
   }
 
+  console.log({ chosenDate })
   return (
     <ProtectedRout>
       <div>
@@ -52,8 +65,13 @@ const ViewPage = observer(() => {
                 )}
               </div>
               {CustomerStore.chosenCustomer && (
-                <div className="h-full flex flex-col items-center  ">
+                <div className="h-full flex justify-around  ">
+                  <Calender
+                    chosenDate={chosenDate}
+                    setChosenDate={setChosenDate}
+                  />
                   <Graph
+                    date={chosenDate}
                     likes={CustomerStore.likes}
                     messages={CustomerStore.messages}
                   />

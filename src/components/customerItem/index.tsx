@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import { Customer } from "@/api/firestore/customer/interfaces"
 import { CustomerStore } from "@/mobx/customerStore"
 import filterStore from "@/mobx/filterStore"
+import moment from "moment"
 
 type CustomerItemProps = {
   customer: Customer
@@ -11,6 +12,8 @@ const CustomerItem = observer<CustomerItemProps>(({ customer }) => {
   const handleClick = () => {
     filterStore.setFilter(customer.name)
     CustomerStore.setChosenCustomer(customer)
+    CustomerStore.getMessages(customer.id, moment())
+    CustomerStore.getLikes(customer.id, moment())
   }
   return (
     <div

@@ -140,3 +140,8 @@ export const fileStarterNames = {
 //   "קשר לא מחייב",
 //   "משהו קליל",
 // ]
+
+export const formatDateTs = (timestamp: Timestamp) => {
+  const date = timestamp.toDate()
+  return moment(date).format("DD-MM-YYYY")
+}
