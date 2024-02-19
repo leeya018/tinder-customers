@@ -74,7 +74,7 @@ const getMyLikesApi = async (token) => {
   return axios
     .request(config)
     .then((response) => {
-      console.log(response.data.data.results)
+      // console.log(response.data.data.results)
       return response.data.data.results
     })
     .catch((error) => {
@@ -157,11 +157,11 @@ const passUserApi = async (token, user, s_number, user_traveling) => {
       throw error.message
     })
 }
-const passUserWithMatchApi = async (token, user, s_number, user_traveling) => {
+const passUserWithMatchApi = async (token, user, s_number) => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
-    url: `https://api.gotinder.com/pass/${user._id}?locale=en&fast_match=1&s_number=${s_number}&user_traveling=${user_traveling}`,
+    url: `https://api.gotinder.com/pass/${user._id}?locale=en&fast_match=1&s_number=${s_number}`,
     headers: {
       "Content-Type": "application/json",
       "User-Agent":
