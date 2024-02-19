@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation"
 import ProtectedRout from "@/components/protectedRout"
 import Navbar from "@/components/navbar"
 import CustomerCommand from "@/components/customerCommand"
-import { startApi } from "@/lib/api"
+import { startApi } from "@/api_client"
 import LoadXls from "@/components/loadXls"
 import { CustomerStore } from "@/mobx/customerStore"
 
@@ -50,7 +50,7 @@ const RootPage = observer(() => {
 
         <div className="w-full flex justify-between items-center "></div>
 
-        <ul className="h-full overflow-scroll">
+        <ul className="h-full overflow-scroll mt-10">
           {CustomerStore.customersXlsData.map(
             (customerXlsData: any, key: number) => (
               <CustomerCommand

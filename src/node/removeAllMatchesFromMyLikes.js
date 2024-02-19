@@ -26,3 +26,5 @@ const minute = 1000 * 60
 
 const token = "4d68f82e-b65c-4730-bc0e-32622c02e05d"
 intervalForever(() => removeMyLikes(token), minute)
+
+// you remove  all the likes that people have doe for you by dislike them

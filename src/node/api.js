@@ -1,15 +1,11 @@
 const axios = require("axios")
 require("dotenv").config()
 const fs = require("fs")
-// const {getToken } = require("./util");
 const FormData = require("form-data")
-// const { getUrl } = require("@/util")
-// const { addImageUrl } = require("lib/api");
+
 let data = new FormData()
 
 const fileStarterFolder = `C://Users//user//Desktop//code//lee//tinder-customers//src//node//starters//`
-
-// const filePath = "starters/messages_english.txt"
 
 const getMessagesApi = async (token, matchId) => {
   let config = {

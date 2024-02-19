@@ -10,8 +10,8 @@ import {
   transWords,
 } from "@/util"
 import { Timestamp } from "firebase/firestore"
-import { passUserWithMatchApi } from "./api"
-import { getDataFromGptApi } from "@/lib/api"
+
+import { getDataFromGptApi } from "@/api_client"
 import { CustomerXlsData } from "@/api/firestore/customerXlsData/interface"
 
 const {
@@ -22,7 +22,6 @@ const {
   sendMessageApi,
   getMatchesApi,
   getMyLikesApi,
-  addArrDataToTxt,
 } = require("./api")
 
 const { v4: uuidv4 } = require("uuid")
@@ -50,40 +49,35 @@ const likeAll = async (
   customer: Customer,
   customerXlsData: CustomerXlsData
 ) => {
-  // console.log("==================LIKEALL========================")
   const { token, lookFor } = customerXlsData
   try {
-    const recs = await getMyLikesApi(token) // GET ALL LIKES FROM WOMEN
-    console.log("recs len: " + recs.length)
-    let i = 0
-    for (const rec of recs) {
-      console.log("rec num " + i)
-      i++
-      // console.log(rec.user)
-      // console.log(rec.user._id, rec.s_number)
+    const recs = await getMyLikesApi(token)
+    console.log("Total recommendations:", recs.length)
+
+    for (let i = 0; i < recs.length; i++) {
+      const rec = recs[i]
+      console.log(`Processing recommendation ${i + 1}...`)
       const isFit = await isGoodFit(rec.user, customerXlsData)
-      console.log({
-        name: rec.user.name,
-        lookFor: lookFor,
-        isFit,
-      })
+      console.log(
+        `User: ${rec.user.name}, LookFor: ${lookFor}, IsFit: ${isFit}`
+      )
+
       if (isFit) {
         await likeUserApi(token, rec.user, payloadLike(rec.s_number))
+        console.log(`Liked user: ${rec.user._id}`)
       } else {
-        console.log("pass user should happend")
-        // await passUserWithMatchApi(token, rec.user, rec.s_number, 1)
-        console.log("pass user done")
+        console.log("Passed user.")
+        // Uncomment the next line if you want to pass users who are not a good fit
+        // await passUserWithMatchApi(token, rec.user, rec.s_number, 1);
       }
-      console.log("out of rec loop")
-      const firstImage = rec.user.photos.map((photos: any) => photos.url)[0]
 
+      const firstImage = rec.user.photos[0]?.url || "No image"
       const newLike: Like = {
         userId: customer.id,
         likeUrl: firstImage,
         createdDate: Timestamp.now(),
       }
       await addLikeFirestore(newLike, customer)
-      console.log("like user id : " + rec.user._id)
       await sleep()
     }
   } catch (error) {
@@ -91,66 +85,66 @@ const likeAll = async (
   }
 }
 
-// let counter = 0
-const getIsLookForFit = (lookFor: string, user: any) => {
-  let wordsIncludes = []
-  console.log({ lookFor })
+interface User {
+  bio: string
+  relationship_intent?: {
+    body_text: string
+  }
+}
+
+const getIsLookForFit = (lookFor: string, user: User): boolean => {
+  console.log("Looking for:", lookFor)
+
   switch (lookFor) {
     case lookForOptions.trans: {
-      wordsIncludes = transWords.filter((word) =>
+      let wordsIncludes = transWords.filter((word) =>
         user.bio.toLowerCase().includes(word)
       )
-      if (wordsIncludes.length > 0) {
-        console.log("trans fit===>")
-      } else {
-        console.log("not trans fit===>")
-      }
-      break
+      console.log(wordsIncludes.length > 0 ? "Trans fit." : "Not trans fit.")
+      return wordsIncludes.length > 0
     }
-    case lookForOptions.relationship: {
-      const pref = user.relationship_intent?.body_text || ""
-      console.log({ pref })
-      wordsIncludes = relationshipWords.filter((choice) => choice === pref)
-      if (wordsIncludes.length > 0) {
-        console.log("relationship fit===>")
-      } else {
-        console.log("not relationship fit===>")
-      }
-      break
-    }
+    case lookForOptions.relationship:
     case lookForOptions.sex: {
       const pref = user.relationship_intent?.body_text || ""
-      console.log({ pref })
-      wordsIncludes = sexWords.filter((choice) => choice === pref)
-      if (wordsIncludes.length > 0) {
-        console.log("sex fit===>")
-      } else {
-        console.log("not sex fit===>")
-      }
-      break
+      console.log("Preference:", pref)
+      const wordsList =
+        lookFor === lookForOptions.relationship ? relationshipWords : sexWords
+      let wordsIncludes = wordsList.filter((choice) => choice === pref)
+      console.log(
+        wordsIncludes.length > 0 ? `${lookFor} fit.` : `Not ${lookFor} fit.`
+      )
+      return wordsIncludes.length > 0
     }
     default:
-      console.log("this optiosn is not exists")
-      throw new Error("this optiosn is not exists")
+      throw new Error("Unsupported option: " + lookFor)
   }
-  return wordsIncludes.length > 0
 }
-const isGoodFit = async (user: any, customerXlsData: CustomerXlsData) => {
-  // console.log({ rec })
-  const { lookFor, isLookGood } = customerXlsData
-  const photoUrls = user.photos.map((photos: any) => photos.url)
-  const firstUrlImage = photoUrls[0]
-  const prediction = await predict(firstUrlImage)
 
-  const pred = convertPrediction(prediction)
-  const randNum = Math.random()
-  const bio = user.bio
-  // console.log({ bio })
-  const isFitPref = getIsLookForFit(lookFor, user)
-  console.log({ isLookGood })
-  return isLookGood ? isFitPref && pred.like > 0.4 : isFitPref
+const isGoodFit = async (user: any, customerXlsData: CustomerXlsData) => {
+  const { lookFor, isLookGood } = customerXlsData
+  const firstPhotoUrl = user.photos[0]?.url
+
+  if (!firstPhotoUrl) {
+    console.error("User has no photos.")
+    return false
+  }
+
+  try {
+    const prediction = await predict(firstPhotoUrl)
+    const { like } = convertPrediction(prediction)
+    const isFitPref = getIsLookForFit(lookFor, user)
+
+    return isLookGood ? isFitPref && like > 0.4 : isFitPref
+  } catch (error) {
+    console.error(
+      "Error in isGoodFit:",
+      error instanceof Error ? error.message : error
+    )
+    return false
+  }
 }
-const iterateRecs = async (
+
+const recIterationLike = async (
   customer: Customer,
   customerXlsData: CustomerXlsData
 ) => {
@@ -198,7 +192,7 @@ const iterateRecs = async (
         console.log("PASS USER : " + rec.user._id)
       }
     } catch (error: any) {
-      console.log("iterateRecs function ", error.message)
+      console.log("recIterationLike function ", error.message)
     }
     await sleep()
   }
@@ -211,7 +205,7 @@ const likeAutomation = async (
 ) => {
   console.log("==================LIKE_AUTOMATION========================")
   while (likes < likesLimit && passes + likes < 100) {
-    await iterateRecs(customer, customerXlsData)
+    await recIterationLike(customer, customerXlsData)
   }
   console.log({ likes, passes })
 }
@@ -221,44 +215,51 @@ const messageAutomation = async (
   customerXlsData: CustomerXlsData,
   lang: string
 ) => {
-  console.log("==================MESSAGE_AUTOMATION========================")
+  console.log("================== MESSAGE_AUTOMATION ========================")
   const { token } = customerXlsData
-  console.log({ customer })
-  const paylod = {
+  console.log("Customer:", customer)
+  const payload = {
     message: 0,
     amount: 60,
     is_tinder_u: true,
   }
-  try {
-    const res = await getMatchesApi(token, paylod)
 
+  try {
+    const res = await getMatchesApi(token, payload)
     const matches = res.data?.matches
-    console.log("matches len: ", matches.length)
-    console.log("message automation: ", lang)
+    console.log("Matches count:", matches.length)
+    console.log("Message automation language:", lang)
+
     for (const match of matches) {
-      console.log("I am in the for===>")
-      const fileStarterName =
-        fileStarterNames[lang.toLowerCase()] || fileStarterNames.english
-      console.log({ fileStarterName })
-      const message = getRandomMessage(fileStarterName)
-      console.log({ message })
-      const payloadMessage = {
-        userId: customer.id,
-        otherId: match?.person._id,
-        matchId: match?.id,
-        sessionId: null,
-        message,
+      try {
+        const fileStarterName =
+          fileStarterNames[lang.toLowerCase()] || fileStarterNames.english
+        const message = getRandomMessage(fileStarterName)
+        const payloadMessage = {
+          userId: customer.id,
+          otherId: match?.person._id,
+          matchId: match?.id,
+          sessionId: null,
+          message,
+        }
+        console.log("Sending message:", message, "to:", match.person._id)
+        await sendMessageApi(token, payloadMessage)
+
+        const newMessage: Message = {
+          userId: customer.id,
+          amount: 1,
+          createdDate: Timestamp.now(),
+        }
+        await addMessageCountFirestore(newMessage, customer)
+        await sleep()
+      } catch (innerError) {
+        console.error(
+          "Error sending message to match:",
+          match.person._id,
+          "Error:",
+          innerError
+        )
       }
-      console.log(payloadMessage)
-      const res = await sendMessageApi(token, payloadMessage)
-      const newMessage: Message = {
-        userId: customer.id,
-        amount: 1,
-        createdDate: Timestamp.now(),
-      }
-      await addMessageCountFirestore(newMessage, customer)
-      console.log("MESSAGE: " + message + "TO : " + match.person._id)
-      await sleep()
     }
   } catch (error: any) {
     console.log(error.message)
@@ -310,40 +311,32 @@ const main = async (customerXlsData: CustomerXlsData) => {
 
   const { token, isWithMessages, isWithLikes } = customerXlsData
   try {
-    // process.env.NEXT_PUBLIC_X_AUTH_TOKEN = "";
-    // console.log(process.env.NEXT_PUBLIC_X_AUTH_TOKEN)
+    console.log("================== START_MAIN ========================")
 
-    console.log("==================START_MAIN========================")
+    const profileResponse = await getProfileApi(token)
+    const { travel, user } = profileResponse.data
+    const isTraveling = travel?.is_traveling
+    const location = isTraveling ? travel.travel_pos : user.pos
+    console.log({ isTraveling, travelPos: travel?.travel_pos, myPos: user.pos })
 
-    // intervalForever(updateToken, day); // each day updaet the token in file and then in the env
-    // await sleep(minute);
-    const res = await getProfileApi(token)
-    // console.log({ profile: res.data })
-    console.log({ isTraveling: res.data.travel?.is_traveling })
-    console.log({ travelPos: res.data.travel?.travel_pos })
-    console.log({ myPos: res.data.user.pos })
-
-    const location = res.data.travel?.is_traveling
-      ? res.data.travel.travel_pos
-      : res.data.user.pos
-    const question = `what is the speaking language in ${JSON.stringify(
+    const question = `What is the speaking language in ${JSON.stringify(
       location
     )} in 1 word only`
     console.log({ question })
     const lang = await getDataFromGptApi(question)
     console.log({ lang })
-    // console.log(res.data.user)
-    const { _id, name } = res.data.user
 
     const customer: Customer = {
-      id: _id,
-      name,
+      id: user._id,
+      name: user.name,
     }
-    console.log(customer)
+    console.log("Customer:", customer)
+
     if (isWithLikes) {
       intervalForever(() => likeAll(customer, customerXlsData), day / 2)
       intervalForever(() => likeAutomation(customer, customerXlsData), day / 10)
     }
+
     if (isWithMessages) {
       intervalForever(
         () => messageAutomation(customer, customerXlsData, lang),
@@ -351,28 +344,13 @@ const main = async (customerXlsData: CustomerXlsData) => {
       )
     }
 
-    console.log("==================END_MAIN========================")
-    // console.log(res.data.user)
-    return res.data.user.name
+    console.log("================== END_MAIN ========================")
+    return user.name
   } catch (error) {
     console.log(error.message)
   }
 }
 
-// async function imagesConv(sourcePath, outputPath) {
-//   let imgUrls = readImagesFromTxt(sourcePath)
-//   imgUrls = [...new Set(imgUrls)]
-//   console.log(imgUrls)
-//   let i = 6300
-//   for (const url of imgUrls.reverse()) {
-//     await fromUrlToImage(url, outputPath + `\\${i}.png`)
-//     i++
-//   }
-// }
-// fromUrlToImage(
-//   "https://images-ssl.gotinder.com/u/2Xfc6kHVbAR5GU87XdHCxk/7KZcgHSS6CHirA7EinGSog.jpeg?Policy=eyJTdGF0ZW1lbnQiOiBbeyJSZXNvdXJjZSI6IiovdS8yWGZjNmtIVmJBUjVHVTg3WGRIQ3hrLyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2OTcwMzU0ODl9fX1dfQ__&Signature=sItIC3OIn8RHFj0fQPrqIrQN476SwbAQ3ZVoTU6iTN5tn6Bk9rr6W4c8zRjGB5hpBuFCRNQgXc6AkZ2Xw6rN7Dlr8pFFutwXugNs0CF2gBc~jCF8X9Yva4cb5V-XAXMZHsxJGcfn3~kWaUGWnnSjWcGVNH~LpxiGGfkbqVZDiwNu07h8SB7PJLcUTqJa8in3JgsTxfcK-z1sxsbs~PO73mRatn63lm-3S4p4Qm8-pqZFyWp7fi081scriV~5Lz-4yGYTQxORPUDZ~wfMtCoSm7TfVm9Wxjt9Xu1JjQSXA0~R~0tPGpcU6Gaxk4-xlESIPkP01v2m-2xf7RAwOYXcNQ__&Key-Pair-Id=K368TLDEUPA6OI",
-//   "C:\\Users\\user\\Downloads\\tensor\\like\\1.png"
-// );
 const sourceLikes = "../tensorFolder/like.txt"
 const sourcePass = "../tensorFolder/pass.txt"
 const sourceAll = "../tensorFolder/all.txt"
@@ -380,13 +358,4 @@ const outputLike = "C:\\Users\\user\\Documents\\tinder-tensor\\like"
 const outputPass = "C:\\Users\\user\\Documents\\tinder-tensor\\pass"
 const outputAll = "C:\\Users\\user\\Documents\\tinder-tensor\\all"
 
-// const o = "../tensorFolder/like1.txt";
-
-// const outputL1 = "C:\\Users\\user\\Downloads\\tensor\\l1";
-
-// imagesConv(sourceLikes, outputLike);
-// imagesConv(sourcePass, outputPass);
-// start(l, o);
-
-// main()
 module.exports = { main, test }

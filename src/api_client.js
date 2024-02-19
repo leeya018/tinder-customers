@@ -1,6 +1,4 @@
-const { default: axios } = require("axios")
-const { v4: uuidv4 } = require("uuid")
-
+import axios from "axios"
 export const startApi = async (customerXlsData) => {
   try {
     console.log("startApi", { customerXlsData })

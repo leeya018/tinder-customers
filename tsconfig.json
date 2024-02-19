@@ -35,7 +35,8 @@
     "src/context/*.jsx",
     "src/lib/**.js",
     "src/lib/**.ts",
-    "src/node/**.js"
+    "src/node/**.js",
+    "src/api_client.js"
   ],
   "exclude": ["node_modules"]
 }

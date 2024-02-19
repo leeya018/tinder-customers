@@ -15,7 +15,7 @@ const xlsArr = [
     name: "lee",
     token: "4d68f82e-b65c-4730-bc0e-32622c02e05d",
     lookFor: "sex",
-    isLookGood: 1,
+    isLookGood: 0,
     isWithLikes: 1,
     isWithMessages: 0,
     isProcess: 0,
