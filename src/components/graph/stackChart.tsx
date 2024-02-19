@@ -36,7 +36,7 @@ const StackChart = observer<any>(({ items, name, label1, label2 }) => {
     },
   }
   const data = {
-    labels: items.map((item: any) => item.date),
+    labels: items.map((item: any) => item.date.split("-")[0]),
     datasets: [
       {
         label: label1,
