@@ -129,12 +129,17 @@ const isGoodFit = async (user: any, customerXlsData: CustomerXlsData) => {
     return false
   }
 
+  let likePred = 1
   try {
-    const prediction = await predict(firstPhotoUrl)
-    const { like } = convertPrediction(prediction)
+    if (isLookGood && firstPhotoUrl) {
+      const prediction = await predict(firstPhotoUrl)
+      const pred = convertPrediction(prediction)
+      console.log({ pred })
+      likePred = pred.like
+    }
     const isFitPref = getIsLookForFit(lookFor, user)
 
-    return isLookGood ? isFitPref && like > 0.4 : isFitPref
+    return isFitPref && likePred > 0.4
   } catch (error) {
     console.error(
       "Error in isGoodFit:",
@@ -169,11 +174,8 @@ const recIterationLike = async (
     if (likes > likesLimit) return
 
     try {
-      // console.log(pred)
-      // if (convertPrediction(prediction).like > 0.5) {
       const isFit = await isGoodFit(rec.user, customerXlsData)
       if (isFit) {
-        // if (randNum > 0.3) {
         console.log("HHHHHHHHHOOOOOOOOOOOOOOOOOOTTTTTTTTTTTTTTTTTTTTTTTT")
         likes++
         res1 = await likeUserApi(token, rec.user, payloadLike(rec.s_number))

@@ -95,6 +95,8 @@ export const lookForOptions: any = {
 }
 
 export const transWords = [
+  "not a girl",
+  "not a real women",
   "trans",
   "transgender",
   "ladyboy",
