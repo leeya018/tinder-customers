@@ -19,30 +19,16 @@ import { CustomerXlsData } from "@/api/firestore/customerXlsData/interface"
 type CustomerCommandProps = {
   customerXlsData: any
   index: number
+  onClick: (customerXlsData: any, key: number) => void
 }
 const CustomerCommand = observer<CustomerCommandProps>(
-  ({ customerXlsData, index }) => {
+  ({ customerXlsData, index, onClick }) => {
     console.log(customerXlsData)
 
     const isAllFieldsFill = () => {
       const { name, token, lookFor, isProcess } = customerXlsData
 
       return name && token && lookForOptions[lookFor] && !isProcess
-    }
-
-    const start = async () => {
-      try {
-        await startApi(customerXlsData)
-        CustomerStore.updateCustomersXls(index, {
-          status: customerStatus.success,
-        })
-      } catch (error) {
-        console.log(error)
-        CustomerStore.updateCustomersXls(index, {
-          status: customerStatus.failed,
-        })
-        throw error
-      }
     }
 
     console.log({ customerXlsData })
@@ -106,7 +92,7 @@ const CustomerCommand = observer<CustomerCommandProps>(
           className={`h-10 ${isAllFieldsFill() ? "cursor-pointer" : ""}`}
           variant="outlined"
           disabled={!isAllFieldsFill()}
-          onClick={start}
+          onClick={() => onClick(customerXlsData, index)}
         >
           {customerXlsData.isProcess === true ? "in Process" : "Start"}
         </Button>

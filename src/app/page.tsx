@@ -8,7 +8,7 @@ import Alerts from "@/ui/Alerts"
 import { messageStore } from "@/mobx/messageStore"
 import MessageModal from "@/ui/modal/message"
 import { ModalStore } from "@/mobx/modalStore"
-import { instructions, modals } from "@/util"
+import { instructions, modals, sleep } from "@/util"
 import tokensStore, { Token } from "@/mobx/tokenStore"
 import { useRouter } from "next/navigation"
 
@@ -17,22 +17,36 @@ import Navbar from "@/components/navbar"
 import CustomerCommand from "@/components/customerCommand"
 import { startApi } from "@/api_client"
 import LoadXls from "@/components/loadXls"
-import { CustomerStore } from "@/mobx/customerStore"
+import { CustomerStore, customerStatus } from "@/mobx/customerStore"
+import { toJS } from "mobx"
 
 const RootPage = observer(() => {
   const { tokens, addToken, setTokens, setToken } = tokensStore
   const router = useRouter()
 
-  const isPlusAvailable = () => {
-    return tokensStore.tokens.length === 0 || tokens[0].name !== ""
+  const startAll = async () => {
+    for (const [index, cXlsData] of CustomerStore.customersXlsData.entries()) {
+      console.log({ index, cXlsData: toJS(cXlsData) })
+      await sleep(5)
+
+      //  this is ithe real code
+      // await start(cXlsData, index)
+      // await sleep(30)
+    }
   }
 
-  const add = () => {
-    const emptyTokensAmount = tokens.filter((token) => token.key === "").length
-    if (emptyTokensAmount < 1) {
-      addToken({ key: "", isProcess: false, name: "" })
-    } else {
-      messageStore.setMessage("cannot add more than 1 empty box", 400)
+  const start = async (customerXlsData: any, index: number) => {
+    try {
+      await startApi(customerXlsData)
+      CustomerStore.updateCustomersXls(index, {
+        status: customerStatus.success,
+      })
+    } catch (error) {
+      console.log(error)
+      CustomerStore.updateCustomersXls(index, {
+        status: customerStatus.failed,
+      })
+      throw error
     }
   }
 
@@ -49,7 +63,16 @@ const RootPage = observer(() => {
         />
 
         <div className="w-full flex justify-between items-center "></div>
-
+        <Button
+          className={`h-10 ${
+            CustomerStore.customersXlsData.length > 0 ? "cursor-pointer" : ""
+          }`}
+          variant="outlined"
+          disabled={CustomerStore.customersXlsData.length === 0}
+          onClick={startAll}
+        >
+          Start all
+        </Button>
         <ul className="h-full overflow-scroll mt-10">
           {CustomerStore.customersXlsData.map(
             (customerXlsData: any, key: number) => (
@@ -57,6 +80,7 @@ const RootPage = observer(() => {
                 key={key}
                 index={key}
                 customerXlsData={customerXlsData}
+                onClick={start}
               />
             )
           )}

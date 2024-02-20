@@ -21,6 +21,15 @@ const xlsArr = [
     isWithMessages: 0,
     isProcess: 0,
   },
+  {
+    name: "idan",
+    token: "4d68f82e-b65c-4730-bc0e-3262202e05d",
+    lookFor: "sex",
+    isLookGood: 1,
+    isWithLikes: 1,
+    isWithMessages: 0,
+    isProcess: 0,
+  },
 ]
 
 export const customerStatus = {
@@ -28,8 +37,8 @@ export const customerStatus = {
   failed: "failed",
 }
 class CustomerS {
-  customersXlsData: any[] = xlsArr
-  // customersXlsData: any[] = []
+  // customersXlsData: any[] = xlsArr
+  customersXlsData: any[] = []
   customers: Customer[] = []
   chosenCustomer: Customer | null = null
   likes: any[] = []

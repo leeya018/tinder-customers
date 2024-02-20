@@ -10,8 +10,8 @@ export const NavNames = {
   about: "/about",
 }
 
-const sleep = (waitTime = null) => {
-  const time = waitTime ? waitTime : (Math.random() * 3 + 1) * 1000
+export const sleep = async (waitTime: number | undefined) => {
+  const time = waitTime ? waitTime * 1000 : (Math.random() * 3 + 1) * 1000
   return new Promise((resolve, reject) => {
     return setTimeout(() => {
       return resolve("done")
