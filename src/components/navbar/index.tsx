@@ -19,6 +19,7 @@ import { auth } from "@/firebase"
 import Image from "next/image"
 import navStore from "@/mobx/navStore"
 import { observer } from "mobx-react-lite"
+import userStore from "@/mobx/userStore"
 
 const pages = ["Home", "View", "About"]
 const settings = ["Logout"]
@@ -61,7 +62,9 @@ const Navbar = observer(() => {
     setAnchorElUser(null)
   }
   console.log("auth.currentUser?.photoURL")
+  // console.log("auth.currentUser?.photoURL")
   console.log(auth.currentUser?.photoURL)
+  // console.log(auth.currentUser?.photoURL)
 
   return (
     <AppBar position="static">
@@ -176,7 +179,13 @@ const Navbar = observer(() => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={auth.currentUser?.photoURL} />
+                <Image
+                  className="rounded-full"
+                  src={userStore.user?.photoURL}
+                  width={50}
+                  height={50}
+                  alt="Profile image"
+                />
               </IconButton>
             </Tooltip>
             <Menu
