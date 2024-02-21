@@ -57,7 +57,7 @@ export const addMessageCount = async (
       return docRef.id
     }
   } catch (error) {
-    console.error("Error in addLike function: ", error)
+    console.log("Error in addLike function: ", error)
     throw new Error("Error in addLike function")
   }
 }

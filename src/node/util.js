@@ -7,7 +7,7 @@ const getDate = () => {
 }
 
 const sleep = (waitTime = null) => {
-  const time = waitTime ? waitTime * 1000 : (Math.random() * 3 + 1) * 1000
+  const time = waitTime ? waitTime * 1000 : (Math.random() + 1) * 7 * 1000
   return new Promise((resolve, reject) => {
     return setTimeout(() => {
       return resolve("done")

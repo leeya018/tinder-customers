@@ -26,7 +26,7 @@ const getMessagesApi = async (token, matchId) => {
       return response.data.data.messages
     })
     .catch((error) => {
-      throw error.message
+      throw error
     })
 }
 const unmatchUsersApi = async (token, matchId) => {

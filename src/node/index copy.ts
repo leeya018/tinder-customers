@@ -152,7 +152,7 @@ const recIterationLike = async (
   let res = null
   do {
     res = await getRecsApi(token)
-    await sleep(8)
+    await sleep(8000)
   } while (!res || !res?.data || res?.data?.results?.length < 0)
   console.log({ res })
   console.log("amount of recs : " + res.data?.results?.length)
@@ -292,8 +292,8 @@ const test = async (token: string) => {
 }
 // I can do setIntrval for each one , every time the dist betwen the operations
 const main = async (customerXlsData: CustomerXlsData) => {
-  const minute = 60
-  const hour = 60 * 60
+  const minute = 1000 * 60
+  const hour = 1000 * 60 * 60
   const day = hour * 24
   const week = day * 7
   const second = 1000
@@ -323,7 +323,7 @@ const main = async (customerXlsData: CustomerXlsData) => {
 
     if (isWithLikes) {
       intervalForever(() => likeAll(customer, customerXlsData), day / 2)
-      intervalForever(() => likeAutomation(customer, customerXlsData), day / 5)
+      intervalForever(() => likeAutomation(customer, customerXlsData), day / 10)
     }
 
     if (isWithMessages) {
@@ -339,5 +339,12 @@ const main = async (customerXlsData: CustomerXlsData) => {
     console.log(error.message)
   }
 }
+
+const sourceLikes = "../tensorFolder/like.txt"
+const sourcePass = "../tensorFolder/pass.txt"
+const sourceAll = "../tensorFolder/all.txt"
+const outputLike = "C:\\Users\\user\\Documents\\tinder-tensor\\like"
+const outputPass = "C:\\Users\\user\\Documents\\tinder-tensor\\pass"
+const outputAll = "C:\\Users\\user\\Documents\\tinder-tensor\\all"
 
 module.exports = { main, test }

@@ -11,7 +11,7 @@ export const NavNames = {
 }
 
 export const sleep = async (waitTime: number | undefined) => {
-  const time = waitTime ? waitTime * 1000 : (Math.random() * 3 + 1) * 1000
+  const time = waitTime ? waitTime * 1000 : (Math.random() + 1) * 3 * 1000
   return new Promise((resolve, reject) => {
     return setTimeout(() => {
       return resolve("done")
