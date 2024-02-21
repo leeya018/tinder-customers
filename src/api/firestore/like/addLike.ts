@@ -58,7 +58,7 @@ export const addLike = async (
         createdDate,
         likeUrls: [likeUrl],
       })
-      console.log("Message added successfully")
+      console.log("Like added successfully")
       return docRef.id
     }
   } catch (error) {

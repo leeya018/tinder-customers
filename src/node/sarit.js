@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require("uuid")
 
 let likes = 0
 let passes = 0
-const randomLim = 0.03
+const randomLim = 0.5
 const waitTime = 10000
 
 const payloadLike = (s_number) => ({
@@ -87,5 +87,5 @@ const main = async (token) => {
   console.log("==================END_MAIN========================")
 }
 
-const myToken = "cabf0363-467b-4f05-90c2-4f16bac10f93"
+const myToken = "fe7ac4b6-0619-45b3-b119-1ae5c32f4c0b"
 main(myToken)
