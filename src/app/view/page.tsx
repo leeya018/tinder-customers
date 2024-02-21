@@ -9,11 +9,14 @@ import { CustomerStore } from "@/mobx/customerStore"
 import Graph from "@/components/graph"
 
 import { useRouter } from "next/navigation"
-import { NavNames } from "@/util"
+import { NavNames, modals } from "@/util"
 import ProtectedRout from "@/components/protectedRout"
 import Navbar from "@/components/navbar"
 import Calender from "@/components/calender"
 import moment from "moment"
+import Modal from "@/ui/modal"
+import Image from "next/image"
+import { ModalStore } from "@/mobx/modalStore"
 
 const ViewPage = observer(() => {
   const [isShowCustomerList, setIsShowCustomerList] = useState(false)
@@ -43,7 +46,25 @@ const ViewPage = observer(() => {
     <ProtectedRout>
       <div>
         <Navbar />
-
+        {ModalStore.modalName === modals.images && (
+          <Modal>
+            <ul className=" flex justify-between flex-wrap h-[80vh] w-[80vw] overflow-y-scroll">
+              {CustomerStore.chosenUrls.map((url, key) => {
+                return (
+                  <li key={key}>
+                    <Image
+                      alt="women image"
+                      width={100}
+                      height={200}
+                      className="rounded-lg "
+                      src={url}
+                    />
+                  </li>
+                )
+              })}
+            </ul>
+          </Modal>
+        )}
         <div className="w-[100vw] h-[100vh] mb-2">
           <div className="mt-10 w-full flex justify-center items-center"></div>
           <div className="w-full h-full flex justify-center ">

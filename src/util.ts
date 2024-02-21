@@ -70,6 +70,7 @@ const convertPrediction = (prediction) => {
 
 export const modals = {
   message: "message",
+  images: "images",
 }
 
 export const instructions = [

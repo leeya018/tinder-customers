@@ -61,6 +61,7 @@ class CustomerS {
   chosenCustomer: Customer | null = null
   likes: any[] = []
   messages: any[] = []
+  chosenUrls: string[] = []
 
   constructor() {
     makeAutoObservable(this)
@@ -107,6 +108,9 @@ class CustomerS {
   }
   async getMessages(customerId: string, date: moment.Moment) {
     this.messages = await getMessagesFirestore(customerId, date)
+  }
+  setChosenimages(urls: string[]) {
+    this.chosenUrls = urls
   }
 }
 export const CustomerStore = new CustomerS()

@@ -22,9 +22,18 @@ ChartJS.register(
   Legend
 )
 
-const StackChart = observer<any>(({ items, name, label1, label2 }) => {
+const StackChart = observer<any>(({ items, name, label1, label2, onClick }) => {
   const options = {
     responsive: true,
+    onClick: (event, elements) => {
+      if (elements.length > 0) {
+        const elementIndex = elements[0].index
+        const day = data.labels[elementIndex]
+
+        console.log(`Clicked on: ${day} `)
+        onClick(day)
+      }
+    },
     plugins: {
       legend: {
         position: "top" as const,

@@ -3,8 +3,11 @@ import { observer } from "mobx-react-lite"
 import { Message } from "@/api/firestore/message/interfaces"
 import StackChart from "./stackChart"
 import moment from "moment"
-import { formatDateTs } from "@/util"
+import { formatDateTs, fromTimestampToMoment, modals } from "@/util"
 import { toJS } from "mobx"
+import { CustomerStore } from "@/mobx/customerStore"
+import MessageModal from "@/ui/modal/message"
+import { ModalStore } from "@/mobx/modalStore"
 
 type GraphProps = {
   likes: any[]
@@ -86,18 +89,30 @@ const Graph = observer<GraphProps>(({ likes, messages, date }) => {
     }
   }
 
+  const getLikeImageUrls = (index: number) => {
+    const likeItem = likes.find((like) => {
+      const day = fromTimestampToMoment(like.createdDate).date()
+      if (day === Number(index)) {
+        return like
+      }
+    })
+    if (!likeItem) return []
+    console.log(likeItem.likeUrls)
+    CustomerStore.setChosenimages(likeItem.likeUrls)
+    ModalStore.openModal(modals.images)
+    return likeItem.likeUrls
+  }
   return (
-    // <div className="h-full">
     <div
       className="flex justify-center w-[90%] mb-32"
       style={{ height: "500px" }}
     >
-      HELLO ALL
       <StackChart
         items={chartItems}
         label1={"Likes"}
         label2={"Messages"}
         name={"Data view"}
+        onClick={getLikeImageUrls}
       />
     </div>
   )

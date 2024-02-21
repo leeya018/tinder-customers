@@ -7,6 +7,7 @@ const nextConfig = {
       "lh3.googleusercontent.com",
       "oaidalleapiprodscus.blob.core.windows.net",
       "tinder-customers.netlify.app",
+      "images-ssl.gotinder.com",
     ],
   },
   async headers() {
