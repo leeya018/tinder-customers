@@ -191,7 +191,6 @@ const recIterationLike = async (
     } catch (error: any) {
       throw new Error("recIterationLike function ", error.message)
     }
-    await sleep()
   }
   console.log({ likes, passes })
 }
@@ -203,6 +202,7 @@ const likeAutomation = async (
   console.log("==================LIKE_AUTOMATION========================")
   while (likes < likesLimit && passes + likes < 100) {
     await recIterationLike(customer, customerXlsData)
+    await sleep()
   }
   console.log({ likes, passes })
 }
@@ -255,89 +255,54 @@ const messageAutomation = async (
   }
 }
 
-const intervalForever = async (callback: Function, rate: number) => {
-  let intervalNum = 0
-  while (true) {
-    intervalNum++
-    console.log(`interval ${callback.name}: ${intervalNum}  ${getDate()}`)
-    await callback()
+// the real main function
+// const main = async (customerXlsData: CustomerXlsData) => {
+//   const hour = 60 * 60
+//   const day = hour * 24
 
-    await sleep(rate)
-  }
-}
+//   const { token, isWithMessages, isWithLikes } = customerXlsData
+//   try {
+//     console.log("================== START_MAIN ========================")
 
-const test = async (token: string) => {
-  const res = await getProfileApi(token)
-  const myProfileId = res.data.user._id
+//     const profileResponse = await getProfileApi(token)
+//     const { travel, user } = profileResponse.data
+//     const isTraveling = travel?.is_traveling
+//     const location = isTraveling ? travel.travel_pos : user.pos
+//     console.log({ isTraveling, travelPos: travel?.travel_pos, myPos: user.pos })
 
-  console.log({ user: res.data.user })
-  const name = res.data.user.name
+//     const question = `What is the speaking language in ${JSON.stringify(
+//       location
+//     )} in 1 word only`
+//     console.log({ question })
+//     const lang = await getDataFromGptApi(question)
+//     console.log({ lang })
 
-  const customer: Customer = {
-    id: myProfileId,
-    name,
-  }
-  const newLike: Like = {
-    userId: myProfileId,
-    likeUrl: "firstImage2/3324",
-    createdDate: Timestamp.now(),
-  }
-  const newMessage: Message = {
-    userId: myProfileId,
-    amount: 1,
-    createdDate: Timestamp.now(),
-  }
-  // await addLikeFirestore(newLike, customer)
-  await addMessageCountFirestore(newMessage, customer)
-}
-// I can do setIntrval for each one , every time the dist betwen the operations
+//     const customer: Customer = {
+//       id: user._id,
+//       name: user.name,
+//     }
+//     console.log("Customer:", customer)
+
+//     if (isWithLikes) {
+//       await likeAll(customer, customerXlsData)
+//       await likeAutomation(customer, customerXlsData)
+//     }
+
+//     if (isWithMessages) {
+//       await messageAutomation(customer, customerXlsData, lang)
+//     }
+
+//     console.log("================== END_MAIN ========================")
+//     return user.name
+//   } catch (error) {
+//     console.log(error.message)
+//   }
+// }
+
+// main funciton just for testing
 const main = async (customerXlsData: CustomerXlsData) => {
-  const minute = 60
-  const hour = 60 * 60
-  const day = hour * 24
-  const week = day * 7
-  const second = 1000
-
-  const { token, isWithMessages, isWithLikes } = customerXlsData
-  try {
-    console.log("================== START_MAIN ========================")
-
-    const profileResponse = await getProfileApi(token)
-    const { travel, user } = profileResponse.data
-    const isTraveling = travel?.is_traveling
-    const location = isTraveling ? travel.travel_pos : user.pos
-    console.log({ isTraveling, travelPos: travel?.travel_pos, myPos: user.pos })
-
-    const question = `What is the speaking language in ${JSON.stringify(
-      location
-    )} in 1 word only`
-    console.log({ question })
-    const lang = await getDataFromGptApi(question)
-    console.log({ lang })
-
-    const customer: Customer = {
-      id: user._id,
-      name: user.name,
-    }
-    console.log("Customer:", customer)
-
-    if (isWithLikes) {
-      intervalForever(() => likeAll(customer, customerXlsData), day / 2)
-      intervalForever(() => likeAutomation(customer, customerXlsData), day / 5)
-    }
-
-    if (isWithMessages) {
-      intervalForever(
-        () => messageAutomation(customer, customerXlsData, lang),
-        day / 2
-      )
-    }
-
-    console.log("================== END_MAIN ========================")
-    return user.name
-  } catch (error) {
-    console.log(error.message)
-  }
+  await sleep()
+  return customerXlsData.name
 }
 
-module.exports = { main, test }
+module.exports = { main }

@@ -30,6 +30,24 @@ const xlsArr = [
     isWithMessages: 0,
     isProcess: 0,
   },
+  {
+    name: "data",
+    token: "4d68f82e-b65c-4730-bc0e-3262202e05d",
+    lookFor: "sex",
+    isLookGood: 1,
+    isWithLikes: 1,
+    isWithMessages: 0,
+    isProcess: 0,
+  },
+  {
+    name: "kali",
+    token: "4d68f82e-b65c-4730-bc0e-3262202e05d",
+    lookFor: "sex",
+    isLookGood: 1,
+    isWithLikes: 1,
+    isWithMessages: 0,
+    isProcess: 0,
+  },
 ]
 
 export const customerStatus = {

@@ -24,23 +24,37 @@ const RootPage = observer(() => {
   const { tokens, addToken, setTokens, setToken } = tokensStore
   const router = useRouter()
 
+  // this funciton invoke start function in loop
+  // each time for different customer .
+  // when its done with all it will start another rotation for all
   const startAll = async () => {
-    for (const [index, cXlsData] of CustomerStore.customersXlsData.entries()) {
-      console.log({ index, cXlsData: toJS(cXlsData) })
-      await sleep(5)
+    let i = 0
+    while (true) {
+      for (const [
+        index,
+        cXlsData,
+      ] of CustomerStore.customersXlsData.entries()) {
+        // console.log({ index, cXlsData: toJS(cXlsData) })
+        // await sleep(5)
 
-      //  this is ithe real code
-      // await start(cXlsData, index)
-      // await sleep(30)
+        //  this is ithe real code
+        const name = await start(cXlsData, index)
+        console.log(`finish iteration for ${name}`)
+        // await sleep(30)
+      }
+      i++
+      console.log(`done interation for all. iteration number: ${i}`)
+      await sleep(1)
     }
   }
 
   const start = async (customerXlsData: any, index: number) => {
     try {
-      await startApi(customerXlsData)
+      const name = await startApi(customerXlsData)
       CustomerStore.updateCustomersXls(index, {
         status: customerStatus.success,
       })
+      return name
     } catch (error) {
       console.log(error)
       CustomerStore.updateCustomersXls(index, {
