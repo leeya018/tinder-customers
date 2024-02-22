@@ -1,4 +1,4 @@
-import { NavNames } from "@/util"
+import { NavNames } from "@/pages/api/util"
 import { autorun, makeAutoObservable } from "mobx"
 
 class Nav {

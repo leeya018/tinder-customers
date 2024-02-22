@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import { Message } from "@/api/firestore/message/interfaces"
 import StackChart from "./stackChart"
 import moment from "moment"
-import { formatDateTs, fromTimestampToMoment, modals } from "@/util"
+import { formatDateTs, fromTimestampToMoment, modals } from "@/pages/api/util"
 import { toJS } from "mobx"
 import { CustomerStore } from "@/mobx/customerStore"
 import MessageModal from "@/ui/modal/message"
@@ -25,8 +25,8 @@ const Graph = observer<GraphProps>(({ likes, messages, date }) => {
       const data = convertData()
       console.log({ data })
       setChartItems(data)
-    } catch (error) {
-      console.log(error)
+    } catch (error: any) {
+      console.log(error.stack)
     }
   }, [date, likes, messages])
 
@@ -83,7 +83,7 @@ const Graph = observer<GraphProps>(({ likes, messages, date }) => {
       })
       console.log({ dataItems })
       return dataItems
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.message)
       throw error
     }
@@ -98,7 +98,7 @@ const Graph = observer<GraphProps>(({ likes, messages, date }) => {
     })
     if (!likeItem) return []
     console.log(likeItem.likeUrls)
-    CustomerStore.setChosenimages(likeItem.likeUrls)
+    CustomerStore.setChosenImages(likeItem.likeUrls)
     ModalStore.openModal(modals.images)
     return likeItem.likeUrls
   }

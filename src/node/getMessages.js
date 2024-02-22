@@ -1,10 +1,10 @@
 const { sleep } = require("./util")
-const {
-  getMatchesApi,
-  addDataToTxt,
-  getProfileApi,
-  getMessagesApi,
-} = require("./api")
+const { getMatchesApi, getProfileApi, getMessagesApi } = require("./api")
+
+const { tensorFolderUrl } = require("@/util")
+const path = require("path")
+const { timeBetween } = require("@/util")
+const { addDataToTxt } = require("@/pages/api/util")
 
 const getMessages = async (token, matchId) => {
   try {
@@ -30,8 +30,8 @@ const getMatches = async (token) => {
 const token = "4d68f82e-b65c-4730-bc0e-32622c02e05d"
 // const matchId = "5980deb74a75f5b45fb118ee6575d04d7c42750100d5892b"
 // const myId = "5980deb74a75f5b45fb118ee"
-const filePath =
-  "C://Users//user//Desktop//code//lee//tinder-customers//src//node//messages.txt"
+const filePath = path.join(tensorFolderUrl, "messages.txt")
+
 const main = async () => {
   let goodMessages = []
   const res = await getProfileApi(token)
@@ -57,7 +57,7 @@ const main = async () => {
     console.log("amount of good messages " + goodMessages.length)
     console.log(`======================MESSAGE ${i}=================`)
     console.log(messages)
-    await sleep()
+    await sleep(timeBetween.ENGAGEMENT)
   }
 
   console.log({ goodMessages })

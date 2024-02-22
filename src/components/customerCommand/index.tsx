@@ -11,7 +11,7 @@ import tokensStore from "@/mobx/tokenStore"
 import { startApi } from "@/api_client"
 import { toJS } from "mobx"
 import BasicSelect from "@/ui/basicSelect"
-import { lookForOptions } from "@/util"
+import { lookForOptions } from "@/pages/api/util"
 import { CustomerStore, customerStatus } from "@/mobx/customerStore"
 import { CustomerXlsData } from "@/api/firestore/customerXlsData/interface"
 //  need to continuse with the xls
@@ -28,7 +28,9 @@ const CustomerCommand = observer<CustomerCommandProps>(
     const isAllFieldsFill = () => {
       const { name, token, lookFor, isProcess } = customerXlsData
 
-      return name && token && lookForOptions[lookFor] && !isProcess
+      return (
+        name && token && lookForOptions[lookFor.toUpperCase()] && !isProcess
+      )
     }
 
     console.log({ customerXlsData })
@@ -43,7 +45,7 @@ const CustomerCommand = observer<CustomerCommandProps>(
             })
           }}
           value={customerXlsData.lookFor}
-          options={Object.keys(lookForOptions)}
+          options={Object.values(lookForOptions)}
           name="look for"
         />
         <FormControlLabel

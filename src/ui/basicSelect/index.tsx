@@ -21,6 +21,7 @@ const BasicSelect: FC<BasicSelectProps> = ({
   options,
   className,
 }) => {
+  console.log({ handleChange, value, name, options })
   return (
     <FormControl className={className}>
       <InputLabel id="demo-simple-select-label">{name}</InputLabel>

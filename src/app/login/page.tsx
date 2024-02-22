@@ -12,7 +12,7 @@ import Image from "next/image"
 
 import { observer } from "mobx-react-lite"
 import { useRouter } from "next/navigation"
-import { NavNames } from "@/util"
+import { NavNames } from "@/pages/api/util"
 import { addUserFirestore } from "@/api/firestore"
 import { User } from "@/api/firestore/user/interfaces"
 import Alerts from "@/ui/Alerts"

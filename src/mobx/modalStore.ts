@@ -1,4 +1,4 @@
-import { modals } from "@/util"
+import { modals } from "@/pages/api/util"
 import { makeAutoObservable } from "mobx"
 
 class Modal {

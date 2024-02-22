@@ -1,4 +1,5 @@
-const { readImagesFromTxt, fromUrlToImage } = require("./api")
+const { fromUrlToImage } = require("@/pages/api/util")
+const { readImagesFromTxt } = require("./api")
 const { sleep } = require("./util")
 
 async function imagesConv(sourcePath, outputPath) {

@@ -8,7 +8,7 @@ import Alerts from "@/ui/Alerts"
 import { messageStore } from "@/mobx/messageStore"
 import MessageModal from "@/ui/modal/message"
 import { ModalStore } from "@/mobx/modalStore"
-import { instructions, modals, sleep } from "@/util"
+import { instructions, modals, sleep, timeBetween } from "@/pages/api/util"
 import tokensStore, { Token } from "@/mobx/tokenStore"
 import { useRouter } from "next/navigation"
 
@@ -28,7 +28,6 @@ const RootPage = observer(() => {
   // each time for different customer .
   // when its done with all it will start another rotation for all
 
-  const hour = 3600
   const startAll = async () => {
     let i = 0
     while (true) {
@@ -46,7 +45,7 @@ const RootPage = observer(() => {
       }
       i++
       console.log(`done interation for all. iteration number: ${i}`)
-      await sleep(hour * 2)
+      await sleep(timeBetween.SESSION_USERS) //session
     }
   }
 
@@ -57,8 +56,8 @@ const RootPage = observer(() => {
         status: customerStatus.success,
       })
       return name
-    } catch (error) {
-      console.log(error)
+    } catch (error: any) {
+      console.log(error.stack)
       CustomerStore.updateCustomersXls(index, {
         status: customerStatus.failed,
       })

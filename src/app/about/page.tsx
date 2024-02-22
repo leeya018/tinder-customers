@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { FcApproval } from "react-icons/fc"
-import { instructions } from "@/util"
+import { instructions } from "@/pages/api/util"
 import Navbar from "@/components/navbar"
 import ProtectedRout from "@/components/protectedRout"
 

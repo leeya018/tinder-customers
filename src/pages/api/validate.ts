@@ -1,4 +1,4 @@
-import { getUrl } from "@/util"
+import { getUrl } from "@/pages/api/util"
 var cors = require("cors")
 
 const corsMiddleware = cors({

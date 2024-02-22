@@ -1,3 +1,4 @@
+const { timeBetween } = require("@/util")
 const { passUserWithMatchApi, getMyLikesApi } = require("./api")
 const { sleep } = require("./util")
 
@@ -18,7 +19,7 @@ const removeMyLikes = async (token) => {
     console.log({ userId: rec.user._id })
     const data = await passUserWithMatchApi(token, rec.user, rec.s_number, 1)
     console.log({ status: data.status })
-    await sleep()
+    await sleep(timeBetween.GET_RECS)
     console.log("done sleep")
   }
 }

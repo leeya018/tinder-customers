@@ -4,9 +4,6 @@ import {
   getMessagesFirestore,
 } from "@/api/firestore"
 import { Customer } from "@/api/firestore/customer/interfaces"
-import { Message } from "@/api/firestore/message/interfaces"
-import { modals } from "@/util"
-import { Timestamp } from "firebase/firestore"
 import { autorun, makeAutoObservable, toJS } from "mobx"
 import { makePersistable } from "mobx-persist-store"
 import moment from "moment"
@@ -14,7 +11,7 @@ import moment from "moment"
 const xlsArr = [
   {
     name: "lee",
-    token: "4d68f82e-b65c-4730-bc0e-32622c02e05d",
+    token: "a8843927-9920-48ab-a0d6-82e91874c5db",
     lookFor: "sex",
     isLookGood: 0,
     isWithLikes: 1,
@@ -82,7 +79,7 @@ class CustomerS {
   async getMessages(customerId: string, date: moment.Moment) {
     this.messages = await getMessagesFirestore(customerId, date)
   }
-  setChosenimages(urls: string[]) {
+  setChosenImages(urls: string[]) {
     this.chosenUrls = urls
   }
 }

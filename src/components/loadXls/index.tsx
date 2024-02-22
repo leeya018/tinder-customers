@@ -15,7 +15,7 @@ const LoadXls = observer<LoadXlsProps>(({ callback }) => {
       const file = e.target.files[0]
 
       const reader = new FileReader()
-      reader.onload = (event) => {
+      reader.onload = (event: any) => {
         const binaryString = event.target.result
         const workbook = XLSX.read(binaryString, { type: "binary" })
         const sheetName = workbook.SheetNames[0]
@@ -26,9 +26,8 @@ const LoadXls = observer<LoadXlsProps>(({ callback }) => {
         callback(jsonData)
       }
       reader.readAsBinaryString(file)
-    } catch (error) {
-      console.log(error)
-      throw error
+    } catch (error: any) {
+      console.log(error.stack)
     }
   }
 
