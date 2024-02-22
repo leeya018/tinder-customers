@@ -27,6 +27,8 @@ const RootPage = observer(() => {
   // this funciton invoke start function in loop
   // each time for different customer .
   // when its done with all it will start another rotation for all
+
+  const hour = 3600
   const startAll = async () => {
     let i = 0
     while (true) {
@@ -44,7 +46,7 @@ const RootPage = observer(() => {
       }
       i++
       console.log(`done interation for all. iteration number: ${i}`)
-      await sleep(1)
+      await sleep(hour * 2)
     }
   }
 

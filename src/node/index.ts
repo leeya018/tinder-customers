@@ -188,6 +188,7 @@ const recIterationLike = async (
         res1 = await passUserApi(token, rec.user, rec.s_number, 1)
         console.log("PASS USER : " + rec.user._id)
       }
+      await sleep(5)
     } catch (error: any) {
       throw new Error("recIterationLike function ", error.message)
     }
@@ -200,9 +201,9 @@ const likeAutomation = async (
   customerXlsData: CustomerXlsData
 ) => {
   console.log("==================LIKE_AUTOMATION========================")
-  while (likes < likesLimit && passes + likes < 100) {
+  while (likes < likesLimit && passes + likes < 70) {
     await recIterationLike(customer, customerXlsData)
-    await sleep()
+    await sleep(5)
   }
   console.log({ likes, passes })
 }
@@ -256,53 +257,53 @@ const messageAutomation = async (
 }
 
 // the real main function
-// const main = async (customerXlsData: CustomerXlsData) => {
-//   const hour = 60 * 60
-//   const day = hour * 24
+const main = async (customerXlsData: CustomerXlsData) => {
+  const hour = 60 * 60
+  const day = hour * 24
 
-//   const { token, isWithMessages, isWithLikes } = customerXlsData
-//   try {
-//     console.log("================== START_MAIN ========================")
+  const { token, isWithMessages, isWithLikes } = customerXlsData
+  try {
+    console.log("================== START_MAIN ========================")
 
-//     const profileResponse = await getProfileApi(token)
-//     const { travel, user } = profileResponse.data
-//     const isTraveling = travel?.is_traveling
-//     const location = isTraveling ? travel.travel_pos : user.pos
-//     console.log({ isTraveling, travelPos: travel?.travel_pos, myPos: user.pos })
+    const profileResponse = await getProfileApi(token)
+    const { travel, user } = profileResponse.data
+    const isTraveling = travel?.is_traveling
+    const location = isTraveling ? travel.travel_pos : user.pos
+    console.log({ isTraveling, travelPos: travel?.travel_pos, myPos: user.pos })
 
-//     const question = `What is the speaking language in ${JSON.stringify(
-//       location
-//     )} in 1 word only`
-//     console.log({ question })
-//     const lang = await getDataFromGptApi(question)
-//     console.log({ lang })
+    const question = `What is the speaking language in ${JSON.stringify(
+      location
+    )} in 1 word only`
+    console.log({ question })
+    const lang = await getDataFromGptApi(question)
+    console.log({ lang })
 
-//     const customer: Customer = {
-//       id: user._id,
-//       name: user.name,
-//     }
-//     console.log("Customer:", customer)
+    const customer: Customer = {
+      id: user._id,
+      name: user.name,
+    }
+    console.log("Customer:", customer)
 
-//     if (isWithLikes) {
-//       await likeAll(customer, customerXlsData)
-//       await likeAutomation(customer, customerXlsData)
-//     }
+    if (isWithLikes) {
+      await likeAll(customer, customerXlsData)
+      await likeAutomation(customer, customerXlsData)
+    }
 
-//     if (isWithMessages) {
-//       await messageAutomation(customer, customerXlsData, lang)
-//     }
+    if (isWithMessages) {
+      await messageAutomation(customer, customerXlsData, lang)
+    }
 
-//     console.log("================== END_MAIN ========================")
-//     return user.name
-//   } catch (error) {
-//     console.log(error.message)
-//   }
-// }
+    console.log("================== END_MAIN ========================")
+    return user.name
+  } catch (error) {
+    console.log(error.message)
+  }
+}
 
 // main funciton just for testing
-const main = async (customerXlsData: CustomerXlsData) => {
-  await sleep()
-  return customerXlsData.name
-}
+// const main = async (customerXlsData: CustomerXlsData) => {
+//   await sleep()
+//   return customerXlsData.name
+// }
 
 module.exports = { main }

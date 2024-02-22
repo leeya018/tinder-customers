@@ -5,13 +5,14 @@ async function imagesConv(sourcePath, outputPath) {
   let imgUrls = readImagesFromTxt(sourcePath)
   imgUrls = [...new Set(imgUrls)]
   console.log(imgUrls)
-  let i = 509
+  let i = 942
   for (const url of imgUrls.reverse()) {
     await fromUrlToImage(url, outputPath + `\\${i}.png`)
+    await sleep(5)
     i++
   }
 }
-const sourceLikes = "./tensorFolder/like.txt"
+// const sourceLikes = "./tensorFolder/like.txt"
 const sourcePass = "./tensorFolder/pass.txt"
 
 const outputAll = "C:\\Users\\user\\Documents\\tinder-tensor\\sarit"
