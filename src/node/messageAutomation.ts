@@ -39,7 +39,7 @@ export const messageAutomation = async (
     for (const match of matches) {
       const fileStarterName =
         fileStarterNames[lang.toLowerCase()] || fileStarterNames.english
-      const message = getRandomMessage(fileStarterName)
+      const message = getRandomMessage(`${fileStarterName}.txt`)
       const payloadMessage = {
         userId: customer.id,
         otherId: match?.person._id,

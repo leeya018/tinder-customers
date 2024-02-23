@@ -113,12 +113,12 @@ export const formatDateTs = (timestamp: Timestamp) => {
   const date = timestamp.toDate()
   return moment(date).format("DD-MM-YYYY")
 }
-
-export const getRandomMessage = (fileStarterName: string) => {
+//  fix that
+export const getRandomMessage = (fileName: string) => {
   try {
-    const filePath = path.join(messagesFolder, "messages.txt")
-    console.log({ fileStarterName, filePath })
-    const data = fs.readFileSync(filePath, "utf8")
+    const urlPath = path.join(starterFolder, fileName)
+    console.log({ urlPath })
+    const data = fs.readFileSync(urlPath, "utf8")
     const lines = data.split("\n").filter((line: string) => line.trim() !== "")
     const chosenLine = Math.floor(Math.random() * (lines.length - 1))
     console.log({ chosenLine })
