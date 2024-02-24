@@ -4,6 +4,7 @@ import { addMessageCount as addMessageCountFirestore } from "./message/addMessag
 import { getLikes as getLikesFirestore } from "./like/getLikes"
 import { addLike as addLikeFirestore } from "./like/addLike"
 import { getCustomers as getCustomersFirestore } from "./customer/getCustomers"
+import { addInfo as addInfoFirestore } from "./info/addInfo"
 
 export {
   addUserFirestore,
@@ -12,4 +13,5 @@ export {
   getLikesFirestore,
   addLikeFirestore,
   getCustomersFirestore,
+  addInfoFirestore,
 }

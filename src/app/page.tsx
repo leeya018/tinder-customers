@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { FaPlus } from "react-icons/fa"
 
 import { Button, OutlinedInput } from "@mui/material"
@@ -19,6 +19,7 @@ import { startApi } from "@/api_client"
 import LoadXls from "@/components/loadXls"
 import { CustomerStore, customerStatus } from "@/mobx/customerStore"
 import { toJS } from "mobx"
+import { addInfoFirestore } from "@/api/firestore"
 
 const RootPage = observer(() => {
   const { tokens, addToken, setTokens, setToken } = tokensStore

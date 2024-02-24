@@ -5,12 +5,13 @@ import {
   fileStarterNames,
   getFullStrTime,
   getRandomMessage,
+  infoTypes,
   messagesFolder,
   sleep,
   timeBetween,
 } from "@/pages/api/util"
 import { Timestamp } from "firebase/firestore"
-import { addMessageCountFirestore } from "@/api/firestore"
+import { addInfoFirestore, addMessageCountFirestore } from "@/api/firestore"
 import { Message } from "@/api/firestore/message/interfaces"
 import { getMatchesApi, sendMessageApi } from "./api"
 import DetailedError from "./DetailedError"
@@ -56,6 +57,11 @@ export const messageAutomation = async (
         createdDate: Timestamp.now(),
       }
       addDataToTxt(messagesFolder, "messages.txt", message)
+      addInfoFirestore({
+        customerName: customer.name,
+        data: message,
+        type: infoTypes.MESSAGE,
+      })
       await addMessageCountFirestore(newMessage, customer)
       await sleep(timeBetween.ENGAGEMENT)
     }

@@ -32,7 +32,7 @@ const recIterationLike = async (
       await handleLike(token, rec, pathUrl, customer, firstImage)
     } else {
       passes++
-      await handlePass(token, rec, pathUrl, firstImage)
+      await handlePass(token, rec, pathUrl, customer, firstImage)
     }
 
     await sleep(timeBetween.GET_RECS)

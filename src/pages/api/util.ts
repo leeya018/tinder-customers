@@ -287,3 +287,11 @@ export const timeBetween = {
   SESSION_USERS: hour,
 }
 export const swipesLim = 20
+
+export const infoTypes = {
+  ERROR: "error",
+  LIKE: "like",
+  PASS: "pass",
+  FUNCTION: "function",
+  MESSAGE: "message",
+}

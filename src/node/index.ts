@@ -1,4 +1,8 @@
-import { addLikeFirestore, addMessageCountFirestore } from "@/api/firestore"
+import {
+  addInfoFirestore,
+  addLikeFirestore,
+  addMessageCountFirestore,
+} from "@/api/firestore"
 import { Customer } from "@/api/firestore/customer/interfaces"
 import { Like } from "@/api/firestore/like/interfaces"
 import { Message } from "@/api/firestore/message/interfaces"
@@ -7,6 +11,7 @@ import {
   addDataToTxt,
   errorsFolder,
   getFullStrTime,
+  infoTypes,
 } from "@/pages/api/util"
 import { Timestamp } from "firebase/firestore"
 
@@ -50,17 +55,54 @@ const main = async (customerXlsData: CustomerXlsData) => {
     console.log("Customer:", customer)
 
     if (isWithLikes) {
+      addInfoFirestore({
+        customerName: customer.name,
+        data: `likeAll start`,
+        type: infoTypes.FUNCTION,
+      })
+
       addDataToTxt(actionsFolder, "functions.txt", `likeAll start`)
+
       await likeAll(customer, customerXlsData)
+      addInfoFirestore({
+        customerName: customer.name,
+        data: `likeAll end`,
+        type: infoTypes.FUNCTION,
+      })
+
       addDataToTxt(actionsFolder, "functions.txt", `likeAll end`)
       addDataToTxt(actionsFolder, "functions.txt", `likeAutomation start`)
+      addInfoFirestore({
+        customerName: customer.name,
+        data: `likeAutomation start`,
+        type: infoTypes.FUNCTION,
+      })
+
       await likeAutomation(customer, customerXlsData)
+      addInfoFirestore({
+        customerName: customer.name,
+        data: `likeAutomation end`,
+        type: infoTypes.FUNCTION,
+      })
+
       addDataToTxt(actionsFolder, "functions.txt", `likeAutomation end`)
     }
     console.log({ isWithMessages })
     if (isWithMessages) {
       addDataToTxt(actionsFolder, "functions.txt", `messageAutomation start`)
+      addInfoFirestore({
+        customerName: customer.name,
+        data: `messageAutomation start`,
+        type: infoTypes.FUNCTION,
+      })
+
       await messageAutomation(customer, customerXlsData, lang)
+      addInfoFirestore({
+        customerName: customer.name,
+        data: `messageAutomation end`,
+        type: infoTypes.FUNCTION,
+      })
+
       addDataToTxt(actionsFolder, "functions.txt", `messageAutomation end`)
     }
 
@@ -74,6 +116,11 @@ const main = async (customerXlsData: CustomerXlsData) => {
       errStr = error.message
     }
     const errorFile = path.join(errorsFolder, "errors.txt")
+    addInfoFirestore({
+      customerName: error.customerName,
+      data: error.message,
+      type: infoTypes.ERROR,
+    })
 
     addDataToTxt(errorFile, "", errStr)
   }
