@@ -22,7 +22,7 @@ export const addInfo = async (newInfo: info) => {
     })
     return doc.id
   } catch (error) {
-    console.log("Error in addLike function: ", error)
-    throw new Error("Error in addLike function")
+    console.log("Error in addInfo function: ", error)
+    throw new Error("Error in addInfo function")
   }
 }
