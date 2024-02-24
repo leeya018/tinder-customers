@@ -96,10 +96,9 @@ const path = require("path")
 // }
 // main(customerXlsData)
 // //  need to check that
-const tensorFolderUrl =
-  "C:/Users/user/Desktop/code/lee/tinder-customers/src/node/tensorFolder"
+const infoUrl = "C:/Users/user/Desktop/code/lee/tinder-customers/src/node/info"
 
-const messagesFolder = path.join(tensorFolderUrl, "message")
+const messagesFolder = path.join(infoUrl, "message")
 
 const addDataToTxt = (folderPath, fileName, txt) => {
   // createFolder(folderPath)

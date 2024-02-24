@@ -1,7 +1,7 @@
 const { sleep } = require("./util")
 const { getMatchesApi, getProfileApi, getMessagesApi } = require("./api")
 
-const { tensorFolderUrl } = require("@/util")
+const { infoUrl } = require("@/util")
 const path = require("path")
 const { timeBetween } = require("@/util")
 const { addDataToTxt } = require("@/pages/api/util")
@@ -30,7 +30,7 @@ const getMatches = async (token) => {
 const token = "4d68f82e-b65c-4730-bc0e-32622c02e05d"
 // const matchId = "5980deb74a75f5b45fb118ee6575d04d7c42750100d5892b"
 // const myId = "5980deb74a75f5b45fb118ee"
-const filePath = path.join(tensorFolderUrl, "messages.txt")
+const filePath = path.join(infoUrl, "messages.txt")
 
 const main = async () => {
   let goodMessages = []

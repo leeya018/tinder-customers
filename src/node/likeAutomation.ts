@@ -22,9 +22,6 @@ const recIterationLike = async (
   const folderName = customer.name
   const pathUrl = path.join(swipesFolder, folderName)
 
-  let likes = 0
-  let passes = 0
-
   for (const rec of recs) {
     const isFit = await isGoodFit(rec.user, customerXlsData)
     const firstImage = rec.user.photos?.[0]?.url

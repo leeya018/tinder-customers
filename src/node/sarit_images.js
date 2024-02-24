@@ -13,8 +13,8 @@ async function imagesConv(sourcePath, outputPath) {
     i++
   }
 }
-// const sourceLikes = "./tensorFolder/like.txt"
-const sourcePass = "./tensorFolder/pass.txt"
+// const sourceLikes = "./info/like.txt"
+const sourcePass = "./info/pass.txt"
 
 const outputAll = "C:\\Users\\user\\Documents\\tinder-tensor\\sarit"
 // C:\Users\user\Documents\tinder-tensor\sarit

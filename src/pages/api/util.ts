@@ -175,29 +175,15 @@ export interface TinderUser {
   }
 }
 
-export const second = 1000
-export const minute = second * 60
-export const hour = minute * 60
-export const day = hour * 24
-export const week = day * 7
-
-export const timeBetween = {
-  ENGAGEMENT: 5 * second,
-  GET_RECS: 10 * second,
-  LIKE_LOOP: 10 * second,
-  SESSION_USERS: 30 * second,
-}
-export const swipesLim = 10
-
 export const starterFolder =
   "C:/Users/user/Desktop/code/lee/tinder-customers/src/node/starters"
-export const tensorFolderUrl =
-  "C:/Users/user/Desktop/code/lee/tinder-customers/src/node/tensorFolder"
+export const infoUrl =
+  "C:/Users/user/Desktop/code/lee/tinder-customers/src/node/info"
 
-export const swipesFolder = path.join(tensorFolderUrl, "swipes")
-export const errorsFolder = path.join(tensorFolderUrl, "errors")
-export const messagesFolder = path.join(tensorFolderUrl, "message")
-export const actionsFolder = path.join(tensorFolderUrl, "actions")
+export const swipesFolder = path.join(infoUrl, "swipes")
+export const errorsFolder = path.join(infoUrl, "errors")
+export const messagesFolder = path.join(infoUrl, "message")
+export const actionsFolder = path.join(infoUrl, "actions")
 
 export const likeRatioBarrier = 0.4
 
@@ -288,3 +274,16 @@ export const tinderBaseUrl = "https://api.gotinder.com"
 //   "קשר לא מחייב",
 //   "משהו קליל",
 // ]
+export const second = 1000
+export const minute = second * 60
+export const hour = minute * 60
+export const day = hour * 24
+export const week = day * 7
+
+export const timeBetween = {
+  ENGAGEMENT: 5 * second,
+  GET_RECS: 20 * second,
+  LIKE_LOOP: 10 * second,
+  SESSION_USERS: hour,
+}
+export const swipesLim = 20

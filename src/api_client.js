@@ -1,16 +1,15 @@
 import axios from "axios"
+import { getUrl } from "./pages/api/util"
+const baseUrl = getUrl()
 export const startApi = async (customerXlsData) => {
   console.log("startApi", { customerXlsData })
-  const res = await axios.post(
-    `http://localhost:${process.env.NEXT_PUBLIC_PORT}/api/start`,
-    { customerXlsData }
-  )
+  const res = await axios.post(`${baseUrl}/api/start`, { customerXlsData })
   return res.data
 }
 
 export const getDataFromGptApi = async (question) => {
   const res = await axios.post(
-    `http://localhost:${process.env.NEXT_PUBLIC_PORT}/api/gpt`,
+    `${baseUrl}/api/gpt`,
     { question },
     {
       headers: {
@@ -25,7 +24,7 @@ export const getDataFromGptApi = async (question) => {
 
 export const getDataFromGptLearnApi = async () => {
   const res = await axios.post(
-    `http://localhost:${process.env.NEXT_PUBLIC_PORT}/api/gptlaern`,
+    `${baseUrl}/api/gptlaern`,
     {},
     {
       headers: {
@@ -40,7 +39,7 @@ export const getDataFromGptLearnApi = async () => {
 
 export const getDataFromGptTrainApi = async () => {
   const res = await axios.post(
-    `http://localhost:${process.env.NEXT_PUBLIC_PORT}/api/gpttrain`,
+    `${baseUrl}/api/gpttrain`,
     {},
     {
       headers: {
