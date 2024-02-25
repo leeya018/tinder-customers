@@ -13,9 +13,10 @@ import Image from "next/image"
 import { observer } from "mobx-react-lite"
 import { useRouter } from "next/navigation"
 import { NavNames } from "@/pages/api/util"
-import { addUserFirestore } from "@/api/firestore"
+import { addUserFirestore, getUserFirestore } from "@/api/firestore"
 import { User } from "@/api/firestore/user/interfaces"
 import Alerts from "@/ui/Alerts"
+import { messageStore } from "@/mobx/messageStore"
 
 function login() {
   const router = useRouter()
@@ -28,11 +29,15 @@ function login() {
       .then(async (UserCredentialImp) => {
         const { email, displayName, uid, photoURL } = UserCredentialImp.user
         const newUser: User = { email, displayName, userId: uid, photoURL }
-        await addUserFirestore(newUser)
+        const user = await getUserFirestore(uid)
+        if (!user) {
+          throw new Error("you are not in the system")
+        }
         router.push(NavNames.home)
       })
       .catch((err) => {
         console.log(err.message)
+        messageStore.setMessage(err.message, 500)
         throw err
       })
   }

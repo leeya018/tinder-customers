@@ -58,6 +58,6 @@ export const addMessageCount = async (
     }
   } catch (error) {
     console.log("Error in addLike function: ", error)
-    throw new Error("Error in addLike function")
+    throw error
   }
 }

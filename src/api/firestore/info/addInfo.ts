@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore"
 import { info } from "./interfaces"
 
-export const addInfo = async (newInfo: info) => {
+export const addInfo = async (newInfo: info): Promise<string | void> => {
   try {
     const colRef = collection(db, "info")
     const doc = await addDoc(colRef, {
@@ -23,6 +23,6 @@ export const addInfo = async (newInfo: info) => {
     return doc.id
   } catch (error) {
     console.log("Error in addInfo function: ", error)
-    throw new Error("Error in addInfo function")
+    throw error
   }
 }

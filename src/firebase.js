@@ -2,7 +2,12 @@
 import { initializeApp } from "firebase/app"
 import { getAuth } from "firebase/auth"
 import { getFirestore } from "firebase/firestore"
+import { isDev } from "./pages/api/util"
 // import { getStorage } from "firebase/storage"
+
+// const appId = isDev()
+//   ?
+//   : process.env.NEXT_PUBLIC_APP_ID_PROD
 
 const firebaseConfigDev = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY_DEV,
