@@ -27,6 +27,7 @@ import DetailedError from "./DetailedError"
 import { Like } from "@/api/firestore/like/interfaces"
 import { getLikes } from "@/api/firestore/like/getLikes"
 import moment from "moment"
+import { info } from "@/api/firestore/info/interfaces"
 
 // the real main function
 // const main = async (customerXlsData: CustomerXlsData) => {
@@ -129,29 +130,31 @@ import moment from "moment"
 //     addDataToTxt(errorFile, "", errStr)
 //   }
 // }
-
-const main = async (customerXlsData: CustomerXlsData) => {
-  const { token } = customerXlsData
-
-  const profileResponse = await getProfileApi(token)
-  console.log("================== getProfileApi ========================")
-  const { user } = profileResponse.data
-  const customer: Customer = {
-    id: user._id,
-    name: user.name,
+const addInfo = () => {
+  try {
+    const info: info = {
+      customerName: "customer.name",
+      data: "firstImage",
+      type: infoTypes.LIKE,
+    }
+    addInfoFirestore(info)
+  } catch (error) {
+    console.log(error)
   }
-  getLikesFirestore(user._id, moment())
-  const newLike: Like = {
-    userId: "5980deb74a75f5b45fb118ee",
-    likeUrl: "test image url ",
-    createdDate: Timestamp.now(),
-  }
-  addLikeFirestore(newLike, customer)
 }
-// main funciton just for testing
-// const main = async (customerXlsData: CustomerXlsData) => {
-//   await sleep()
-//   return customerXlsData.name
-// }
+const main = async (customerXlsData: CustomerXlsData) => {
+  try {
+    const { token } = customerXlsData
+    console.log("================== START_MAIN ========================")
+
+    const profileResponse = await getProfileApi(token)
+    const { travel, user } = profileResponse.data
+    console.log(travel, user)
+    return { travel, user }
+    // addInfo()
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 module.exports = { main }
