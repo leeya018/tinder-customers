@@ -10,7 +10,7 @@ if (typeof window === "undefined") {
   fs = require("fs")
 }
 
-export const NavNames = {
+export const NavNames: any = {
   login: "/login",
   home: "/",
   view: "/view",
@@ -37,7 +37,8 @@ export const isDev = () => process.env.NODE_ENV === "development"
 
 export const intervalForever = async (callback: Function, rate: number) => {
   let intervalNum = 0
-  while (true) {
+  let condition = true
+  while (condition) {
     intervalNum++
     console.log(`interval ${callback.name}: ${intervalNum}  ${getDate()}`)
     await callback()

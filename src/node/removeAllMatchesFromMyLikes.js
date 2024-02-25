@@ -4,7 +4,8 @@ const { sleep } = require("./util")
 
 const intervalForever = async (callback, rate) => {
   let intervalNum = 0
-  while (true) {
+  let condition = true
+  while (condition) {
     intervalNum++
     console.log(`interval ${callback.name}: ${intervalNum} `)
     await callback()

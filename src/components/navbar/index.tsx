@@ -27,14 +27,14 @@ const settings = ["Logout"]
 const Navbar = observer(() => {
   const router = useRouter()
 
-  const [anchorElNav, setAnchorElNav] = React.useState(null)
-  const [anchorElUser, setAnchorElUser] = React.useState(null)
+  const [anchorElNav, setAnchorElNav] = React.useState<any>(null)
+  const [anchorElUser, setAnchorElUser] = React.useState<any>(null)
 
-  const handleOpenNavMenu = (event) => {
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget)
   }
 
-  const handleOpenUserMenu = (event) => {
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
   }
 
@@ -54,8 +54,8 @@ const Navbar = observer(() => {
       await signOut(auth)
 
       console.log("user Logged out")
-    } catch (error) {
-      console.log(error.message)
+    } catch (error: any) {
+      console.log(error)
     }
   }
   const handleCloseUserMenu = () => {
@@ -167,9 +167,7 @@ const Navbar = observer(() => {
                     navStore.nav === NavNames[page.toLowerCase()]
                       ? "underline"
                       : "none",
-                  // textDecoration: "underline",
                 }}
-                // className={"bg-color-orange"}
               >
                 {page}
               </Button>

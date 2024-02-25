@@ -22,7 +22,6 @@ import { toJS } from "mobx"
 import { addInfoFirestore } from "@/api/firestore"
 
 const RootPage = observer(() => {
-  const { tokens, addToken, setTokens, setToken } = tokensStore
   const router = useRouter()
 
   // this funciton invoke start function in loop
@@ -31,7 +30,8 @@ const RootPage = observer(() => {
 
   const startAll = async () => {
     let i = 0
-    while (true) {
+    let condition = true
+    while (condition) {
       for (const [
         index,
         cXlsData,
