@@ -164,15 +164,6 @@ const likeUserApi = async (token: string, user: any, data: any) => {
     maxBodyLength: Infinity,
     url: `${tinderBaseUrl}/like/${user._id}`,
     headers: getHeaders(token),
-
-    // headers: {
-    //   "app-version": "1032701",
-    //   platform: "web",
-    //   Accept: "application/json",
-    //   "Content-Type": "application/json",
-    //   "User-Agent": "Chrome/100.0.4896.127",
-    //   "x-auth-token": token,
-    // },
     data: data,
   }
 
@@ -199,15 +190,30 @@ const getRecsApi = async (token: string) => {
     .request(config)
     .then((response) => {
       const user = response.data.data.results[0].user
-      // console.log(Object.keys(user))
-      // console.log(user.photos.map((photos) => photos.url))
-      // console.log({})
       return response.data
     })
     .catch((error) => {
       console.log(error.message)
       throw error
-      //   return res.status(450).json(error);
+    })
+}
+
+const getUserApi = async (token: string, userId: string) => {
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `${tinderBaseUrl}/user/${userId}?locale=en`,
+    headers: getHeaders(token),
+  }
+
+  return axios
+    .request(config)
+    .then((response) => {
+      return response.data
+    })
+    .catch((error) => {
+      console.log(error.message)
+      throw error
     })
 }
 
@@ -222,4 +228,5 @@ export {
   getMessagesApi,
   getProfileApi,
   passUserWithMatchApi,
+  getUserApi,
 }

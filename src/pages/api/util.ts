@@ -14,7 +14,8 @@ export const NavNames: any = {
   login: "/login",
   home: "/",
   view: "/view",
-  about: "/about",
+  info: "/info",
+  msgorder: "/msgorder",
 }
 
 export const sleep = async (time: number) => {
@@ -283,6 +284,7 @@ export const day = hour * 24
 export const week = day * 7
 
 export const timeBetween = {
+  CUSTOM: 2 * second,
   ENGAGEMENT: 5 * second,
   GET_RECS: 20 * second,
   LIKE_LOOP: 10 * second,

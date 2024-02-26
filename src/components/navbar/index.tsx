@@ -7,7 +7,6 @@ import { NavNames } from "@/pages/api/util"
 import navStore from "@/mobx/navStore"
 import Image from "next/image"
 import userStore from "@/mobx/userStore"
-import { msgorderApi } from "@/api_client"
 
 const Navbar = observer(() => {
   const router = useRouter()
@@ -40,41 +39,22 @@ const Navbar = observer(() => {
           home
         </li>
         <li
-          onClick={() => handleNavItemClick(NavNames.view)}
+          onClick={() => handleNavItemClick(NavNames.info)}
           className={`${
             navStore.nav === NavNames.info && "underline"
           } p-2 hover:underline cursor-pointer`}
         >
           info
         </li>
-
-        <li>
-          <div
-            className="cursor-pointer flex justify-center border-2
-           items-center bg-pink-600 text-white text-lg
-             px-5 py-2 rounded-full hover:bg-white 
-             hover:borer-pink-600   hover:text-pink-600
-              hover:border-pink-600 duration-300
-             "
-          >
-            <button
-              onClick={async () => {
-                try {
-                  const res = await msgorderApi()
-                  console.log(res.message)
-                  console.log(res.message === "Script executed successfully")
-                  if (res.message === "Script executed successfully") {
-                    window.open("http://localhost:4000/msgorder", "_blank")
-                  }
-                } catch (error) {
-                  console.log(error)
-                }
-              }}
-            >
-              MsgOrderPage
-            </button>
-          </div>
+        <li
+          onClick={() => handleNavItemClick(NavNames.msgorder)}
+          className={`${
+            navStore.nav === NavNames.msgorder && "underline"
+          } p-2 hover:underline cursor-pointer`}
+        >
+          msgOrder
         </li>
+
         <li>
           <div
             className="cursor-pointer flex justify-center border-2
