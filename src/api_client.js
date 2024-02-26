@@ -51,3 +51,17 @@ export const getDataFromGptTrainApi = async () => {
   console.log(res.data)
   return res.data
 }
+export const msgorderApi = async () => {
+  const res = await axios.post(
+    `${baseUrl}/api/msgorder`,
+    {},
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
+
+  console.log(res.data)
+  return res.data
+}

@@ -1,4 +1,5 @@
 import { db } from "@/firebase"
+// import { db, dbServer } from "@/firebase"
 import {
   Timestamp,
   addDoc,
@@ -12,6 +13,14 @@ import {
   where,
 } from "firebase/firestore"
 import { info } from "./interfaces"
+
+// export const addInfo = async (newInfo: info): Promise<string | void> => {
+// try {
+//   await dbServer.collection("info").add(newInfo)
+// } catch (error) {
+//   console.error(error)
+// }
+// }
 
 export const addInfo = async (newInfo: info): Promise<string | void> => {
   try {

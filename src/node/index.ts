@@ -144,14 +144,14 @@ const addInfo = () => {
 }
 const main = async (customerXlsData: CustomerXlsData) => {
   try {
-    const { token } = customerXlsData
-    console.log("================== START_MAIN ========================")
+    // const { token } = customerXlsData
+    // console.log("================== START_MAIN ========================")
 
-    const profileResponse = await getProfileApi(token)
-    const { travel, user } = profileResponse.data
-    console.log(travel, user)
-    return { travel, user }
-    // addInfo()
+    // const profileResponse = await getProfileApi(token)
+    // const { travel, user } = profileResponse.data
+    // console.log(travel, user)
+    // return { travel, user }
+    addInfo()
   } catch (error) {
     console.log(error)
   }

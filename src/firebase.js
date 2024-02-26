@@ -5,9 +5,7 @@ import { getFirestore } from "firebase/firestore"
 import { isDev } from "./pages/api/util"
 // import { getStorage } from "firebase/storage"
 
-// const appId = isDev()
-//   ?
-//   : process.env.NEXT_PUBLIC_APP_ID_PROD
+// import * as admin from "firebase-admin"
 
 const firebaseConfigDev = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY_DEV,
@@ -18,7 +16,21 @@ const firebaseConfigDev = {
   appId: process.env.NEXT_PUBLIC_APP_ID_DEV,
 }
 
+// if (!admin.apps.length) {
+//   admin.initializeApp({
+//     credential: admin.credential.cert({
+//       // Your service account details
+//       projectId: process.env.NEXT_PUBLIC_APP_ID_DEV,
+//       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+//       privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+//     }),
+//   })
+// }
+
 const app = initializeApp(firebaseConfigDev)
 export const db = getFirestore(app)
 export const auth = getAuth(app)
+// export const adminFirbase = admin
+
+// export const dbServer = admin.firestore()
 // export const storage = getStorage(app)
