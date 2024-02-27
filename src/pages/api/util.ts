@@ -284,7 +284,7 @@ export const day = hour * 24
 export const week = day * 7
 
 export const timeBetween = {
-  CUSTOM: 2 * second,
+  CUSTOM: 0.5 * second,
   ENGAGEMENT: 5 * second,
   GET_RECS: 20 * second,
   LIKE_LOOP: 10 * second,

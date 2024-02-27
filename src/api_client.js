@@ -96,3 +96,17 @@ export const getUserApi = async (token, userId) => {
   console.log(res.data)
   return res.data
 }
+export const sendMessageApi = async (token, payload) => {
+  const res = await axios.post(
+    `${baseUrl}/api/sendMessage`,
+    { token, payload },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
+
+  console.log(res.data)
+  return res.data
+}

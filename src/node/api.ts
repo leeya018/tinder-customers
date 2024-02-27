@@ -94,13 +94,13 @@ const getMatchesApi = async (token: string, payload: any) => {
     })
 }
 
-const sendMessageApi = async (token: string, data: any) => {
+const sendMessageApi = async (token: string, payload: any) => {
   let config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: `${tinderBaseUrl}/user/matches/${data.matchId}?locale=en`,
+    url: `${tinderBaseUrl}/user/matches/${payload.matchId}?locale=en`,
     headers: getHeaders(token),
-    data: JSON.stringify(data),
+    data: JSON.stringify(payload),
   }
 
   return axios
