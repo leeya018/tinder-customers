@@ -77,11 +77,13 @@ const getMyLikesApi = async (token: string) => {
     })
 }
 const getMatchesApi = async (token: string, payload: any) => {
-  const { message, is_tinder_u, amount } = payload
+  const { message, is_tinder_u, amount, pageToken } = payload
+  const withToken = pageToken ? `&page_token=${pageToken}` : ""
+
   var config = {
     method: "get",
     maxBodyLength: Infinity,
-    url: `${tinderBaseUrl}/v2/matches?locale=en&count=${amount}&is_tinder_u=${is_tinder_u}&message=${message}`,
+    url: `${tinderBaseUrl}/v2/matches?locale=en&count=${amount}&is_tinder_u=${is_tinder_u}&message=${message}${withToken}`,
     headers: getHeaders(token),
   }
   return axios(config)

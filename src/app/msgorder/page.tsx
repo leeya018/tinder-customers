@@ -16,15 +16,15 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { FaHome } from "react-icons/fa"
 
-const token = "21317bf0-e0ee-4c66-8bff-9fd31509a424"
+const myTinderToken = process.env.NEXT_PUBLIC_MY_TINDER_TOKEN_ID
 const mPayload = {
   message: 1, //if there are messages in the pull
-  amount: 40, // how many matches to return
+  amount: 10, // how many matches to return
   is_tinder_u: true,
   pageToken: null,
 }
 
-const matchId = "5980deb74a75f5b45fb118ee63ecad4f083ea501001fc6db"
+// const matchId = "5980deb74a75f5b45fb118ee63ecad4f083ea501001fc6db"
 
 const myId = "5980deb74a75f5b45fb118ee"
 // const item = data[0]
@@ -32,8 +32,8 @@ const MsgOrderPage = observer(() => {
   const [messagesArr, setMessagesArr] = useState<any>([])
   const [txtMsg, setTxtMsg] = useState<string>("")
   const [isLoading, setIsLoading] = useState(false)
+  const [isDone, setIsDone] = useState(false)
   const [mchPayload, setMchPayload] = useState(mPayload)
-  const [nextPageToken, setNextPageToken] = useState(null)
   const scrollRef = useRef<any>(null)
   const inputRef = useRef<any>(null)
 
@@ -48,20 +48,17 @@ const MsgOrderPage = observer(() => {
     }
   }, [inputRef.current, messagesArr])
 
-  // useEffect(() => {
-  //   getMyMessages()
-  // }, [])
   useEffect(() => {
-    if (messagesArr.length === 0) {
+    if (messagesArr.length === 0 && !isLoading && !isDone) {
       getMyMessages()
     }
-  }, [messagesArr])
+  }, [isLoading, messagesArr])
 
   const getMatches = async () => {
-    return await getMatchesApi(token, mchPayload)
+    return await getMatchesApi(myTinderToken, mchPayload)
   }
   // const getUser = async () => {
-  //   const user = await getUserApi(token, "6240c3faa7299401007624a1")
+  //   const user = await getUserApi(myTinderToken, "6240c3faa7299401007624a1")
   //   console.log({ user })
   //   return user
   // }
@@ -91,12 +88,12 @@ const MsgOrderPage = observer(() => {
     let filteredMatches = []
     for (const match of matches) {
       if (!match.id) throw new Error("match id not specified")
-      const messages = await getMessagesApi(token, match.id)
+      const messages = await getMessagesApi(myTinderToken, match.id)
       const userId = match.person.id
       const firstMessage = messages[0]
 
       if (firstMessage.from !== myId) {
-        const user = await getUserApi(token, userId)
+        const user = await getUserApi(myTinderToken, userId)
         const newCustomData = createCustomData(match, user, messages)
         filteredMatches.push(newCustomData)
         setMessagesArr(filteredMatches)
@@ -126,7 +123,7 @@ const MsgOrderPage = observer(() => {
       message: txtMsg,
     }
     console.log(payload)
-    sendMessageApi(token, payload).catch((err) => {
+    sendMessageApi(myTinderToken, payload).catch((err) => {
       console.log(err)
     })
     setTxtMsg("")
@@ -147,17 +144,23 @@ const MsgOrderPage = observer(() => {
     setIsLoading(true)
     console.log("what is up")
     const { matches, next_page_token } = await getMatches()
+    console.log({ next_page_token, matches })
+    if (!next_page_token) {
+      setIsDone(true)
+      return
+    }
     setMchPayload((prev) => ({
       ...prev,
-      pageToken: nextPageToken,
+      pageToken: next_page_token,
     }))
-    console.log({ next_page_token, matches })
     const results = await filterMatches(matches)
-    console.log({ results })
     setIsLoading(false)
+
+    console.log({ results })
+
     // setMessagesArr(results)
   }
-  if (messagesArr.length === 0 && isLoading) {
+  if (messagesArr.length === 0) {
     return (
       <div className="flex justify-center items-center bg-pink-400 w-full h-screen flex-col">
         <div className="text-5xl font-semibold  text-white">
@@ -166,7 +169,7 @@ const MsgOrderPage = observer(() => {
       </div>
     )
   }
-  if (messagesArr.length === 0 && !isLoading) {
+  if (isDone) {
     return (
       <div className="flex justify-center items-center bg-pink-400 w-full h-screen flex-col">
         <div className="text-5xl font-semibold  text-white">
@@ -181,13 +184,14 @@ const MsgOrderPage = observer(() => {
       </div>
     )
   }
+
   return (
     <ProtectedRout>
       <Navbar />
       <div className=" container max-h-screen p-10 mt-20 relative ">
         {/* images */}
         <ul className="flex justify-between flex-wrap gap-2">
-          {[...messagesArr[0].photos].map((url, key) => (
+          {(messagesArr[0]?.photos || []).map((url: string, key: number) => (
             <li key={key}>
               <Image
                 alt="girl image"
@@ -201,9 +205,9 @@ const MsgOrderPage = observer(() => {
         </ul>
         <div className="mt-10">
           <span className="font-semibold">name: </span>
-          {messagesArr[0].name}
+          {messagesArr[0]?.name}
         </div>
-        <div className="mt-10">{messagesArr[0].bio}</div>
+        <div className="mt-10">{messagesArr[0]?.bio}</div>
         {/* message send section */}
         <div className="mt-5 flex items-center h-14 gap-2  ">
           <input
@@ -226,7 +230,7 @@ const MsgOrderPage = observer(() => {
           className="flex flex-col  gap-3 border-2 max-h-96 overflow-scroll mt-10 "
           ref={scrollRef}
         >
-          {messagesArr[0].messages.map((message: any, key: number) => (
+          {(messagesArr[0]?.messages || []).map((message: any, key: number) => (
             <li key={key}>
               <div className="flex gap-3">
                 <div className="font-semibold text-lg">{message.from} :</div>
