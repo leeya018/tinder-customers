@@ -288,9 +288,9 @@ export const timeBetween = {
   ENGAGEMENT: 5 * second,
   GET_RECS: 20 * second,
   LIKE_LOOP: 10 * second,
-  SESSION_USERS: hour,
+  SESSION_USERS: 10 * minute,
 }
-export const swipesLim = 20
+export const swipesLim = 50
 
 export const infoTypes = {
   ERROR: "error",

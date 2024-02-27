@@ -38,3 +38,6 @@ next-env.d.ts
 
 /src/node/info/
 /src/node/messages.txt
+
+
+xlsData.js

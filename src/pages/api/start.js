@@ -1,11 +1,11 @@
-import { main, test } from "../../node"
+import { mainIteration, test } from "../../node"
 
 export default async function handler(req, res) {
   try {
     // main()
     const { customerXlsData } = req.body
     console.log("start the main function")
-    const name = await main(customerXlsData)
+    const name = await mainIteration(customerXlsData)
 
     return res.status(200).send(name)
   } catch (error) {

@@ -12,6 +12,8 @@ import {
   errorsFolder,
   getFullStrTime,
   infoTypes,
+  intervalForever,
+  timeBetween,
 } from "@/pages/api/util"
 import { Timestamp } from "firebase/firestore"
 
@@ -116,14 +118,18 @@ const main = async (customerXlsData: CustomerXlsData) => {
       errStr = error.message
     }
     const errorFile = path.join(errorsFolder, "errors.txt")
-    // addInfoFirestore({
-    //   customerName: error.customerName,
-    //   data: error.message,
-    //   type: infoTypes.ERROR,
-    // })
+    addInfoFirestore({
+      customerName: error.customerName,
+      data: error.message,
+      type: infoTypes.ERROR,
+    })
 
     addDataToTxt(errorFile, "", errStr)
   }
+}
+
+const mainIteration = (customerXlsData: CustomerXlsData) => {
+  intervalForever(() => main(customerXlsData), timeBetween.SESSION_USERS)
 }
 // const addInfo = () => {
 //   try {
@@ -152,4 +158,4 @@ const main = async (customerXlsData: CustomerXlsData) => {
 //   }
 // }
 
-module.exports = { main }
+module.exports = { mainIteration }

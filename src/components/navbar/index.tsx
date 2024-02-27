@@ -27,7 +27,7 @@ const Navbar = observer(() => {
   }
 
   return (
-    <nav className="px-8 py-3 bg-blue-500 text-white fixed top-0 w-screen flex items-center justify-between">
+    <nav className="px-8 py-3 bg-blue-500 text-white fixed top-0 w-screen flex z-10 items-center justify-between">
       {/*  nav */}
       <ul className="flex items-center gap-2">
         <li

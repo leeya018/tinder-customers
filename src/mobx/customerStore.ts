@@ -7,25 +7,13 @@ import { Customer } from "@/api/firestore/customer/interfaces"
 import { autorun, makeAutoObservable, toJS } from "mobx"
 import { makePersistable } from "mobx-persist-store"
 import moment from "moment"
-
-const xlsArr = [
-  {
-    name: "lee",
-    token: "21317bf0-e0ee-4c66-8bff-9fd31509a424",
-    lookFor: "sex",
-    isLookGood: 0,
-    isWithLikes: 1,
-    isWithMessages: 0,
-    isProcess: 0,
-  },
-]
-
+import { xlsData } from "./xlsData"
 export const customerStatus = {
   success: "success",
   failed: "failed",
 }
 class CustomerS {
-  customersXlsData: any[] = xlsArr
+  customersXlsData: any[] = xlsData
   // customersXlsData: any[] = []
   customers: Customer[] = []
   chosenCustomer: Customer | null = null
