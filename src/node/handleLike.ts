@@ -3,9 +3,11 @@ import { likeUserApi } from "./api"
 import { addDataToTxt, infoTypes, payloadLike } from "@/pages/api/util"
 import { Like } from "@/api/firestore/like/interfaces"
 import { Timestamp } from "firebase/firestore"
-import { addInfoFirestore, addLikeFirestore } from "@/api/firestore"
+import { addLikeFirestore } from "@/api/firestore"
 import { addInfo } from "@/api/firestore/info/addInfo"
 import { info } from "@/api/firestore/info/interfaces"
+import { addInfoServer } from "@/api/firestore/info/addInfoServer"
+import { addLikeServer } from "@/api/firestore/like/addLikeServer"
 
 export const handleLike = async (
   token: string,
@@ -23,7 +25,7 @@ export const handleLike = async (
     }
     console.log("adding data to info LIKE")
 
-    addInfoFirestore(info)
+    addInfoServer(info)
     addDataToTxt(pathUrl, "like.txt", firstImage)
   }
   const newLike: Like = {
@@ -31,6 +33,6 @@ export const handleLike = async (
     likeUrl: firstImage,
     createdDate: Timestamp.now(),
   }
-  await addLikeFirestore(newLike, customer)
+  await addLikeServer(newLike, customer)
   console.log("LIKE USER:", rec.user._id)
 }

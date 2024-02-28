@@ -25,6 +25,7 @@ export const addMessageCount = async (
     if (!isExists) {
       await addCustomer(customer)
     }
+    if (!createdDate) throw new Error("createdDate is not exists")
     const date = createdDate.toDate()
 
     // Start of the day

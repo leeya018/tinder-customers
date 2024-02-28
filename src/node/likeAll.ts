@@ -8,6 +8,7 @@ import { Timestamp } from "firebase/firestore"
 import { addLikeFirestore } from "@/api/firestore"
 import DetailedError from "./DetailedError"
 import moment from "moment"
+import { addLikeServer } from "@/api/firestore/like/addLikeServer"
 
 export const likeAll = async (
   customer: Customer,
@@ -42,7 +43,7 @@ export const likeAll = async (
         likeUrl: firstImage,
         createdDate: Timestamp.now(),
       }
-      await addLikeFirestore(newLike, customer)
+      await addLikeServer(newLike, customer)
       await sleep(timeBetween.ENGAGEMENT)
       const dateTimeFormat = "DD-MM-YYYY HH:mm:ss"
       const dateStr = moment().format(dateTimeFormat)

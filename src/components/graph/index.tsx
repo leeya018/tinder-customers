@@ -61,6 +61,8 @@ const Graph = observer<GraphProps>(({ likes, messages, date }) => {
       dateObj[formattedDate].likes = like.likeUrls.length
     }
     for (const message of messages) {
+      if (!message.createdDate) throw new Error("createdDate is not exists")
+
       dateObj[formatDateTs(message.createdDate)].messages = message.amount
     }
     console.log({ dateObj })

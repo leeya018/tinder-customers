@@ -1,26 +1,7 @@
 import { db } from "@/firebase"
-// import { db, dbServer } from "@/firebase"
-import {
-  Timestamp,
-  addDoc,
-  arrayUnion,
-  collection,
-  doc,
-  getDocs,
-  query,
-  serverTimestamp,
-  updateDoc,
-  where,
-} from "firebase/firestore"
-import { info } from "./interfaces"
 
-// export const addInfo = async (newInfo: info): Promise<string | void> => {
-// try {
-//   await dbServer.collection("info").add(newInfo)
-// } catch (error) {
-//   console.error(error)
-// }
-// }
+import { addDoc, collection, serverTimestamp } from "firebase/firestore"
+import { info } from "./interfaces"
 
 export const addInfo = async (newInfo: info): Promise<string | void> => {
   try {

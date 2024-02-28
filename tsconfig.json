@@ -37,7 +37,10 @@
     "src/lib/**.js",
     "src/lib/**.ts",
     "src/node/**.js",
-    "src/api_client.js"
+    "src/api_client.js",
+    "src/pages/api/addinfo.ts",
+    "src/pages/api/*.*ts",
+    "src/**.js"
   ],
   "exclude": ["node_modules"]
 }

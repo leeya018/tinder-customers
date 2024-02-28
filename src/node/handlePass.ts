@@ -3,6 +3,7 @@ import { passUserApi } from "./api"
 import { info } from "@/api/firestore/info/interfaces"
 import { addInfoFirestore } from "@/api/firestore"
 import { Customer } from "@/api/firestore/customer/interfaces"
+import { addInfoServer } from "@/api/firestore/info/addInfoServer"
 
 export const handlePass = async (
   token: string,
@@ -20,7 +21,7 @@ export const handlePass = async (
     }
 
     console.log("adding data to info PASS")
-    addInfoFirestore(info)
+    addInfoServer(info)
     addDataToTxt(pathUrl, "pass.txt", firstImage)
   }
   console.log("PASS USER:", rec.user._id)

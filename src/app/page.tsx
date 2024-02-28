@@ -25,9 +25,10 @@ import { startApi } from "@/api_client"
 import LoadXls from "@/components/loadXls"
 import { CustomerStore, customerStatus } from "@/mobx/customerStore"
 import { toJS } from "mobx"
-import { addInfoFirestore } from "@/api/firestore"
+
 import { addInfo } from "@/api/firestore/info/addInfo"
 import { info } from "@/api/firestore/info/interfaces"
+import { addInfoFirestore } from "@/api/firestore"
 
 const RootPage = observer(() => {
   const router = useRouter()
@@ -73,23 +74,23 @@ const RootPage = observer(() => {
       throw error
     }
   }
-  const addInfo = () => {
-    try {
-      const info: info = {
-        customerName: "customer.name",
-        data: "firstImage",
-        type: infoTypes.LIKE,
-      }
-      addInfoFirestore(info)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  // const addInfo = () => {
+  //   try {
+  //     const info: info = {
+  //       customerName: "customer.name",
+  //       data: "firstImage",
+  //       type: infoTypes.LIKE,
+  //     }
+  //     addInfoFirestore(info)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }
   return (
     <ProtectedRout>
       <Navbar />
       <div className="w-[100vw] h-[100vh] p-10 ">
-        <button onClick={addInfo}>add info test</button>
+        {/* <button onClick={addInfo}>add info test</button> */}
         <Alerts />
         {/*  */}
         <LoadXls

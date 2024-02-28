@@ -98,12 +98,12 @@ const CustomerCommand = observer<CustomerCommandProps>(
         >
           {customerXlsData.isProcess === true ? "in Process" : "Start"}
         </Button>
-        <div className="group flex justify-center items-center p-2   shadow-md cursor-pointer">
+        {/* <div className="group flex justify-center items-center p-2   shadow-md cursor-pointer h-20  flex-col">
           <div className="group-hover:hidden">Show Token</div>
           <div className="hidden  group-hover:flex  ">
             {customerXlsData.token}
           </div>
-        </div>
+        </div> */}
         <div className="flex justify-center items-center  ">
           <div
             className={

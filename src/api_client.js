@@ -110,3 +110,17 @@ export const sendMessageApi = async (token, payload) => {
   console.log(res.data)
   return res.data
 }
+export const addInfoApi = async (newInfo) => {
+  const res = await axios.post(
+    `${baseUrl}/api/addinfo`,
+    { newInfo },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
+
+  console.log(res.data)
+  return res.data
+}
