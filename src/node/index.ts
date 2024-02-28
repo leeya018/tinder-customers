@@ -28,7 +28,6 @@ import path from "path"
 import DetailedError from "./DetailedError"
 import { info } from "@/api/firestore/info/interfaces"
 import moment from "moment"
-// import { getAdmin } from "@/firebaseAdmin"
 import { addInfoServer } from "@/api/firestore/info/addInfoServer"
 
 import { Message } from "@/api/firestore/message/interfaces"
@@ -78,7 +77,7 @@ const main = async (customerXlsData: CustomerXlsData) => {
         type: infoTypes.FUNCTION,
       })
 
-      // // addDataToTxt(actionsFolder, "functions.txt", `likeAll start`)
+      addDataToTxt(actionsFolder, "functions.txt", `likeAll start`)
 
       await likeAll(customer, customerXlsData)
       await addInfoServer({
@@ -87,8 +86,8 @@ const main = async (customerXlsData: CustomerXlsData) => {
         type: infoTypes.FUNCTION,
       })
 
-      // addDataToTxt(actionsFolder, "functions.txt", `likeAll end`)
-      // addDataToTxt(actionsFolder, "functions.txt", `likeAutomation start`)
+      addDataToTxt(actionsFolder, "functions.txt", `likeAll end`)
+      addDataToTxt(actionsFolder, "functions.txt", `likeAutomation start`)
       await addInfoServer({
         customerName: customer.name,
         data: `likeAutomation start`,
@@ -102,11 +101,11 @@ const main = async (customerXlsData: CustomerXlsData) => {
         type: infoTypes.FUNCTION,
       })
 
-      // addDataToTxt(actionsFolder, "functions.txt", `likeAutomation end`)
+      addDataToTxt(actionsFolder, "functions.txt", `likeAutomation end`)
     }
     console.log({ isWithMessages })
     if (isWithMessages) {
-      // addDataToTxt(actionsFolder, "functions.txt", `messageAutomation start`)
+      addDataToTxt(actionsFolder, "functions.txt", `messageAutomation start`)
       await addInfoServer({
         customerName: customer.name,
         data: `messageAutomation start`,
@@ -120,7 +119,7 @@ const main = async (customerXlsData: CustomerXlsData) => {
         type: infoTypes.FUNCTION,
       })
 
-      // addDataToTxt(actionsFolder, "functions.txt", `messageAutomation end`)
+      addDataToTxt(actionsFolder, "functions.txt", `messageAutomation end`)
     }
 
     console.log("================== END_MAIN ========================")
@@ -139,8 +138,6 @@ const main = async (customerXlsData: CustomerXlsData) => {
       type: infoTypes.ERROR,
     })
     return "done"
-
-    // addDataToTxt(errorFile, "", errStr)
   }
 }
 
@@ -158,37 +155,7 @@ const addInfoApi = async (newInfo: info) => {
 }
 
 const mainIteration = async (customerXlsData: CustomerXlsData) => {
-  // intervalForever(() => main(customerXlsData), timeBetween.SESSION_USERS)
-  // const docId = await addInfoServer({
-  //   customerName: "customer.name",
-  //   data: `likeAll start`,
-  //   type: infoTypes.FUNCTION,
-  // })
-
-  // return docId
-  // const id = await addInfoServer({
-  //   customerName: customerXlsData.name,
-  //   data: `likeAutomation end`,
-  //   type: infoTypes.FUNCTION,
-  // })
-  // return `${id}   -   ${customerXlsData.token}`
-  // return await main(customerXlsData)
-
-  const { token, isWithMessages, isWithLikes } = customerXlsData
-
-  const profileResponse = await getProfileApi(token)
-  console.log("================== getProfileApi ========================")
-  const { travel, user } = profileResponse.data
-  const customer: Customer = {
-    id: user._id,
-    name: user.name,
-  }
-  const recs = await getRecs(token)
-  const firstImage =
-    recs[0].user.photos?.[0]?.url || "first image url not exists"
-
-  await handleLike(token, recs[0], "pathUrl", customer, firstImage)
-  return "done"
+  intervalForever(() => main(customerXlsData), timeBetween.SESSION_USERS)
 }
 
 module.exports = { mainIteration }

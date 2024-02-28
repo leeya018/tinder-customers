@@ -112,4 +112,3 @@ const addDataToTxt = (folderPath, fileName, txt) => {
     }
   })
 }
-// addDataToTxt(messagesFolder, "messages.txt", "message")

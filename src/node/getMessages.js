@@ -30,7 +30,7 @@ const getMatches = async (token) => {
 const token = "4d68f82e-b65c-4730-bc0e-32622c02e05d"
 // const matchId = "5980deb74a75f5b45fb118ee6575d04d7c42750100d5892b"
 // const myId = "5980deb74a75f5b45fb118ee"
-// const filePath = path.join(infoUrl, "messages.txt")
+const filePath = path.join(infoUrl, "messages.txt")
 
 const main = async () => {
   let goodMessages = []
@@ -52,7 +52,7 @@ const main = async () => {
     })
     if (messages.length > 7) {
       goodMessages.push(messages)
-      // addDataToTxt(filePath, JSON.stringify(messages))
+      addDataToTxt(filePath, JSON.stringify(messages))
     }
     console.log("amount of good messages " + goodMessages.length)
     console.log(`======================MESSAGE ${i}=================`)

@@ -177,7 +177,8 @@ export interface TinderUser {
   }
 }
 
-export const starterFolder = "./src/node/starters"
+export const starterFolder =
+  "C:/Users/user/Desktop/code/lee/tinder-customers/src/node/starters"
 export const infoUrl =
   "C:/Users/user/Desktop/code/lee/tinder-customers/src/node/info"
 
@@ -284,9 +285,9 @@ export const week = day * 7
 
 export const timeBetween = {
   CUSTOM: 0.5 * second,
-  ENGAGEMENT: 5 * second,
-  GET_RECS: 20 * second,
-  LIKE_LOOP: 10 * second,
+  ENGAGEMENT: 2 * second,
+  GET_RECS: 10 * second,
+  LIKE_LOOP: 4 * second,
   SESSION_USERS: 10 * minute,
 }
 export const swipesLim = 50

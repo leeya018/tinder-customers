@@ -58,7 +58,7 @@ export const messageAutomation = async (
         amount: 1,
         createdDate: Timestamp.now(),
       }
-      // addDataToTxt(messagesFolder, "messages.txt", message)
+      addDataToTxt(messagesFolder, "messages.txt", message)
       addInfoServer({
         customerName: customer.name,
         data: message,

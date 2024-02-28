@@ -20,7 +20,7 @@ const recIterationLike = async (
   const recs = await getRecs(token)
 
   const folderName = customer.name
-  const pathUrl = "path.join(swipesFolder, folderName)"
+  const pathUrl = path.join(swipesFolder, folderName)
 
   for (const rec of recs) {
     const isFit = await isGoodFit(rec.user, customerXlsData)
