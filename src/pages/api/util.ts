@@ -177,8 +177,7 @@ export interface TinderUser {
   }
 }
 
-export const starterFolder =
-  "C:/Users/user/Desktop/code/lee/tinder-customers/src/node/starters"
+export const starterFolder = "./src/node/starters"
 export const infoUrl =
   "C:/Users/user/Desktop/code/lee/tinder-customers/src/node/info"
 

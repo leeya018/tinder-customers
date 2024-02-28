@@ -22,7 +22,7 @@ export const handlePass = async (
 
     console.log("adding data to info PASS")
     addInfoServer(info)
-    addDataToTxt(pathUrl, "pass.txt", firstImage)
+    // addDataToTxt(pathUrl, "pass.txt", firstImage)
   }
   console.log("PASS USER:", rec.user._id)
 }

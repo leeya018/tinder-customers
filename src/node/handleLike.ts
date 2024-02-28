@@ -26,7 +26,7 @@ export const handleLike = async (
     console.log("adding data to info LIKE")
 
     addInfoServer(info)
-    addDataToTxt(pathUrl, "like.txt", firstImage)
+    // addDataToTxt(pathUrl, "like.txt", firstImage)
   }
   const newLike: Like = {
     userId: customer.id,

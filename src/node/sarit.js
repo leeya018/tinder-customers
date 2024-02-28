@@ -96,7 +96,7 @@ const path = require("path")
 // }
 // main(customerXlsData)
 // //  need to check that
-const infoUrl = "C:/Users/user/Desktop/code/lee/tinder-customers/src/node/info"
+const infoUrl = "./src/node/info"
 
 const messagesFolder = path.join(infoUrl, "message")
 
@@ -112,4 +112,4 @@ const addDataToTxt = (folderPath, fileName, txt) => {
     }
   })
 }
-addDataToTxt(messagesFolder, "messages.txt", "message")
+// addDataToTxt(messagesFolder, "messages.txt", "message")

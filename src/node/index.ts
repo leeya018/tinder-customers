@@ -11,6 +11,7 @@ import {
   addDataToTxt,
   errorsFolder,
   getFullStrTime,
+  getRandomMessage,
   infoTypes,
   intervalForever,
   timeBetween,
@@ -75,7 +76,7 @@ const main = async (customerXlsData: CustomerXlsData) => {
         type: infoTypes.FUNCTION,
       })
 
-      addDataToTxt(actionsFolder, "functions.txt", `likeAll start`)
+      // // addDataToTxt(actionsFolder, "functions.txt", `likeAll start`)
 
       await likeAll(customer, customerXlsData)
       await addInfoServer({
@@ -84,8 +85,8 @@ const main = async (customerXlsData: CustomerXlsData) => {
         type: infoTypes.FUNCTION,
       })
 
-      addDataToTxt(actionsFolder, "functions.txt", `likeAll end`)
-      addDataToTxt(actionsFolder, "functions.txt", `likeAutomation start`)
+      // addDataToTxt(actionsFolder, "functions.txt", `likeAll end`)
+      // addDataToTxt(actionsFolder, "functions.txt", `likeAutomation start`)
       await addInfoServer({
         customerName: customer.name,
         data: `likeAutomation start`,
@@ -99,11 +100,11 @@ const main = async (customerXlsData: CustomerXlsData) => {
         type: infoTypes.FUNCTION,
       })
 
-      addDataToTxt(actionsFolder, "functions.txt", `likeAutomation end`)
+      // addDataToTxt(actionsFolder, "functions.txt", `likeAutomation end`)
     }
     console.log({ isWithMessages })
     if (isWithMessages) {
-      addDataToTxt(actionsFolder, "functions.txt", `messageAutomation start`)
+      // addDataToTxt(actionsFolder, "functions.txt", `messageAutomation start`)
       await addInfoServer({
         customerName: customer.name,
         data: `messageAutomation start`,
@@ -117,7 +118,7 @@ const main = async (customerXlsData: CustomerXlsData) => {
         type: infoTypes.FUNCTION,
       })
 
-      addDataToTxt(actionsFolder, "functions.txt", `messageAutomation end`)
+      // addDataToTxt(actionsFolder, "functions.txt", `messageAutomation end`)
     }
 
     console.log("================== END_MAIN ========================")
@@ -129,14 +130,14 @@ const main = async (customerXlsData: CustomerXlsData) => {
     } else {
       errStr = error.message
     }
-    const errorFile = path.join(errorsFolder, "errors.txt")
+    // const errorFile = path.join(errorsFolder, "errors.txt")
     await addInfoServer({
       customerName: error.customerName,
       data: error.message,
       type: infoTypes.ERROR,
     })
 
-    addDataToTxt(errorFile, "", errStr)
+    // addDataToTxt(errorFile, "", errStr)
   }
 }
 
@@ -155,15 +156,15 @@ const addInfoApi = async (newInfo: info) => {
 
 const mainIteration = async (customerXlsData: CustomerXlsData) => {
   // intervalForever(() => main(customerXlsData), timeBetween.SESSION_USERS)
-  const docId = await addInfoServer({
-    customerName: "customer.name",
-    data: `likeAll start`,
-    type: infoTypes.FUNCTION,
-  })
+  // const docId = await addInfoServer({
+  //   customerName: "customer.name",
+  //   data: `likeAll start`,
+  //   type: infoTypes.FUNCTION,
+  // })
 
-  return docId
+  // return docId
 
-  // main()
+  main(customerXlsData)
 }
 
 module.exports = { mainIteration }
