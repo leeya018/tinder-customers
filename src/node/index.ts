@@ -23,7 +23,7 @@ import { CustomerXlsData } from "@/api/firestore/customerXlsData/interface"
 import { messageAutomation } from "./messageAutomation"
 import { likeAutomation } from "./likeAutomation"
 import { likeAll } from "./likeAll"
-import { getProfileApi } from "./api"
+import { getProfileApi, likeUserApi } from "./api"
 import path from "path"
 import DetailedError from "./DetailedError"
 import { info } from "@/api/firestore/info/interfaces"
@@ -38,6 +38,8 @@ import { addLikeServer } from "@/api/firestore/like/addLikeServer"
 import { Like } from "@/api/firestore/like/interfaces"
 import { addMessageCountServer } from "@/api/firestore/message/addMessageCountServer"
 import { getAdminDb } from "@/firebaseAdmin"
+import { getRecs } from "./getRecs"
+import { handleLike } from "./handleLike"
 
 // the real main function
 const main = async (customerXlsData: CustomerXlsData) => {
@@ -170,7 +172,23 @@ const mainIteration = async (customerXlsData: CustomerXlsData) => {
   //   type: infoTypes.FUNCTION,
   // })
   // return `${id}   -   ${customerXlsData.token}`
-  return await main(customerXlsData)
+  // return await main(customerXlsData)
+
+  const { token, isWithMessages, isWithLikes } = customerXlsData
+
+  const profileResponse = await getProfileApi(token)
+  console.log("================== getProfileApi ========================")
+  const { travel, user } = profileResponse.data
+  const customer: Customer = {
+    id: user._id,
+    name: user.name,
+  }
+  const recs = await getRecs(token)
+  const firstImage =
+    recs[0].user.photos?.[0]?.url || "first image url not exists"
+
+  await handleLike(token, recs[0], "pathUrl", customer, firstImage)
+  return "done"
 }
 
 module.exports = { mainIteration }
