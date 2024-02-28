@@ -136,6 +136,7 @@ const main = async (customerXlsData: CustomerXlsData) => {
       data: error.message,
       type: infoTypes.ERROR,
     })
+    return "done"
 
     // addDataToTxt(errorFile, "", errStr)
   }
@@ -163,13 +164,13 @@ const mainIteration = async (customerXlsData: CustomerXlsData) => {
   // })
 
   // return docId
-  const id = await addInfoServer({
-    customerName: customerXlsData.name,
-    data: `likeAutomation end`,
-    type: infoTypes.FUNCTION,
-  })
-  return `${id}   -   ${customerXlsData.token}`
-  // main(customerXlsData)
+  // const id = await addInfoServer({
+  //   customerName: customerXlsData.name,
+  //   data: `likeAutomation end`,
+  //   type: infoTypes.FUNCTION,
+  // })
+  // return `${id}   -   ${customerXlsData.token}`
+  return await main(customerXlsData)
 }
 
 module.exports = { mainIteration }
