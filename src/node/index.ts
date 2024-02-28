@@ -153,62 +153,14 @@ const addInfoApi = async (newInfo: info) => {
   }
 }
 
-// const main = async () => {
-//   // addInfoServer({
-//   //   customerName: "M MAN on fthe world ",
-//   //   data: `lst s the king`,
-//   //   type: infoTypes.FUNCTION,
-//   // })
+const mainIteration = async (customerXlsData: CustomerXlsData) => {
+  // intervalForever(() => main(customerXlsData), timeBetween.SESSION_USERS)
+  const { token, isWithMessages, isWithLikes } = customerXlsData
 
-//   const customer: Customer = {
-//     id: "5980deb74a75f5b45fb118ee",
-//     name: "lee",
-//   }
-//   const newMessage: Message = {
-//     userId: customer.id,
-//     amount: 4,
-//     createdDate: Timestamp.now(),
-//   }
-//   // addCustomerServer(customer)
-//   const newLike: Like = {
-//     userId: customer.id,
-//     likeUrl: "firstImage",
-//     createdDate: Timestamp.now(),
-//   }
-//   // addLikeServer(newLike, customer)
-//   addMessageCountServer(newMessage, customer)
-//   // const exssts = await isCustomerExistServer("5980deb74a75f5b45fb118ee")
-//   // console.log(exssts)
-// }
-const mainIteration = (customerXlsData: CustomerXlsData) => {
-  intervalForever(() => main(customerXlsData), timeBetween.SESSION_USERS)
+  const profileResponse = await getProfileApi(token)
+  return profileResponse
+
   // main()
 }
-// const addInfo = () => {
-//   try {
-//     const info: info = {
-//       customerName: "customer.name",
-//       data: "firstImage",
-//       type: infoTypes.LIKE,
-//     }
-//     addInfoServer(info)
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
-// const main = async (customerXlsData: CustomerXlsData) => {
-//   try {
-//     // const { token } = customerXlsData
-//     // console.log("================== START_MAIN ========================")
-
-//     // const profileResponse = await getProfileApi(token)
-//     // const { travel, user } = profileResponse.data
-//     // console.log(travel, user)
-//     // return { travel, user }
-//     addInfo()
-//   } catch (error) {
-//     console.log(error)
-//   }
-// }
 
 module.exports = { mainIteration }
