@@ -69,7 +69,7 @@ const main = async (customerXlsData: CustomerXlsData) => {
     console.log("Customer:", customer)
 
     if (isWithLikes) {
-      addInfoServer({
+      await addInfoServer({
         customerName: customer.name,
         data: `likeAll start`,
         type: infoTypes.FUNCTION,
@@ -78,7 +78,7 @@ const main = async (customerXlsData: CustomerXlsData) => {
       addDataToTxt(actionsFolder, "functions.txt", `likeAll start`)
 
       await likeAll(customer, customerXlsData)
-      addInfoServer({
+      await addInfoServer({
         customerName: customer.name,
         data: `likeAll end`,
         type: infoTypes.FUNCTION,
@@ -86,14 +86,14 @@ const main = async (customerXlsData: CustomerXlsData) => {
 
       addDataToTxt(actionsFolder, "functions.txt", `likeAll end`)
       addDataToTxt(actionsFolder, "functions.txt", `likeAutomation start`)
-      addInfoServer({
+      await addInfoServer({
         customerName: customer.name,
         data: `likeAutomation start`,
         type: infoTypes.FUNCTION,
       })
 
       await likeAutomation(customer, customerXlsData)
-      addInfoServer({
+      await addInfoServer({
         customerName: customer.name,
         data: `likeAutomation end`,
         type: infoTypes.FUNCTION,
@@ -104,14 +104,14 @@ const main = async (customerXlsData: CustomerXlsData) => {
     console.log({ isWithMessages })
     if (isWithMessages) {
       addDataToTxt(actionsFolder, "functions.txt", `messageAutomation start`)
-      addInfoServer({
+      await addInfoServer({
         customerName: customer.name,
         data: `messageAutomation start`,
         type: infoTypes.FUNCTION,
       })
 
       await messageAutomation(customer, customerXlsData, lang)
-      addInfoServer({
+      await addInfoServer({
         customerName: customer.name,
         data: `messageAutomation end`,
         type: infoTypes.FUNCTION,
@@ -130,7 +130,7 @@ const main = async (customerXlsData: CustomerXlsData) => {
       errStr = error.message
     }
     const errorFile = path.join(errorsFolder, "errors.txt")
-    addInfoServer({
+    await addInfoServer({
       customerName: error.customerName,
       data: error.message,
       type: infoTypes.ERROR,
@@ -155,10 +155,13 @@ const addInfoApi = async (newInfo: info) => {
 
 const mainIteration = async (customerXlsData: CustomerXlsData) => {
   // intervalForever(() => main(customerXlsData), timeBetween.SESSION_USERS)
-  const { token, isWithMessages, isWithLikes } = customerXlsData
+  const docId = await addInfoServer({
+    customerName: "customer.name",
+    data: `likeAll start`,
+    type: infoTypes.FUNCTION,
+  })
 
-  const profileResponse = await getProfileApi(token)
-  return profileResponse
+  return docId
 
   // main()
 }
