@@ -7,11 +7,24 @@ import { Customer } from "@/api/firestore/customer/interfaces"
 import { autorun, makeAutoObservable, toJS } from "mobx"
 import { makePersistable } from "mobx-persist-store"
 import moment from "moment"
-import { xlsData } from "./xlsData"
+// import { xlsData } from "./xlsData"
 export const customerStatus = {
   success: "success",
   failed: "failed",
 }
+
+const xlsData = [
+  {
+    name: "lee",
+    token: process.env.NEXT_PUBLIC_MY_TINDER_TOKEN_ID,
+    lookFor: "sex",
+    isLookGood: 0,
+    isWithLikes: 1,
+    isWithMessages: 0,
+    isProcess: 0,
+  },
+]
+
 class CustomerS {
   customersXlsData: any[] = xlsData
   // customersXlsData: any[] = []
