@@ -163,8 +163,13 @@ const mainIteration = async (customerXlsData: CustomerXlsData) => {
   // })
 
   // return docId
-
-  main(customerXlsData)
+  const id = await addInfoServer({
+    customerName: customerXlsData.name,
+    data: `likeAutomation end`,
+    type: infoTypes.FUNCTION,
+  })
+  return `${id}   -   ${customerXlsData.token}`
+  // main(customerXlsData)
 }
 
 module.exports = { mainIteration }
