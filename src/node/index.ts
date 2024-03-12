@@ -155,6 +155,16 @@ const addInfoApi = async (newInfo: info) => {
 }
 
 const mainIteration = async (customerXlsData: CustomerXlsData) => {
+  // const customerXlsDataTmp: CustomerXlsData = {
+  //   name: "lee",
+  //   token: process.env.NEXT_PUBLIC_MY_TINDER_TOKEN_ID || "",
+  //   lookFor: "sex",
+  //   isLookGood: false,
+  //   isWithLikes: true,
+  //   isWithMessages: true,
+  //   isProcess: false,
+  // }
+  // intervalForever(() => main(customerXlsDataTmp), timeBetween.SESSION_USERS)
   intervalForever(() => main(customerXlsData), timeBetween.SESSION_USERS)
 }
 

@@ -20,7 +20,7 @@ const xlsData = [
     lookFor: "sex",
     isLookGood: 0,
     isWithLikes: 1,
-    isWithMessages: 0,
+    isWithMessages: 1,
     isProcess: 0,
   },
 ]

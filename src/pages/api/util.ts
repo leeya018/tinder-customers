@@ -51,6 +51,7 @@ export const intervalForever = async (callback: Function, rate: number) => {
 export const modals = {
   message: "message",
   images: "images",
+  unmatch: "unmatch",
 }
 
 export const instructions = [
@@ -286,11 +287,11 @@ export const week = day * 7
 export const timeBetween = {
   CUSTOM: 0.5 * second,
   ENGAGEMENT: 2 * second,
-  GET_RECS: 10 * second,
+  GET_RECS: 5 * second,
   LIKE_LOOP: 4 * second,
-  SESSION_USERS: 10 * minute,
+  SESSION_USERS: 20 * minute,
 }
-export const swipesLim = 50
+export const swipesLim = 100
 
 export const infoTypes = {
   ERROR: "error",

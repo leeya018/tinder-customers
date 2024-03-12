@@ -8,13 +8,17 @@ import {
   getMatchesApi,
   getMessagesApi,
   getUserApi,
+  removeMatchApi,
   sendMessageApi,
 } from "@/api_client"
-import { NavNames, sleep, timeBetween } from "@/pages/api/util"
+import { NavNames, modals, sleep, timeBetween } from "@/pages/api/util"
 import { data } from "./data"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { FaHome } from "react-icons/fa"
+import moment from "moment"
+import RemoveModal from "@/ui/modal/unmatch"
+import { ModalStore } from "@/mobx/modalStore"
 
 const myTinderToken = process.env.NEXT_PUBLIC_MY_TINDER_TOKEN_ID
 const mPayload = {
@@ -34,6 +38,10 @@ const MsgOrderPage = observer(() => {
   const [isLoading, setIsLoading] = useState(false)
   const [isDone, setIsDone] = useState(false)
   const [mchPayload, setMchPayload] = useState(mPayload)
+  const [chosenToRem, setChosenToRem] = useState({
+    name: "",
+    matchId: "",
+  })
   const scrollRef = useRef<any>(null)
   const inputRef = useRef<any>(null)
 
@@ -63,7 +71,7 @@ const MsgOrderPage = observer(() => {
   //   return user
   // }
 
-  const createCustomData = (match: any, user: any, messages: any) => {
+  const createCustomData = (match: any, messages: any) => {
     const photos = match.person.photos.map((item: any) => item.url)
     const customMessages = messages.map((message: any) => {
       return {
@@ -73,11 +81,15 @@ const MsgOrderPage = observer(() => {
         matchId: message.matchId,
       }
     })
+    const { _id, bio, name, birth_date } = match.person
+    if (!birth_date) throw new Error("birth date is required")
+    const age: number = moment().diff(birth_date, "years")
     const data = {
-      id: user._id, // check
-      name: match.person.name,
+      id: _id,
+      age,
+      name,
       photos,
-      bio: user.bio,
+      bio,
       messages: customMessages,
       matchId: match._id,
     }
@@ -93,8 +105,8 @@ const MsgOrderPage = observer(() => {
       const firstMessage = messages[0]
 
       if (firstMessage.from !== myId) {
-        const user = await getUserApi(myTinderToken, userId)
-        const newCustomData = createCustomData(match, user, messages)
+        // const user = await getUserApi(myTinderToken, userId)
+        const newCustomData = createCustomData(match, messages)
         filteredMatches.push(newCustomData)
         setMessagesArr(filteredMatches)
       }
@@ -133,9 +145,33 @@ const MsgOrderPage = observer(() => {
     console.log(e.code)
     if (e.code === "Enter") {
       sendMessage()
-    } else if (e.code === "NumpadEnter") {
+    } else if (e.code === "Backquote") {
       setMessagesArr((prev: any) => [...prev.slice(1)])
     }
+  }
+
+  const closeModal = () => {
+    setChosenToRem({
+      name: "",
+      matchId: "",
+    })
+  }
+
+  const openUmatchModal = async (matchId: string, name: string) => {
+    setChosenToRem({
+      matchId,
+      name,
+    })
+    ModalStore.openModal(modals.unmatch)
+  }
+
+  const removeMatch = async () => {
+    await removeMatchApi(chosenToRem.matchId, myTinderToken)
+    //
+    setMessagesArr((prev: any) =>
+      prev.filter((msgItem: any) => msgItem.matchId !== chosenToRem.matchId)
+    )
+    ModalStore.closeModal()
   }
 
   // match.person.photos.map(item =>item.url)
@@ -188,7 +224,15 @@ const MsgOrderPage = observer(() => {
   return (
     <ProtectedRout>
       <Navbar />
-      <div className=" container max-h-screen p-10 mt-20 relative ">
+      {ModalStore.modalName === modals.unmatch && (
+        <RemoveModal
+          onClose={closeModal}
+          title="unmatch"
+          chosenToRem={chosenToRem}
+          onClick={removeMatch}
+        />
+      )}
+      <div className=" container max-h-screen p-10 my-20 relative ">
         {/* images */}
         <ul className="flex justify-between flex-wrap gap-2">
           {(messagesArr[0]?.photos || []).map((url: string, key: number) => (
@@ -203,27 +247,46 @@ const MsgOrderPage = observer(() => {
             </li>
           ))}
         </ul>
-        <div className="mt-10">
-          <span className="font-semibold">name: </span>
-          {messagesArr[0]?.name}
-        </div>
-        <div className="mt-10">{messagesArr[0]?.bio}</div>
-        {/* message send section */}
-        <div className="mt-5 flex items-center h-14 gap-2  ">
-          <input
-            value={txtMsg}
-            onChange={(e) => setTxtMsg(e.target.value)}
-            ref={inputRef}
-            type="text"
-            className="border-2 rounded-lg h-full flex-1 p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            onKeyDown={handleKeyDown}
-          />
+        <div className="flex items-center gap-10">
+          <div className="mt-10">
+            <span className="font-semibold">name: </span>
+            {messagesArr[0]?.name}
+          </div>
           <button
-            onClick={sendMessage}
-            className="text-white bg-blue-500 hover:text-blue-500 hover:bg-white rounded-lg px-5 py-3"
+            onClick={() =>
+              openUmatchModal(messagesArr[0].matchId, messagesArr[0].name)
+            }
+            className="text-white bg-red-500 hover:text-red-500 hover:bg-white rounded-lg px-5 py-3"
           >
-            send message
+            remove match
           </button>
+        </div>
+
+        <div className="mt-10">
+          <span className="font-semibold">age: </span>
+          {messagesArr[0]?.age}
+        </div>
+
+        <div className="mt-10 lg:w-[50%] ">{messagesArr[0]?.bio}</div>
+
+        {/* message send section */}
+        <div className=" flex  ">
+          <div className="mt-5 flex items-center h-14 gap-2 lg:w-[50%] ">
+            <input
+              value={txtMsg}
+              onChange={(e) => setTxtMsg(e.target.value)}
+              ref={inputRef}
+              type="text"
+              className="border-2 rounded-lg h-full flex-1 p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onKeyDown={handleKeyDown}
+            />
+            <button
+              onClick={sendMessage}
+              className="text-white bg-blue-500 hover:text-blue-500 hover:bg-white rounded-lg px-5 py-3"
+            >
+              send message
+            </button>
+          </div>
         </div>
         {/* messages */}
         <ul

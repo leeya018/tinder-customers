@@ -36,6 +36,11 @@ const RootPage = observer(() => {
   // this funciton invoke start function in loop
   // each time for different customer .
   // when its done with all it will start another rotation for all
+  // useEffect(() => {
+  //   const cXlsData = CustomerStore.customersXlsData
+  //   console.log({ cXlsData: toJS(cXlsData) })
+  //   start(cXlsData, 0)
+  // }, [])
 
   const startAll = async () => {
     let i = 0

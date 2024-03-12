@@ -124,3 +124,17 @@ export const addInfoApi = async (newInfo) => {
   console.log(res.data)
   return res.data
 }
+export const removeMatchApi = async (matchId, token) => {
+  const res = await axios.delete(
+    `${baseUrl}/api/match`,
+    { data: { matchId, token } },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  )
+
+  console.log(res.data)
+  return res.data
+}
