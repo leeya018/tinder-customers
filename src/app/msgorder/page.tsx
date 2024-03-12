@@ -38,6 +38,7 @@ const MsgOrderPage = observer(() => {
   const [isLoading, setIsLoading] = useState(false)
   const [isDone, setIsDone] = useState(false)
   const [mchPayload, setMchPayload] = useState(mPayload)
+  const [imgClicked, setImgClicked] = useState("")
   const [chosenToRem, setChosenToRem] = useState({
     name: "",
     matchId: "",
@@ -224,6 +225,18 @@ const MsgOrderPage = observer(() => {
   return (
     <ProtectedRout>
       <Navbar />
+      {imgClicked !== "" && (
+        <div className="absolute z-10  inset-0 bg-gray-400 bg-opacity-30 flex items-center justify-center">
+          <Image
+            alt="girl image "
+            width={600}
+            height={600}
+            className="object-fit "
+            src={imgClicked}
+            onClick={() => setImgClicked("")}
+          />
+        </div>
+      )}
       {ModalStore.modalName === modals.unmatch && (
         <RemoveModal
           onClose={closeModal}
@@ -236,7 +249,7 @@ const MsgOrderPage = observer(() => {
         {/* images */}
         <ul className="flex justify-between flex-wrap gap-2">
           {(messagesArr[0]?.photos || []).map((url: string, key: number) => (
-            <li key={key}>
+            <li key={key} onClick={() => setImgClicked(url)}>
               <Image
                 alt="girl image"
                 width={200}

@@ -14,7 +14,6 @@ export const NavNames: any = {
   login: "/login",
   home: "/",
   view: "/view",
-  info: "/info",
   msgorder: "/msgorder",
 }
 
