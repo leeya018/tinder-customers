@@ -20,6 +20,14 @@ import moment from "moment"
 import RemoveModal from "@/ui/modal/unmatch"
 import { ModalStore } from "@/mobx/modalStore"
 
+const commonMessages = [
+  "you look like someone with interesting job, am I right?",
+  "what is your job?",
+  "I dont like freelancers so I need to know before I see you.",
+  "I think that me and you can have a great time together, what do you think?",
+  "for now we can exchange numbers",
+  "I see you when I get there",
+]
 const myTinderToken = process.env.NEXT_PUBLIC_MY_TINDER_TOKEN_ID
 const mPayload = {
   message: 1, //if there are messages in the pull
@@ -39,6 +47,7 @@ const MsgOrderPage = observer(() => {
   const [isDone, setIsDone] = useState(false)
   const [mchPayload, setMchPayload] = useState(mPayload)
   const [imgClicked, setImgClicked] = useState("")
+  const [isShowComMsgs, setIsShowComMsgs] = useState<boolean>(false)
   const [chosenToRem, setChosenToRem] = useState({
     name: "",
     matchId: "",
@@ -148,6 +157,8 @@ const MsgOrderPage = observer(() => {
       sendMessage()
     } else if (e.code === "Backquote") {
       setMessagesArr((prev: any) => [...prev.slice(1)])
+    } else if (e.code === "Slash") {
+      setIsShowComMsgs(true)
     }
   }
 
@@ -196,6 +207,11 @@ const MsgOrderPage = observer(() => {
     console.log({ results })
 
     // setMessagesArr(results)
+  }
+
+  const chooseMsgOption = (msg: string) => {
+    setTxtMsg(msg)
+    setIsShowComMsgs(false)
   }
   if (messagesArr.length === 0) {
     return (
@@ -285,14 +301,30 @@ const MsgOrderPage = observer(() => {
         {/* message send section */}
         <div className=" flex  ">
           <div className="mt-5 flex items-center h-14 gap-2 lg:w-[50%] ">
-            <input
-              value={txtMsg}
-              onChange={(e) => setTxtMsg(e.target.value)}
-              ref={inputRef}
-              type="text"
-              className="border-2 rounded-lg h-full flex-1 p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              onKeyDown={handleKeyDown}
-            />
+            <div>
+              <input
+                value={txtMsg}
+                onChange={(e) => setTxtMsg(e.target.value)}
+                ref={inputRef}
+                type="text"
+                className="border-2 rounded-lg h-full flex-1 p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                onKeyDown={handleKeyDown}
+              />
+              {/* options message */}
+              {isShowComMsgs && (
+                <ul className="flex flex-col bg-slate-100 absolute z-10">
+                  {commonMessages.map((commonMessage, key) => (
+                    <li
+                      key={key}
+                      className="hover:bg-gray-500 flex items-center p-2 "
+                      onClick={() => chooseMsgOption(commonMessage)}
+                    >
+                      {commonMessage}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
             <button
               onClick={sendMessage}
               className="text-white bg-blue-500 hover:text-blue-500 hover:bg-white rounded-lg px-5 py-3"
