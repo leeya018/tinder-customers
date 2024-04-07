@@ -4,6 +4,7 @@ import {
   relationshipWords,
   sexWords,
   transWords,
+  womenWords,
 } from "@/pages/api/util"
 
 export const getIsLookForFit = (lookFor: string, user: TinderUser): boolean => {
@@ -28,6 +29,16 @@ export const getIsLookForFit = (lookFor: string, user: TinderUser): boolean => {
         wordsIncludes.length > 0 ? `${lookFor} fit.` : `Not ${lookFor} fit.`
       )
       return wordsIncludes.length > 0
+    }
+
+    case lookForOptions.WOMEN: {
+      console.log("I am in women search mode")
+      let wordsIncludes = transWords.filter((word) =>
+        user.bio.toLowerCase().includes(word)
+      )
+      const isWomen = wordsIncludes.length === 0
+      console.log({ isWomen })
+      return isWomen
     }
     default: {
       throw new Error(`option of ${lookFor} is not supported}`)

@@ -73,10 +73,12 @@ export const lookForOptions: any = {
   TRANS: "trans",
   RELATIONSHIP: "relationship",
   SEX: "sex",
+  WOMEN: "women",
 }
 
 export const transWords = [
   "not a girl",
+  "not real women",
   "not a real women",
   "trans",
   "transgender",
@@ -84,6 +86,17 @@ export const transWords = [
   "טרנס",
   "טראנס",
   "shemale",
+]
+export const womenWords = [
+  "100% women",
+  "I am a women",
+  "not a Trans",
+  "not a Transgender",
+  "not a ladyboy",
+  "not a lad yboy",
+  "not ladyboy",
+  "not lady boy",
+  "not Trans",
 ]
 
 export const relationshipWords = [

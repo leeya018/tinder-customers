@@ -25,5 +25,6 @@ export const isGoodFit = async (
   }
   const isFitPref = getIsLookForFit(lookFor, user)
 
+  console.log({ isWomenGood: isFitPref && likePred > likeRatioBarrier })
   return isFitPref && likePred > likeRatioBarrier
 }

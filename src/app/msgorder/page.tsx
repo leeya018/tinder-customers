@@ -19,6 +19,7 @@ import { FaHome } from "react-icons/fa"
 import moment from "moment"
 import RemoveModal from "@/ui/modal/unmatch"
 import { ModalStore } from "@/mobx/modalStore"
+import { getProfileApi } from "@/api_client"
 
 const commonMessages = [
   "you look like someone with interesting job, am I right?",
@@ -48,6 +49,7 @@ const MsgOrderPage = observer(() => {
   const [mchPayload, setMchPayload] = useState(mPayload)
   const [imgClicked, setImgClicked] = useState("")
   const [isShowComMsgs, setIsShowComMsgs] = useState<boolean>(false)
+  const [dist, setDist] = useState<number>(-1)
   const [chosenToRem, setChosenToRem] = useState({
     name: "",
     matchId: "",
@@ -69,8 +71,12 @@ const MsgOrderPage = observer(() => {
   useEffect(() => {
     if (messagesArr.length === 0 && !isLoading && !isDone) {
       getMyMessages()
+    } else if (messagesArr.length !== 0) {
+      getDist(messagesArr[0]?.id).then((res) => {
+        setDist(res)
+      })
     }
-  }, [isLoading, messagesArr])
+  }, [messagesArr])
 
   const getMatches = async () => {
     return await getMatchesApi(myTinderToken, mchPayload)
@@ -213,6 +219,19 @@ const MsgOrderPage = observer(() => {
     setTxtMsg(msg)
     setIsShowComMsgs(false)
   }
+
+  const getDist = async (userId: any) => {
+    if (!userId) return -1
+
+    const otherProfile = await getUserApi(myTinderToken!, userId)
+    // console.log(otherProfile.results.distance_mi)
+    const kil_mile_ratio = 1.60934
+    const otherLocation_mile = otherProfile.results.distance_mi
+    const otherLocation_kilometer = otherLocation_mile * kil_mile_ratio
+
+    return otherLocation_kilometer.toFixed(0)
+  }
+
   if (messagesArr.length === 0) {
     return (
       <div className="flex justify-center items-center bg-pink-400 w-full h-screen flex-col">
@@ -294,6 +313,11 @@ const MsgOrderPage = observer(() => {
         <div className="mt-10">
           <span className="font-semibold">age: </span>
           {messagesArr[0]?.age}
+        </div>
+
+        <div className="mt-10">
+          <span className="font-semibold">distance: </span>
+          {dist} km
         </div>
 
         <div className="mt-10 lg:w-[50%] ">{messagesArr[0]?.bio}</div>
