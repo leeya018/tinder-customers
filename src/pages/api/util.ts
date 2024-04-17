@@ -1,13 +1,13 @@
-import { Timestamp } from "firebase/firestore"
-import moment from "moment"
+import { Timestamp } from "firebase/firestore";
+import moment from "moment";
 // import fs from "fs"
-import { v4 as uuidv4 } from "uuid"
-import axios from "axios"
-import path from "path"
+import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
+import path from "path";
 
-let fs: any
+let fs: any;
 if (typeof window === "undefined") {
-  fs = require("fs")
+  fs = require("fs");
 }
 
 export const NavNames: any = {
@@ -15,43 +15,43 @@ export const NavNames: any = {
   home: "/",
   view: "/view",
   msgorder: "/msgorder",
-}
+};
 
 export const sleep = async (time: number) => {
-  const smallRand = Math.random() / 10
-  const waitTime = (smallRand + 1) * time
+  const smallRand = Math.random() / 10;
+  const waitTime = (smallRand + 1) * time;
   return new Promise((resolve, reject) => {
     return setTimeout(() => {
-      return resolve("done")
-    }, waitTime)
-  })
-}
+      return resolve("done");
+    }, waitTime);
+  });
+};
 
 export const getUrl = () => {
   return process.env.NODE_ENV === "development"
     ? process.env.NEXT_PUBLIC_BASIC_URL
-    : process.env.NEXT_PUBLIC_BASIC_URL_PRODUCTION
-}
+    : process.env.NEXT_PUBLIC_BASIC_URL_PRODUCTION;
+};
 
-export const isDev = () => process.env.NODE_ENV === "development"
+export const isDev = () => process.env.NODE_ENV === "development";
 
 export const intervalForever = async (callback: Function, rate: number) => {
-  let intervalNum = 0
-  let condition = true
+  let intervalNum = 0;
+  let condition = true;
   while (condition) {
-    intervalNum++
-    console.log(`interval ${callback.name}: ${intervalNum}  ${getDate()}`)
-    await callback()
+    intervalNum++;
+    console.log(`interval ${callback.name}: ${intervalNum}  ${getDate()}`);
+    await callback();
 
-    await sleep(rate)
+    await sleep(rate);
   }
-}
+};
 
 export const modals = {
   message: "message",
   images: "images",
   unmatch: "unmatch",
-}
+};
 
 export const instructions = [
   "more matches",
@@ -60,21 +60,21 @@ export const instructions = [
   "send first messages according the your search location",
   "can select girls in your taste",
   "choose according to preference of love between : trans , sex and relationship",
-]
+];
 
 export const fromTimestampToMoment = (date: Timestamp) => {
-  const jsDate = date.toDate()
-  const dateStr = moment(jsDate).format("YYYY-MM-DD")
-  const momentDate = moment(dateStr, "YYYY-MM-DD")
-  return momentDate
-}
+  const jsDate = date.toDate();
+  const dateStr = moment(jsDate).format("YYYY-MM-DD");
+  const momentDate = moment(dateStr, "YYYY-MM-DD");
+  return momentDate;
+};
 
 export const lookForOptions: any = {
   TRANS: "trans",
   RELATIONSHIP: "relationship",
   SEX: "sex",
   WOMEN: "women",
-}
+};
 
 export const transWords = [
   "not a girl",
@@ -85,8 +85,9 @@ export const transWords = [
   "ladyboy",
   "טרנס",
   "טראנס",
+  "טראנסית",
   "shemale",
-]
+];
 export const womenWords = [
   "100% women",
   "I am a women",
@@ -97,168 +98,168 @@ export const womenWords = [
   "not ladyboy",
   "not lady boy",
   "not Trans",
-]
+];
 
 export const relationshipWords = [
   "Long-term partner",
   "Long-term, open to short",
   //  "New friends"
-]
+];
 export const sexWords = [
   "Still figuring it out",
   "Long-term, open to short",
   "Short-term, open to long",
   "Short-term fun",
-]
+];
 
 interface FileStarterNames {
-  english: string
-  hebrew: string
-  spanish: string
-  [key: string]: string // Optional: Allows access with any string key
+  english: string;
+  hebrew: string;
+  spanish: string;
+  [key: string]: string; // Optional: Allows access with any string key
 }
 
 export const fileStarterNames: FileStarterNames = {
   english: "english",
   hebrew: "hebrew",
   spanish: "spanish",
-}
+};
 
 export const formatDateTs = (timestamp: Timestamp) => {
-  const date = timestamp.toDate()
-  return moment(date).format("DD-MM-YYYY")
-}
+  const date = timestamp.toDate();
+  return moment(date).format("DD-MM-YYYY");
+};
 //  fix that
 export const getRandomMessage = (fileName: string) => {
   try {
-    const urlPath = path.join(starterFolder, fileName)
-    console.log({ urlPath })
-    const data = fs.readFileSync(urlPath, "utf8")
-    const lines = data.split("\n").filter((line: string) => line.trim() !== "")
-    const chosenLine = Math.floor(Math.random() * (lines.length - 1))
-    console.log({ chosenLine })
+    const urlPath = path.join(starterFolder, fileName);
+    console.log({ urlPath });
+    const data = fs.readFileSync(urlPath, "utf8");
+    const lines = data.split("\n").filter((line: string) => line.trim() !== "");
+    const chosenLine = Math.floor(Math.random() * (lines.length - 1));
+    console.log({ chosenLine });
     if (chosenLine < lines.length && chosenLine >= 0) {
-      return lines[chosenLine]
+      return lines[chosenLine];
     }
 
-    console.log("Line is out of range" + chosenLine)
-    throw new Error("Line is out of range" + chosenLine)
+    console.log("Line is out of range" + chosenLine);
+    throw new Error("Line is out of range" + chosenLine);
   } catch (err: any) {
-    console.log(err.message)
-    throw err.message
+    console.log(err.message);
+    throw err.message;
   }
-}
+};
 
 export const getDate = () => {
   // add 3 hours for the isreal time zone
-  const miliseconds = new Date().getTime() + +3 * 60 * 60 * 1000
-  return new Date(miliseconds).toISOString()
-}
+  const miliseconds = new Date().getTime() + +3 * 60 * 60 * 1000;
+  return new Date(miliseconds).toISOString();
+};
 
 export const getToken = async () => {
   return new Promise((resolve, reject) => {
     fs.readFile("auth_token.json", "utf-8", (err: any, jsonString: string) => {
       if (err) {
-        console.error(err)
-        return reject(err.message)
+        console.error(err);
+        return reject(err.message);
       }
-      const data = JSON.parse(jsonString)
-      console.log("data", data)
-      return resolve(data.auth_token)
-    })
-  })
-}
+      const data = JSON.parse(jsonString);
+      console.log("data", data);
+      return resolve(data.auth_token);
+    });
+  });
+};
 export const convertPrediction = (prediction: any) => {
   const result = prediction.reduce((acc: any, item: any) => {
-    acc[item.class] = item.score
-    return acc
-  }, {})
-  return result
-}
+    acc[item.class] = item.score;
+    return acc;
+  }, {});
+  return result;
+};
 
 export const payloadLike = (s_number: string) => ({
   s_number,
   user_traveling: 1,
   liked_content_type: "photo",
   liked_content_id: uuidv4(),
-})
+});
 
 export interface TinderUser {
-  bio: string
+  bio: string;
   relationship_intent?: {
-    body_text: string
-  }
+    body_text: string;
+  };
 }
 
 export const starterFolder =
-  "C:/Users/user/Desktop/code/lee/tinder-customers/src/node/starters"
+  "C:/Users/user/Documents//code//tinder-customers/src/node/starters";
 export const infoUrl =
-  "C:/Users/user/Desktop/code/lee/tinder-customers/src/node/info"
+  "C:/Users/user/Documents//code//tinder-customers/src/node/info";
 
-export const swipesFolder = path.join(infoUrl, "swipes")
-export const errorsFolder = path.join(infoUrl, "errors")
-export const messagesFolder = path.join(infoUrl, "message")
-export const actionsFolder = path.join(infoUrl, "actions")
+export const swipesFolder = path.join(infoUrl, "swipes");
+export const errorsFolder = path.join(infoUrl, "errors");
+export const messagesFolder = path.join(infoUrl, "message");
+export const actionsFolder = path.join(infoUrl, "actions");
 
-export const likeRatioBarrier = 0.4
+export const likeRatioBarrier = 0.4;
 
 const createFolder = (folderPath: string) => {
   if (!fs.existsSync(folderPath)) {
-    fs.mkdirSync(folderPath, { recursive: true })
-    console.log("Directory created:", folderPath)
+    fs.mkdirSync(folderPath, { recursive: true });
+    console.log("Directory created:", folderPath);
   } else {
-    console.log("Directory already exists:", folderPath)
+    console.log("Directory already exists:", folderPath);
   }
-}
+};
 
 export const readImagesFromTxt = (url: string) => {
-  const content = fs.readFileSync(url, "utf8")
+  const content = fs.readFileSync(url, "utf8");
 
   // Split the content by newline character to get an array
-  const lines = content.split("\n").filter(Boolean) // filter(Boolean) removes any empty lines
+  const lines = content.split("\n").filter(Boolean); // filter(Boolean) removes any empty lines
 
-  return lines
-}
+  return lines;
+};
 
 export const addDataToTxt = (
   folderPath: string,
   fileName: string,
   txt: string
 ) => {
-  createFolder(folderPath)
-  const filePath = path.join(folderPath, fileName)
+  createFolder(folderPath);
+  const filePath = path.join(folderPath, fileName);
 
   fs.appendFile(
     filePath,
     `${getFullStrTime()} ---  ${txt}` + "\n",
     (err: any) => {
       if (err) {
-        console.error("Error appending data to the file:", err)
+        console.error("Error appending data to the file:", err);
       } else {
-        console.log("Data successfully appended to the file!")
+        console.log("Data successfully appended to the file!");
       }
     }
-  )
-}
+  );
+};
 export const fromUrlToImage = async (url: string, pathFileName: string) => {
   const response = await axios.get(url, {
     responseType: "stream",
-  })
+  });
 
-  const writer = fs.createWriteStream(pathFileName)
+  const writer = fs.createWriteStream(pathFileName);
 
-  response.data.pipe(writer)
+  response.data.pipe(writer);
 
   return new Promise((resolve, reject) => {
-    writer.on("finish", resolve)
-    writer.on("error", reject)
-  })
-}
+    writer.on("finish", resolve);
+    writer.on("error", reject);
+  });
+};
 
 export const getFullStrTime = () => {
-  const dateTimeFormat = "DD-MM-YYYY HH:mm:ss"
-  return moment().format(dateTimeFormat)
-}
+  const dateTimeFormat = "DD-MM-YYYY HH:mm:ss";
+  return moment().format(dateTimeFormat);
+};
 
 export const getHeaders = (token: string) => {
   const headers = {
@@ -266,12 +267,12 @@ export const getHeaders = (token: string) => {
     "User-Agent":
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
     "x-auth-token": token,
-  }
+  };
 
-  return headers
-}
+  return headers;
+};
 
-export const tinderBaseUrl = "https://api.gotinder.com"
+export const tinderBaseUrl = "https://api.gotinder.com";
 
 //   "long-term",
 //   "no hookups",
@@ -290,20 +291,22 @@ export const tinderBaseUrl = "https://api.gotinder.com"
 //   "משהו קליל",
 // ]
 
-export const second = 1000
-export const minute = second * 60
-export const hour = minute * 60
-export const day = hour * 24
-export const week = day * 7
+export const second = 1000;
+export const minute = second * 60;
+export const hour = minute * 60;
+export const day = hour * 24;
+export const week = day * 7;
 
 export const timeBetween = {
   CUSTOM: 0.5 * second,
   ENGAGEMENT: 2 * second,
   GET_RECS: 5 * second,
   LIKE_LOOP: 4 * second,
-  SESSION_USERS: 20 * minute,
-}
-export const swipesLim = 100
+  // SESSION_USERS: 30 * second,
+  SESSION_USERS: 10 * minute,
+};
+export const swipesLim = 100;
+// export const swipesLim = 10;
 
 export const infoTypes = {
   ERROR: "error",
@@ -311,4 +314,4 @@ export const infoTypes = {
   PASS: "pass",
   FUNCTION: "function",
   MESSAGE: "message",
-}
+};
