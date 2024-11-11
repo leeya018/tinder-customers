@@ -1,7 +1,7 @@
-import { initializeApp } from "firebase/app"
-import { getAuth } from "firebase/auth"
-import { getFirestore } from "firebase/firestore"
-import { isDev } from "./pages/api/util"
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { isDev } from "./pages/api/util";
 
 const firebaseConfigDev = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY_DEV,
@@ -10,8 +10,8 @@ const firebaseConfigDev = {
   storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET_DEV,
   messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID_DEV,
   appId: process.env.NEXT_PUBLIC_APP_ID_DEV,
-}
+};
 
-const app = initializeApp(firebaseConfigDev)
-export const db = getFirestore(app)
-export const auth = getAuth(app)
+const app = initializeApp(firebaseConfigDev);
+export const db = getFirestore(app);
+export const auth = getAuth(app);

@@ -173,6 +173,7 @@ const mainIteration = async (customerXlsData: CustomerXlsData) => {
   )} in 1 word only`;
   console.log({ question });
   const lang = await getDataFromGptApi(question);
+  // const lang = "hebrew";
   console.log("================== getDataFromGptApi ========================");
   console.log({ lang });
 

@@ -1,10 +1,10 @@
-"use client"
-import React, { useEffect, useState } from "react"
-import { observer } from "mobx-react-lite"
-import { FcApproval } from "react-icons/fc"
-import { instructions } from "@/pages/api/util"
-import Navbar from "@/components/navbar"
-import ProtectedRout from "@/components/protectedRout"
+"use client";
+import React, { useEffect, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { FcApproval } from "react-icons/fc";
+import { instructions } from "@/pages/api/util";
+import Navbar from "@/components/navbar";
+import ProtectedRout from "@/components/protectedRout";
 
 const AboutPage = observer(() => {
   return (
@@ -25,6 +25,6 @@ const AboutPage = observer(() => {
         </div>
       </div>
     </ProtectedRout>
-  )
-})
-export default AboutPage
+  );
+});
+export default AboutPage;

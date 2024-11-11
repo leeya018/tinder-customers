@@ -1,46 +1,46 @@
-"use client"
-import React, { useEffect, useRef, useState } from "react"
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 
 import {
   signInWithPopup,
   GoogleAuthProvider,
   onAuthStateChanged,
-} from "firebase/auth"
-import { auth } from "@/firebase"
+} from "firebase/auth";
+import { auth } from "@/firebase";
 
-import Image from "next/image"
+import Image from "next/image";
 
-import { observer } from "mobx-react-lite"
-import { useRouter } from "next/navigation"
-import { NavNames } from "@/pages/api/util"
-import { addUserFirestore, getUserFirestore } from "@/api/firestore"
-import { User } from "@/api/firestore/user/interfaces"
-import Alerts from "@/ui/Alerts"
-import { messageStore } from "@/mobx/messageStore"
+import { observer } from "mobx-react-lite";
+import { useRouter } from "next/navigation";
+import { NavNames } from "@/pages/api/util";
+import { addUserFirestore, getUserFirestore } from "@/api/firestore";
+import { User } from "@/api/firestore/user/interfaces";
+import Alerts from "@/ui/Alerts";
+import { messageStore } from "@/mobx/messageStore";
 
 function login() {
-  const router = useRouter()
-  const inputRef = useRef(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const inputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const googleSignIn = async () => {
-    const provider = new GoogleAuthProvider()
+    const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then(async (UserCredentialImp) => {
-        const { email, displayName, uid, photoURL } = UserCredentialImp.user
-        const newUser: User = { email, displayName, userId: uid, photoURL }
-        const user = await getUserFirestore(uid)
+        const { email, displayName, uid, photoURL } = UserCredentialImp.user;
+        const newUser: User = { email, displayName, userId: uid, photoURL };
+        const user = await getUserFirestore(uid);
         if (!user) {
-          throw new Error("you are not in the system")
+          throw new Error("you are not in the system");
         }
-        router.push(NavNames.home)
+        router.push(NavNames.home);
       })
       .catch((err) => {
-        console.log(err.message)
-        messageStore.setMessage(err.message, 500)
-        throw err
-      })
-  }
+        console.log(err.message);
+        messageStore.setMessage(err.message, 500);
+        throw err;
+      });
+  };
 
   return (
     <div
@@ -93,6 +93,6 @@ function login() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-export default observer(login)
+export default observer(login);

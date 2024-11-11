@@ -1,25 +1,25 @@
-"use client"
-import React, { useEffect, useRef, useState } from "react"
-import Navbar from "@/components/navbar"
-import ProtectedRout from "@/components/protectedRout"
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import Navbar from "@/components/navbar";
+import ProtectedRout from "@/components/protectedRout";
 
-import { observer } from "mobx-react-lite"
+import { observer } from "mobx-react-lite";
 import {
   getMatchesApi,
   getMessagesApi,
   getUserApi,
   removeMatchApi,
   sendMessageApi,
-} from "@/api_client"
-import { NavNames, modals, sleep, timeBetween } from "@/pages/api/util"
-import { data } from "./data"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { FaHome } from "react-icons/fa"
-import moment from "moment"
-import RemoveModal from "@/ui/modal/unmatch"
-import { ModalStore } from "@/mobx/modalStore"
-import { getProfileApi } from "@/api_client"
+} from "@/api_client";
+import { NavNames, modals, sleep, timeBetween } from "@/pages/api/util";
+import { data } from "./data";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { FaHome } from "react-icons/fa";
+import moment from "moment";
+import RemoveModal from "@/ui/modal/unmatch";
+import { ModalStore } from "@/mobx/modalStore";
+import { getProfileApi } from "@/api_client";
 
 const commonMessages = [
   "you look like someone with interesting job, am I right?",
@@ -28,59 +28,59 @@ const commonMessages = [
   "I think that me and you can have a great time together, what do you think?",
   "for now we can exchange numbers",
   "I see you when I get there",
-]
-const myTinderToken = process.env.NEXT_PUBLIC_MY_TINDER_TOKEN_ID
+];
+const myTinderToken = process.env.NEXT_PUBLIC_MY_TINDER_TOKEN_ID;
 const mPayload = {
   message: 1, //if there are messages in the pull
   amount: 10, // how many matches to return
   is_tinder_u: true,
   pageToken: null,
-}
+};
 
 // const matchId = "5980deb74a75f5b45fb118ee63ecad4f083ea501001fc6db"
 
-const myId = "5980deb74a75f5b45fb118ee"
+const myId = "5980deb74a75f5b45fb118ee";
 // const item = data[0]
 const MsgOrderPage = observer(() => {
-  const [messagesArr, setMessagesArr] = useState<any>([])
-  const [txtMsg, setTxtMsg] = useState<string>("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [isDone, setIsDone] = useState(false)
-  const [mchPayload, setMchPayload] = useState(mPayload)
-  const [imgClicked, setImgClicked] = useState("")
-  const [isShowComMsgs, setIsShowComMsgs] = useState<boolean>(false)
-  const [dist, setDist] = useState<number>(-1)
+  const [messagesArr, setMessagesArr] = useState<any>([]);
+  const [txtMsg, setTxtMsg] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDone, setIsDone] = useState(false);
+  const [mchPayload, setMchPayload] = useState(mPayload);
+  const [imgClicked, setImgClicked] = useState("");
+  const [isShowComMsgs, setIsShowComMsgs] = useState<boolean>(false);
+  const [dist, setDist] = useState<number>(-1);
   const [chosenToRem, setChosenToRem] = useState({
     name: "",
     matchId: "",
-  })
-  const scrollRef = useRef<any>(null)
-  const inputRef = useRef<any>(null)
+  });
+  const scrollRef = useRef<any>(null);
+  const inputRef = useRef<any>(null);
 
-  const router = useRouter()
+  const router = useRouter();
 
-  console.log({ messagesArr })
+  console.log({ messagesArr });
 
   useEffect(() => {
     if (inputRef.current && messagesArr.length !== 0) {
-      console.log({ current: inputRef.current })
-      inputRef?.current?.focus()
+      console.log({ current: inputRef.current });
+      inputRef?.current?.focus();
     }
-  }, [inputRef.current, messagesArr])
+  }, [inputRef.current, messagesArr]);
 
   useEffect(() => {
     if (messagesArr.length === 0 && !isLoading && !isDone) {
-      getMyMessages()
+      getMyMessages();
     } else if (messagesArr.length !== 0) {
       getDist(messagesArr[0]?.id).then((res) => {
-        setDist(res)
-      })
+        setDist(Number(res));
+      });
     }
-  }, [messagesArr])
+  }, [messagesArr]);
 
   const getMatches = async () => {
-    return await getMatchesApi(myTinderToken, mchPayload)
-  }
+    return await getMatchesApi(myTinderToken, mchPayload);
+  };
   // const getUser = async () => {
   //   const user = await getUserApi(myTinderToken, "6240c3faa7299401007624a1")
   //   console.log({ user })
@@ -88,18 +88,18 @@ const MsgOrderPage = observer(() => {
   // }
 
   const createCustomData = (match: any, messages: any) => {
-    const photos = match.person.photos.map((item: any) => item.url)
+    const photos = match.person.photos.map((item: any) => item.url);
     const customMessages = messages.map((message: any) => {
       return {
         from: message.from === myId ? "YOU" : match.person.name,
         to: message.to === myId ? "YOU" : match.person.name,
         message: message.message,
         matchId: message.matchId,
-      }
-    })
-    const { _id, bio, name, birth_date } = match.person
-    if (!birth_date) throw new Error("birth date is required")
-    const age: number = moment().diff(birth_date, "years")
+      };
+    });
+    const { _id, bio, name, birth_date } = match.person;
+    if (!birth_date) throw new Error("birth date is required");
+    const age: number = moment().diff(birth_date, "years");
     const data = {
       id: _id,
       age,
@@ -108,39 +108,39 @@ const MsgOrderPage = observer(() => {
       bio,
       messages: customMessages,
       matchId: match._id,
-    }
-    return data
-  }
+    };
+    return data;
+  };
 
   const filterMatches = async (matches: any) => {
-    let filteredMatches = []
+    let filteredMatches = [];
     for (const match of matches) {
-      if (!match.id) throw new Error("match id not specified")
-      const messages = await getMessagesApi(myTinderToken, match.id)
-      const userId = match.person.id
-      const firstMessage = messages[0]
+      if (!match.id) throw new Error("match id not specified");
+      const messages = await getMessagesApi(myTinderToken, match.id);
+      const userId = match.person.id;
+      const firstMessage = messages[0];
 
       if (firstMessage.from !== myId) {
         // const user = await getUserApi(myTinderToken, userId)
-        const newCustomData = createCustomData(match, messages)
-        filteredMatches.push(newCustomData)
-        setMessagesArr(filteredMatches)
+        const newCustomData = createCustomData(match, messages);
+        filteredMatches.push(newCustomData);
+        setMessagesArr(filteredMatches);
       }
-      await sleep(timeBetween.CUSTOM)
+      await sleep(timeBetween.CUSTOM);
     }
-    return filteredMatches
-  }
+    return filteredMatches;
+  };
 
   const sendMessage = async () => {
-    const firstItem = messagesArr[0]
-    let updateItem = { ...firstItem }
+    const firstItem = messagesArr[0];
+    let updateItem = { ...firstItem };
     const newMessage = {
       from: "YOU",
       to: updateItem.name,
       message: txtMsg,
-    }
-    updateItem.messages.unshift(newMessage)
-    setMessagesArr((prev: any) => [updateItem, ...prev.slice(1)])
+    };
+    updateItem.messages.unshift(newMessage);
+    setMessagesArr((prev: any) => [updateItem, ...prev.slice(1)]);
     // send the message here
 
     const payload = {
@@ -149,88 +149,88 @@ const MsgOrderPage = observer(() => {
       matchId: firstItem.matchId,
       sessionId: null,
       message: txtMsg,
-    }
-    console.log(payload)
+    };
+    console.log(payload);
     sendMessageApi(myTinderToken, payload).catch((err) => {
-      console.log(err)
-    })
-    setTxtMsg("")
-  }
+      console.log(err);
+    });
+    setTxtMsg("");
+  };
 
   const handleKeyDown = (e: any) => {
-    console.log(e.code)
+    console.log(e.code);
     if (e.code === "Enter") {
-      sendMessage()
+      sendMessage();
     } else if (e.code === "Backquote") {
-      setMessagesArr((prev: any) => [...prev.slice(1)])
+      setMessagesArr((prev: any) => [...prev.slice(1)]);
     } else if (e.code === "Slash") {
-      setIsShowComMsgs(true)
+      setIsShowComMsgs(true);
     }
-  }
+  };
 
   const closeModal = () => {
     setChosenToRem({
       name: "",
       matchId: "",
-    })
-  }
+    });
+  };
 
   const openUmatchModal = async (matchId: string, name: string) => {
     setChosenToRem({
       matchId,
       name,
-    })
-    ModalStore.openModal(modals.unmatch)
-  }
+    });
+    ModalStore.openModal(modals.unmatch);
+  };
 
   const removeMatch = async () => {
-    await removeMatchApi(chosenToRem.matchId, myTinderToken)
+    await removeMatchApi(chosenToRem.matchId, myTinderToken);
     //
     setMessagesArr((prev: any) =>
       prev.filter((msgItem: any) => msgItem.matchId !== chosenToRem.matchId)
-    )
-    ModalStore.closeModal()
-  }
+    );
+    ModalStore.closeModal();
+  };
 
   // match.person.photos.map(item =>item.url)
   // match.person.name
   const getMyMessages = async () => {
-    setIsLoading(true)
-    console.log("what is up")
-    const { matches, next_page_token } = await getMatches()
-    console.log({ next_page_token, matches })
+    setIsLoading(true);
+    console.log("what is up");
+    const { matches, next_page_token } = await getMatches();
+    console.log({ next_page_token, matches });
     if (!next_page_token) {
-      setIsDone(true)
-      return
+      setIsDone(true);
+      return;
     }
     setMchPayload((prev) => ({
       ...prev,
       pageToken: next_page_token,
-    }))
-    const results = await filterMatches(matches)
-    setIsLoading(false)
+    }));
+    const results = await filterMatches(matches);
+    setIsLoading(false);
 
-    console.log({ results })
+    console.log({ results });
 
     // setMessagesArr(results)
-  }
+  };
 
   const chooseMsgOption = (msg: string) => {
-    setTxtMsg(msg)
-    setIsShowComMsgs(false)
-  }
+    setTxtMsg(msg);
+    setIsShowComMsgs(false);
+  };
 
   const getDist = async (userId: any) => {
-    if (!userId) return -1
+    if (!userId) return -1;
 
-    const otherProfile = await getUserApi(myTinderToken!, userId)
+    const otherProfile = await getUserApi(myTinderToken!, userId);
     // console.log(otherProfile.results.distance_mi)
-    const kil_mile_ratio = 1.60934
-    const otherLocation_mile = otherProfile.results.distance_mi
-    const otherLocation_kilometer = otherLocation_mile * kil_mile_ratio
+    const kil_mile_ratio = 1.60934;
+    const otherLocation_mile = otherProfile.results.distance_mi;
+    const otherLocation_kilometer = otherLocation_mile * kil_mile_ratio;
 
-    return otherLocation_kilometer.toFixed(0)
-  }
+    return otherLocation_kilometer.toFixed(0);
+  };
 
   if (messagesArr.length === 0) {
     return (
@@ -239,7 +239,7 @@ const MsgOrderPage = observer(() => {
           We are loading ...
         </div>
       </div>
-    )
+    );
   }
   if (isDone) {
     return (
@@ -254,7 +254,7 @@ const MsgOrderPage = observer(() => {
           back to <FaHome size={25} />
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -377,6 +377,6 @@ const MsgOrderPage = observer(() => {
         {/* <button onClick={getMatches}>get matches</button> */}
       </div>
     </ProtectedRout>
-  )
-})
-export default MsgOrderPage
+  );
+});
+export default MsgOrderPage;

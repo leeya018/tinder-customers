@@ -102,7 +102,6 @@ export const womenWords = [
 
 export const relationshipWords = [
   "Long-term partner",
-  "Long-term, open to short",
   //  "New friends"
 ];
 export const sexWords = [

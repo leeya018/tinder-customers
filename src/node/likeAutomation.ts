@@ -20,6 +20,7 @@ const recIterationLike = async (
   const recs = await getRecs(token);
 
   const folderName = customer.name;
+  console.log({ folderName });
   const pathUrl = path.join(swipesFolder, folderName);
   console.log("RECS LEN IS :" + recs.length);
   for (const rec of recs) {
@@ -29,6 +30,7 @@ const recIterationLike = async (
     if (isFit) {
       console.log("HOT");
       likes++;
+      console.log({ pathUrl });
       await handleLike(token, rec, pathUrl, customer, firstImage);
     } else {
       passes++;

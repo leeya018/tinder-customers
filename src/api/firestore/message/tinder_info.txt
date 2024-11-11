@@ -1,0 +1,44 @@
+Full-Stack Program Documentation Template
+1. Overview
+Program Name: TINDER-Customers
+Purpose/Goal: helpting to automate the tinder results by auto likes and auto messages ( for the first likes) and by that givingi 
+ you more results with less efforts. 
+Target Audience: people from 18 years old and more that want to improve the results in the online app. 
+and pepole who wants no to waste lots of times on swiping , and messaging. 
+2. Technologies Used
+Frontend:
+Technologies/Frameworks: Next js , react js , 
+Styling: CSS,Tailwind CSS
+Backend:
+Server:  Node.js
+Database: firebase
+Additional Tools:
+Version Control: ChatGpt api, tinderApi, machine learning, Git
+Deployment: localhost 
+3. Architecture
+High-Level Architecture: in the app there are 3 main pages, 
+    main: changing settings of the user according to filters he wants to cerate. :
+        filters: with/without messages, likes according to preference, (Trans, women , want sex , want realsionship), and choose if the women looks good/ or not matter, ( this according to algo that I trained on israelies)
+    info: show the information per user, show diagrams of month with the likes and messages, so you can see the amount of production of the algo . 
+        you can also see who did you make like to and who you pass 
+    msgOrder: because of the big amount of likes and messages, lots of times, messages or going down on  tinder to the bottom and you are missign them, so by that , you can show the user all the conversations that
+        this is the time of YOU to message back , when I dont show you more messages its mean that you reply to all of them
+    analitics: another app which allready deployed and connected to the same fireabse db . so it can show lots of infos: messages, errors, actions in db , like and passes . 
+Data Flow: there is a fireabse db connction to save customers likes and messages for each customer. 
+        there is an intergration with tinder API 
+        there is integrtion with CHAT GPT API inroder to know the languge of the conutry I am in ( in preimium you can be on travel mode )
+        there is a messaging system that uses 3 files for starting a convo , each file has around 20 starters . and each fiele is in different language ( hebrew, english ,spanish ). according to the CHAT GPT rseponese , I know what file to use . 
+4. Setup Instructions
+Prerequisites: List any requirements needed to run the program (e.g., software, environment setups).
+Installation Steps:
+Step 1: Clone/download the repository
+Step 2: npm run dev 
+Step 3: need the env file from me . 
+Step 4: change the NEXT_PUBLIC_MY_TINDER_TOKEN_ID to be your own token  ( get it from tinder devtoole , under applications, under localstorage , under TinderWeb/APIToken) 
+    this token is valid for at least 24 hours and will need to be replaced
+Running the Application: npm run dev 
+5. Features and Functionality
+User authentication : I am (Lee ) the only use that can logged in to the system and operates it (  and this is because I cannot deploy it anyway because of cors protection from tinder side . )
+Data visualization
+Interactive elements tinder-analitics ( another software which connect to the same db , and show the info per customer)
+db collections : users, customers, likes , messages, infos. 
